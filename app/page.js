@@ -1,113 +1,269 @@
-import Image from 'next/image'
+/* File: app/page.jsx */
 
-export default function Home() {
+"use client"; // Required for framer-motion animations
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  RiFileTextLine,
+  RiPagesLine,
+  RiMoneyDollarCircleLine,
+  RiCalculatorLine,
+  RiPercentLine,
+  RiArrowRightSLine,
+  RiDownload2Line,
+  RiPencilLine,
+  RiEyeLine,
+} from "react-icons/ri";
+
+// --- Hero Section Component ---
+function HeroSection() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <section className="relative overflow-hidden py-24 sm:py-32 lg:py-40 bg-white dark:bg-slate-950">
+      {/* Subtle background glow */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-[150px]"
+        aria-hidden="true"
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          className="max-w-3xl mx-auto text-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.h1
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white"
+            variants={itemVariants}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            Financial Tools,
+            <br />
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 bg-clip-text text-transparent">
+              Beautifully Simple.
+            </span>
+          </motion.h1>
+          <motion.p
+            className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300"
+            variants={itemVariants}
+          >
+            Create professional invoices, payslips, and quotes in seconds.
+            Calculate loans and margins instantly.
+          </motion.p>
+          <motion.h2
+            className="mt-4 text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100"
+            variants={itemVariants}
+          >
+            No signups. No fees. Just fast, professional tools.
+          </motion.h2>
+          <motion.div
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            variants={itemVariants}
+          >
+            <Link
+              href="/invoice-generator"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            >
+              Create an Invoice
+              <RiArrowRightSLine className="ml-2 h-5 w-5" />
+            </Link>
+            <Link
+              href="#features"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-slate-300 dark:border-slate-700 text-base font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Explore All Tools
+            </Link>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// --- Features Section Component ---
+function FeaturesSection() {
+  const tools = [
+    {
+      name: "Invoice Generator",
+      description: "Create and download professional PDF invoices in seconds.",
+      href: "/invoice-generator",
+      icon: RiFileTextLine,
+    },
+    {
+      name: "Payslip Generator",
+      description: "Generate detailed, accurate payslips for your employees.",
+      href: "/payslip-generator",
+      icon: RiPagesLine,
+    },
+    {
+      name: "Quotation Generator",
+      description: "Send beautiful, clear estimates that win you clients.",
+      href: "/quotation-generator",
+      icon: RiMoneyDollarCircleLine,
+    },
+    {
+      name: "Loan Calculator",
+      description: "Visualize monthly payments and total interest for any loan.",
+      href: "/loan-calculator",
+      icon: RiCalculatorLine,
+    },
+    {
+      name: "Profit Margin Calculator",
+      description:
+        "Find the perfect selling price and profit margin instantly.",
+      href: "/profit-margin-calculator",
+      icon: RiPercentLine,
+    },
+    {
+      name: "More Tools Coming",
+      description: "We're always building new utilities to help you succeed.",
+      href: "#",
+      icon: RiPencilLine,
+    },
+  ];
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        type: "spring",
+        stiffness: 80,
+      },
+    }),
+  };
+
+  return (
+    <section id="features" className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+            Your Financial Utility Toolbox
+          </h2>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+            One-click solutions for your most common financial tasks.
+          </p>
+        </div>
+        <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool, i) => (
+            <motion.div
+              key={tool.name}
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <Link
+                href={tool.href}
+                className="group block p-8 h-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-lg hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300"
+              >
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+                  <tool.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+                  {tool.name}
+                </h3>
+                <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                  {tool.description}
+                </p>
+                <span className="mt-6 inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-500 group-hover:translate-x-1 transition-transform">
+                  Get Started <RiArrowRightSLine className="ml-1 h-4 w-4" />
+                </span>
+              </Link>
+            </motion.div>
+          ))}
         </div>
       </div>
+    </section>
+  );
+}
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+// --- How It Works Section ---
+function HowItWorksSection() {
+  const steps = [
+    {
+      name: "1. Select a Tool",
+      description:
+        "Choose the financial utility you need, like the Invoice or Loan calculator.",
+      icon: RiEyeLine,
+    },
+    {
+      name: "2. Edit Visually",
+      description:
+        "Click directly on the document or use simple controls. No boring forms.",
+      icon: RiPencilLine,
+    },
+    {
+      name: "3. Download PDF",
+      description:
+        "Instantly download a professional, high-quality PDF. No watermarks.",
+      icon: RiDownload2Line,
+    },
+  ];
+
+  return (
+    <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+            As Simple As It Gets
+          </h2>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+            Our WYSIWYG editor makes financial documents effortless.
+          </p>
+        </div>
+        <div className="mt-16 grid grid-cols-1 gap-y-12 md:grid-cols-3 md:gap-x-8">
+          {steps.map((step) => (
+            <div key={step.name} className="flex flex-col items-center text-center">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400">
+                <step.icon className="h-8 w-8" />
+              </div>
+              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+                {step.name}
+              </h3>
+              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
+    </section>
+  );
+}
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+// --- Main Home Page ---
+export default function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <HowItWorksSection />
+    </>
+  );
 }

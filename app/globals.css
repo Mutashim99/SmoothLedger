@@ -1,27 +1,94 @@
+/* File: app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    /* ... other light theme variables ... */
+    --primary: 220 90% 50%;
+    --primary-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    /* ... other dark theme variables ... */
+    --primary: 210 90% 60%;
+    --primary-foreground: 224 71.4% 4.1%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer base {
+  * {
+    @apply border-[hsl(var(--border))];
+  }
+  html,
+  body {
+    @apply h-full antialiased;
+  }
+  body {
+    @apply bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300;
+  }
+
+  /* Custom selection color for a premium feel */
+  ::selection {
+    @apply bg-blue-500/20 text-blue-700 dark:text-blue-300;
+  }
+}
+
+/* Custom class for the whiteboard/editor area */
+.whiteboard-bg {
+  @apply bg-slate-50 dark:bg-slate-900;
+}
+
+/* --- NEW: A4 Page Container --- */
+/* This will force the div to have a perfect A4 aspect ratio */
+.a4-container {
+  @apply w-full;
+  aspect-ratio: 210 / 297;
+}
+
+/* Global custom scrollbars */
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #3b82f6 #e5e7eb; /* thumb | track */
+}
+
+/* For WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e5e7eb;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 20px;
+  border: 2px solid #e5e7eb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  * {
+    scrollbar-color: #60a5fa #1f2937;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #60a5fa;
+    border: 2px solid #1f2937;
+  }
 }
