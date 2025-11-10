@@ -26,6 +26,7 @@ import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Image from "next/image";
 
 // --- Helper: Editable Field Component ---
 function EditableField({
@@ -428,11 +429,11 @@ export default function QuotationGeneratorPage() {
 
   // --- TEMPLATE DEFINITIONS ---
   const templates = [
-    { id: "modern", name: "Modern", preview: "/previews/quote-modern.png" },
-    { id: "classic", name: "Classic", preview: "/previews/quote-classic.png" },
-    { id: "bold", name: "Bold", preview: "/previews/quote-bold.png" },
-    { id: "minimal", name: "Minimal", preview: "/previews/quote-minimal.png" },
-    { id: "creative", name: "Creative", preview: "/previews/quote-creative.png" },
+    { id: "modern", name: "Modern", preview: "/previews/modern.png" },
+    { id: "classic", name: "Classic", preview: "/previews/classic.png" },
+    { id: "bold", name: "Bold", preview: "/previews/bold.png" },
+    { id: "minimal", name: "Minimal", preview: "/previews/minimal.png" },
+    { id: "creative", name: "Creative", preview: "/previews/creative.png" },
   ];
 
   const renderQuotationTemplate = () => {
@@ -1250,6 +1251,7 @@ function TemplateQuotationCreative({
 
 
 // --- Template Modal Component ---
+// --- Template Modal Component ---
 function TemplateModal({
   isOpen,
   onClose,
@@ -1265,41 +1267,92 @@ function TemplateModal({
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex justify-between items-center">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">Choose a Template</Dialog.Title>
-                  <button onClick={onClose} className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"><RiCloseLine className="h-5 w-5" /></button>
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                  >
+                    Choose a Template
+                  </Dialog.Title>
+                  <button
+                    onClick={onClose}
+                    className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    <RiCloseLine className="h-5 w-5" />
+                  </button>
                 </div>
 
-                <RadioGroup value={selectedTemplate} onChange={handleSelect} className="mt-4">
-                  <RadioGroup.Label className="sr-only">Choose a template</RadioGroup.Label>
+                <RadioGroup
+                  value={selectedTemplate}
+                  onChange={handleSelect}
+                  className="mt-4"
+                >
+                  <RadioGroup.Label className="sr-only">
+                    Choose a template
+                  </RadioGroup.Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {templates.map((template) => (
                       <RadioGroup.Option
                         key={template.id}
                         value={template.id}
                         className={({ active, checked }) =>
-                          `relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
-                          ${checked ? "border-blue-500 ring-2 ring-blue-500" : "border-slate-200 dark:border-slate-700 hover:border-blue-300"}
+                          // UPDATED: Added 'group' for hover effect
+                          `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
+                          ${
+                            checked
+                              ? "border-blue-500 ring-2 ring-blue-500"
+                              : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                          }
                           ${active ? "ring-2 ring-offset-2 ring-blue-400" : ""}`
                         }
                       >
                         {({ checked }) => (
                           <>
                             <div className="flex w-full flex-col items-center gap-2">
-                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400">
-                                <RiImageAddLine className="h-10 w-10" />
+                              {/* UPDATED: Replaced placeholder div with Image component */}
+                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 overflow-hidden relative">
+                                <Image
+                                  src={template.preview}
+                                  alt={template.name}
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="group-hover:scale-105 transition-transform duration-300"
+                                />
                               </div>
-                              <RadioGroup.Label as="span" className="font-medium text-sm text-slate-800 dark:text-slate-200">{template.name}</RadioGroup.Label>
+                              <RadioGroup.Label
+                                as="span"
+                                className="font-medium text-sm text-slate-800 dark:text-slate-200"
+                              >
+                                {template.name}
+                              </RadioGroup.Label>
                               {checked && (
-                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white"><RiCheckLine className="h-4 w-4" /></div>
+                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                  <RiCheckLine className="h-4 w-4" />
+                                </div>
                               )}
                             </div>
                           </>

@@ -242,7 +242,7 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-slate-950 min-h-screen flex items-center">
+    <section className="relative overflow-hidden bg-white dark:bg-slate-950 min-h-[calc(100vh-4rem)] flex items-center ">
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-[150px]"
         aria-hidden="true"
@@ -702,28 +702,48 @@ function TestimonialsSection() {
 
 // --- 6. FAQ Section ---
 function FaqSection() {
-  const faqs = [
-    {
-      question: "Is this financial toolbox really 100% free?",
-      answer:
-        "Yes. All 5 tools (Invoice, Payslip, Quotation, Loan, and Margin) are completely free to use, with no signups, no watermarks, and no item limits on a single page. We plan to make money *later* by offering a separate, premium 'Dashboard' product for users who want cloud storage and team features.",
-    },
-    {
-      question: "Do I need to create an account?",
-      answer:
-        "No. Our motto is 'No signups. No fees.' You can use every tool on this site instantly, without giving us any personal information. We do offer optional 'Save in Browser' features that use your computer's local storage, but this is never sent to a server.",
-    },
-    {
-      question: "Can I add my own company logo?",
-      answer:
-        "Absolutely. The Invoice, Payslip, and Quotation generators all have a simple 'Add Your Logo' button. This is a 100% free feature and makes your documents look truly professional.",
-    },
-    {
-      question: "Is this safe to use for real financial data?",
-      answer:
-        "Yes. All calculations happen directly in your browser. None of your financial data (client names, amounts, etc.) is ever sent to or stored on our servers. When you use the 'Save' features, it saves directly to your own computer's local storage, which only you can access.",
-    },
-  ];
+ const faqs = [
+  {
+    question: "What's the catch? Are these tools really 100% free?",
+    answer:
+      "Yes, 100%. This is not a 'free trial.' Our tools are completely free to use, with no signups, no feature paywalls, and no watermarks on your final documents. You can create, download, and save as many documents as you like.",
+  },
+  {
+    question: "How does SmoothLedger make money if everything is free?",
+    answer:
+      "Our free tools are our 'traffic engine' and our way of building trust. Our business plan is to launch an *optional*, premium **SmoothLedger Dashboard** in the future. This will be a paid product for users who need advanced features like cloud-syncing across devices, team collaboration, and tracking payments. The standalone tools you see today will always remain free.",
+  },
+  {
+    question: "Do I need to create an account or sign up?",
+    answer:
+      "No. Our motto is 'No signups. No fees.' You can use every tool on this site instantly. We don't ask for your email or any personal information. Your privacy comes first.",
+  },
+  {
+    question: "Is my financial data safe and private?",
+    answer:
+      "Yes, it is 100% private. All the data you enter (your company name, your client's details, your income) **never leaves your computer**. Everything is processed directly in your browser. We do not have a database to store or see your financial information, which also makes our tools incredibly fast.",
+  },
+  {
+    question: "What is the 'Save' feature? Where does my data go?",
+    answer:
+      "When you use 'Save My Details' or 'Save Invoice', you are saving your data to your browser's **Local Storage**. This is a secure storage space on your own computer. It's private to you and allows you to load your data instantly the next time you visit, all without needing an account. Clearing your browser cache will erase this data.",
+  },
+  {
+    question: "Can I customize my invoice? Can I add my logo?",
+    answer:
+      "Absolutely. You can (and should!) add your own company logo. You can also choose from 5 different professional templates, change the brand accent color, and select your preferred font and font size. All customization features are completely free.",
+  },
+  {
+    question: "What format do I get? Can I download a PDF?",
+    answer:
+      "Yes. All our document generators (Invoice, Payslip, and Quotation) export a high-quality, print-ready PDF file. You can instantly download it to your device and send it to your client or employee.",
+  },
+  {
+    question: "How does the 'Reverse' Profit Margin Calculator work?",
+    answer:
+      "Our Profit Margin Calculator has two modes. In 'Standard Mode,' you enter your Cost and Sale Price to find your profit margin. In 'Reverse Mode,' you enter your Cost and your *desired* margin (e.g., 40%), and it will instantly calculate the exact Sale Price you need to charge to hit that target. It's perfect for pricing new products.",
+  },
+];
 
   return (
     <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">

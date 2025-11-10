@@ -26,6 +26,7 @@ import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Image from "next/image";
 
 // --- Helper: Editable Field Component ---
 function EditableField({
@@ -163,7 +164,10 @@ export default function PayslipGeneratorPage() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: "" });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -254,7 +258,8 @@ export default function PayslipGeneratorPage() {
   // Earnings Handlers
   const handleEarningChange = (index, field, value) => {
     const newEarnings = [...earnings];
-    newEarnings[index][field] = (field === "amount") ? (parseFloat(value) || 0) : value;
+    newEarnings[index][field] =
+      field === "amount" ? parseFloat(value) || 0 : value;
     setEarnings(newEarnings);
   };
   const addEarning = () => {
@@ -262,7 +267,10 @@ export default function PayslipGeneratorPage() {
       setIsLimitModalOpen(true);
       return;
     }
-    setEarnings([...earnings, { id: Date.now(), name: "New Earning", amount: 0 }]);
+    setEarnings([
+      ...earnings,
+      { id: Date.now(), name: "New Earning", amount: 0 },
+    ]);
   };
   const removeEarning = (id) => {
     setEarnings(earnings.filter((item) => item.id !== id));
@@ -271,7 +279,8 @@ export default function PayslipGeneratorPage() {
   // Deductions Handlers
   const handleDeductionChange = (index, field, value) => {
     const newDeductions = [...deductions];
-    newDeductions[index][field] = (field === "amount") ? (parseFloat(value) || 0) : value;
+    newDeductions[index][field] =
+      field === "amount" ? parseFloat(value) || 0 : value;
     setDeductions(newDeductions);
   };
   const addDeduction = () => {
@@ -279,7 +288,10 @@ export default function PayslipGeneratorPage() {
       setIsLimitModalOpen(true);
       return;
     }
-    setDeductions([...deductions, { id: Date.now(), name: "New Deduction", amount: 0 }]);
+    setDeductions([
+      ...deductions,
+      { id: Date.now(), name: "New Deduction", amount: 0 },
+    ]);
   };
   const removeDeduction = (id) => {
     setDeductions(deductions.filter((item) => item.id !== id));
@@ -516,22 +528,22 @@ export default function PayslipGeneratorPage() {
 
   // --- TEMPLATE DEFINITIONS ---
   const templates = [
-    { id: "modern", name: "Modern", preview: "/previews/payslip-modern.png" },
+    { id: "modern", name: "Modern", preview: "/previews/modern.png" },
     {
       id: "classic",
       name: "Classic",
-      preview: "/previews/payslip-classic.png",
+      preview: "/previews/classic.png",
     },
     {
       id: "compact",
-      name: "Compact",
-      preview: "/previews/payslip-compact.png",
+      name: "Creative",
+      preview: "/previews/creative.png",
     },
-    { id: "bold", name: "Bold", preview: "/previews/payslip-bold.png" },
+    { id: "bold", name: "Bold", preview: "/previews/bold.png" },
     {
       id: "minimal",
       name: "Minimal",
-      preview: "/previews/payslip-minimal.png",
+      preview: "/previews/minimal.png",
     },
   ];
 
@@ -618,7 +630,6 @@ export default function PayslipGeneratorPage() {
 
           {/* UPDATED: Re-ordered sections */}
           <div className="space-y-6">
-            
             {/* Styling */}
             <div>
               <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
@@ -984,9 +995,7 @@ export default function PayslipGeneratorPage() {
               )}
               {watermark && (
                 <div className="absolute inset-0 flex items-center justify-center z-0">
-                  <span
-                    className="text-[6vw] sm:text-[6em] font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10"
-                  >
+                  <span className="text-[6vw] sm:text-[6em] font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10">
                     {watermark}
                   </span>
                 </div>
@@ -1027,64 +1036,141 @@ export default function PayslipGeneratorPage() {
 
 // --- Template 1: Modern Payslip ---
 function TemplatePayslipModern({
-  companyName, setCompanyName, companyAddress, setCompanyAddress, logo,
-  employeeName, setEmployeeName, employeeId, setEmployeeId, employeePosition, setEmployeePosition,
-  payPeriodStart, setPayPeriodStart, payPeriodEnd, setPayPeriodEnd, payDate, setPayDate,
-  earnings, handleEarningChange, addEarning, removeEarning,
-  deductions, handleDeductionChange, addDeduction, removeDeduction,
-  grossEarnings, totalDeductions, netPay, formatCurrency
+  companyName,
+  setCompanyName,
+  companyAddress,
+  setCompanyAddress,
+  logo,
+  employeeName,
+  setEmployeeName,
+  employeeId,
+  setEmployeeId,
+  employeePosition,
+  setEmployeePosition,
+  payPeriodStart,
+  setPayPeriodStart,
+  payPeriodEnd,
+  setPayPeriodEnd,
+  payDate,
+  setPayDate,
+  earnings,
+  handleEarningChange,
+  addEarning,
+  removeEarning,
+  deductions,
+  handleDeductionChange,
+  addDeduction,
+  removeDeduction,
+  grossEarnings,
+  totalDeductions,
+  netPay,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative">
       <div className="relative z-10">
-        <header className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2" style={{ borderColor: "var(--accent-color)" }}>
+        <header
+          className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2"
+          style={{ borderColor: "var(--accent-color)" }}
+        >
           <div className="w-full sm:w-1/2 mb-6 sm:mb-0">
-            {logo ? (<img src={logo} alt="Logo" className="max-h-24 max-w-48 object-contain"/>) : (
-              <h1 className="font-bold" style={{ fontSize: "2em", color: "var(--accent-color)" }}>
-                <EditableField value={companyName} onChange={setCompanyName} placeholder="Company Name" />
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain"
+              />
+            ) : (
+              <h1
+                className="font-bold"
+                style={{ fontSize: "2em", color: "var(--accent-color)" }}
+              >
+                <EditableField
+                  value={companyName}
+                  onChange={setCompanyName}
+                  placeholder="Company Name"
+                />
               </h1>
             )}
             <div className="mt-2 text-[0.9em] whitespace-pre-wrap opacity-70">
-              <EditableField value={companyAddress} onChange={setCompanyAddress} area={true} placeholder="Company Address" />
+              <EditableField
+                value={companyAddress}
+                onChange={setCompanyAddress}
+                area={true}
+                placeholder="Company Address"
+              />
             </div>
           </div>
           <div className="w-full sm:w-1/2 text-left sm:text-right">
-            <h2 className="font-bold uppercase" style={{ fontSize: "2.2em" }}>Payslip</h2>
+            <h2 className="font-bold uppercase" style={{ fontSize: "2.2em" }}>
+              Payslip
+            </h2>
             <div className="mt-2 text-[0.9em] opacity-70">
               <span className="font-semibold">Pay Date: </span>
-              <EditableField type="date" value={payDate} onChange={setPayDate} placeholder="Pay Date" />
+              <EditableField
+                type="date"
+                value={payDate}
+                onChange={setPayDate}
+                placeholder="Pay Date"
+              />
             </div>
           </div>
         </header>
 
         <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-[0.9em]">
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Employee Details</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Employee Details
+            </h3>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="font-semibold">Name:</span>
-                <EditableField value={employeeName} onChange={setEmployeeName} placeholder="Employee Name" />
+                <EditableField
+                  value={employeeName}
+                  onChange={setEmployeeName}
+                  placeholder="Employee Name"
+                />
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold">Employee ID:</span>
-                <EditableField value={employeeId} onChange={setEmployeeId} placeholder="EMP-001" />
+                <EditableField
+                  value={employeeId}
+                  onChange={setEmployeeId}
+                  placeholder="EMP-001"
+                />
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold">Position:</span>
-                <EditableField value={employeePosition} onChange={setEmployeePosition} placeholder="Job Title" />
+                <EditableField
+                  value={employeePosition}
+                  onChange={setEmployeePosition}
+                  placeholder="Job Title"
+                />
               </div>
             </div>
           </div>
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Pay Period</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Pay Period
+            </h3>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="font-semibold">Period Start:</span>
-                <EditableField type="date" value={payPeriodStart} onChange={setPayPeriodStart} placeholder="Start Date" />
+                <EditableField
+                  type="date"
+                  value={payPeriodStart}
+                  onChange={setPayPeriodStart}
+                  placeholder="Start Date"
+                />
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold">Period End:</span>
-                <EditableField type="date" value={payPeriodEnd} onChange={setPayPeriodEnd} placeholder="End Date" />
+                <EditableField
+                  type="date"
+                  value={payPeriodEnd}
+                  onChange={setPayPeriodEnd}
+                  placeholder="End Date"
+                />
               </div>
             </div>
           </div>
@@ -1092,43 +1178,125 @@ function TemplatePayslipModern({
 
         <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-[1.2em] font-semibold pb-2 border-b-2" style={{ borderColor: "var(--accent-color)" }}>Earnings</h3>
+            <h3
+              className="text-[1.2em] font-semibold pb-2 border-b-2"
+              style={{ borderColor: "var(--accent-color)" }}
+            >
+              Earnings
+            </h3>
             <div className="mt-2 space-y-2">
               {earnings.map((item, index) => (
                 <div key={item.id} className="flex items-center gap-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleEarningChange(index, "name", v)} placeholder="Earning Name" /></div>
-                  <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleEarningChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeEarning(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleEarningChange(index, "name", v)}
+                      placeholder="Earning Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) => handleEarningChange(index, "amount", v)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeEarning(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addEarning} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Earning</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addEarning}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Earning
+            </button>
             <div className="mt-4 pt-2 border-t border-slate-300 flex justify-between font-semibold text-[1.1em]">
-              <span>Gross Earnings:</span><span>{formatCurrency(grossEarnings)}</span>
+              <span>Gross Earnings:</span>
+              <span>{formatCurrency(grossEarnings)}</span>
             </div>
           </div>
           <div>
-            <h3 className="text-[1.2em] font-semibold pb-2 border-b-2" style={{ borderColor: "var(--accent-color)" }}>Deductions</h3>
+            <h3
+              className="text-[1.2em] font-semibold pb-2 border-b-2"
+              style={{ borderColor: "var(--accent-color)" }}
+            >
+              Deductions
+            </h3>
             <div className="mt-2 space-y-2">
               {deductions.map((item, index) => (
                 <div key={item.id} className="flex items-center gap-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleDeductionChange(index, "name", v)} placeholder="Deduction Name" /></div>
-                  <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleDeductionChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeDeduction(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleDeductionChange(index, "name", v)}
+                      placeholder="Deduction Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) =>
+                        handleDeductionChange(index, "amount", v)
+                      }
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeDeduction(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addDeduction} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Deduction</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addDeduction}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Deduction
+            </button>
             <div className="mt-4 pt-2 border-t border-slate-300 flex justify-between font-semibold text-[1.1em]">
-              <span>Total Deductions:</span><span>{formatCurrency(totalDeductions)}</span>
+              <span>Total Deductions:</span>
+              <span>{formatCurrency(totalDeductions)}</span>
             </div>
           </div>
         </section>
 
-        <section className="mt-10 pt-6" style={{ borderTop: "2px solid var(--accent-color)" }}>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 rounded-lg" style={{ backgroundColor: "var(--accent-color)" }}>
-            <h2 className="text-white font-bold mb-2 sm:mb-0" style={{ fontSize: "1.8em" }}>Net Pay</h2>
-            <span className="text-white font-bold" style={{ fontSize: "1.8em" }}>{formatCurrency(netPay)}</span>
+        <section
+          className="mt-10 pt-6"
+          style={{ borderTop: "2px solid var(--accent-color)" }}
+        >
+          <div
+            className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 rounded-lg"
+            style={{ backgroundColor: "var(--accent-color)" }}
+          >
+            <h2
+              className="text-white font-bold mb-2 sm:mb-0"
+              style={{ fontSize: "1.8em" }}
+            >
+              Net Pay
+            </h2>
+            <span
+              className="text-white font-bold"
+              style={{ fontSize: "1.8em" }}
+            >
+              {formatCurrency(netPay)}
+            </span>
           </div>
         </section>
       </div>
@@ -1138,93 +1306,238 @@ function TemplatePayslipModern({
 
 // --- Template 2: Classic Payslip ---
 function TemplatePayslipClassic({
-  companyName, setCompanyName, companyAddress, setCompanyAddress, logo,
-  employeeName, setEmployeeName, employeeId, setEmployeeId, employeePosition, setEmployeePosition,
-  payPeriodStart, setPayPeriodStart, payPeriodEnd, setPayPeriodEnd, payDate, setPayDate,
-  earnings, handleEarningChange, addEarning, removeEarning,
-  deductions, handleDeductionChange, addDeduction, removeDeduction,
-  grossEarnings, totalDeductions, netPay, formatCurrency
+  companyName,
+  setCompanyName,
+  companyAddress,
+  setCompanyAddress,
+  logo,
+  employeeName,
+  setEmployeeName,
+  employeeId,
+  setEmployeeId,
+  employeePosition,
+  setEmployeePosition,
+  payPeriodStart,
+  setPayPeriodStart,
+  payPeriodEnd,
+  setPayPeriodEnd,
+  payDate,
+  setPayDate,
+  earnings,
+  handleEarningChange,
+  addEarning,
+  removeEarning,
+  deductions,
+  handleDeductionChange,
+  addDeduction,
+  removeDeduction,
+  grossEarnings,
+  totalDeductions,
+  netPay,
+  formatCurrency,
 }) {
   return (
     <div className="relative border-2 border-black h-full">
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <header className="text-center pb-6 border-b-2 border-black">
-          {logo && (<img src={logo} alt="Logo" className="max-h-20 object-contain mx-auto mb-4"/>)}
+          {logo && (
+            <img
+              src={logo}
+              alt="Logo"
+              className="max-h-20 object-contain mx-auto mb-4"
+            />
+          )}
           <h1 className="font-bold" style={{ fontSize: "2em" }}>
-            <EditableField value={companyName} onChange={setCompanyName} placeholder="Company Name" />
+            <EditableField
+              value={companyName}
+              onChange={setCompanyName}
+              placeholder="Company Name"
+            />
           </h1>
           <div className="mt-1 text-[0.9em] whitespace-pre-wrap opacity-70">
-            <EditableField value={companyAddress} onChange={setCompanyAddress} area={true} placeholder="Company Address" />
+            <EditableField
+              value={companyAddress}
+              onChange={setCompanyAddress}
+              area={true}
+              placeholder="Company Address"
+            />
           </div>
-          <h2 className="font-semibold uppercase mt-4" style={{ fontSize: "1.5em" }}>Pay Statement</h2>
+          <h2
+            className="font-semibold uppercase mt-4"
+            style={{ fontSize: "1.5em" }}
+          >
+            Pay Statement
+          </h2>
         </header>
 
         <section className="mt-6 pb-6 border-b border-black text-[0.9em]">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <span className="font-semibold block opacity-70">Employee</span>
-              <EditableField value={employeeName} onChange={setEmployeeName} placeholder="Employee Name" />
+              <EditableField
+                value={employeeName}
+                onChange={setEmployeeName}
+                placeholder="Employee Name"
+              />
             </div>
             <div>
-              <span className="font-semibold block opacity-70">Employee ID</span>
-              <EditableField value={employeeId} onChange={setEmployeeId} placeholder="EMP-001" />
+              <span className="font-semibold block opacity-70">
+                Employee ID
+              </span>
+              <EditableField
+                value={employeeId}
+                onChange={setEmployeeId}
+                placeholder="EMP-001"
+              />
             </div>
             <div>
               <span className="font-semibold block opacity-70">Position</span>
-              <EditableField value={employeePosition} onChange={setEmployeePosition} placeholder="Job Title" />
+              <EditableField
+                value={employeePosition}
+                onChange={setEmployeePosition}
+                placeholder="Job Title"
+              />
             </div>
             <div className="mt-2 sm:mt-0">
-              <span className="font-semibold block opacity-70">Pay Period Start</span>
-              <EditableField type="date" value={payPeriodStart} onChange={setPayPeriodStart} placeholder="Start Date" />
+              <span className="font-semibold block opacity-70">
+                Pay Period Start
+              </span>
+              <EditableField
+                type="date"
+                value={payPeriodStart}
+                onChange={setPayPeriodStart}
+                placeholder="Start Date"
+              />
             </div>
             <div className="mt-2 sm:mt-0">
-              <span className="font-semibold block opacity-70">Pay Period End</span>
-              <EditableField type="date" value={payPeriodEnd} onChange={setPayPeriodEnd} placeholder="End Date" />
+              <span className="font-semibold block opacity-70">
+                Pay Period End
+              </span>
+              <EditableField
+                type="date"
+                value={payPeriodEnd}
+                onChange={setPayPeriodEnd}
+                placeholder="End Date"
+              />
             </div>
             <div className="mt-2 sm:mt-0">
               <span className="font-semibold block opacity-70">Pay Date</span>
-              <EditableField type="date" value={payDate} onChange={setPayDate} placeholder="Pay Date" />
+              <EditableField
+                type="date"
+                value={payDate}
+                onChange={setPayDate}
+                placeholder="Pay Date"
+              />
             </div>
           </div>
         </section>
 
         <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Earnings</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Earnings
+            </h3>
             {earnings.map((item, index) => (
               <div key={item.id} className="flex items-center gap-2">
-                <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleEarningChange(index, "name", v)} placeholder="Earning Name" /></div>
-                <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleEarningChange(index, "amount", v)} placeholder="0.00" /></div>
-                <button data-html2canvas-ignore="true" onClick={() => removeEarning(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div className="flex-1">
+                  <EditableField
+                    value={item.name}
+                    onChange={(v) => handleEarningChange(index, "name", v)}
+                    placeholder="Earning Name"
+                  />
+                </div>
+                <div className="w-28 text-right">
+                  <EditableField
+                    type="number"
+                    value={item.amount}
+                    onChange={(v) => handleEarningChange(index, "amount", v)}
+                    placeholder="0.00"
+                  />
+                </div>
+                <button
+                  data-html2canvas-ignore="true"
+                  onClick={() => removeEarning(item.id)}
+                  className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                >
+                  <RiDeleteBinLine />
+                </button>
               </div>
             ))}
-            <button data-html2canvas-ignore="true" onClick={addEarning} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Earning</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addEarning}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Earning
+            </button>
           </div>
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Deductions</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Deductions
+            </h3>
             {deductions.map((item, index) => (
               <div key={item.id} className="flex items-center gap-2">
-                <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleDeductionChange(index, "name", v)} placeholder="Deduction Name" /></div>
-                <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleDeductionChange(index, "amount", v)} placeholder="0.00" /></div>
-                <button data-html2canvas-ignore="true" onClick={() => removeDeduction(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div className="flex-1">
+                  <EditableField
+                    value={item.name}
+                    onChange={(v) => handleDeductionChange(index, "name", v)}
+                    placeholder="Deduction Name"
+                  />
+                </div>
+                <div className="w-28 text-right">
+                  <EditableField
+                    type="number"
+                    value={item.amount}
+                    onChange={(v) => handleDeductionChange(index, "amount", v)}
+                    placeholder="0.00"
+                  />
+                </div>
+                <button
+                  data-html2canvas-ignore="true"
+                  onClick={() => removeDeduction(item.id)}
+                  className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                >
+                  <RiDeleteBinLine />
+                </button>
               </div>
             ))}
-            <button data-html2canvas-ignore="true" onClick={addDeduction} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Deduction</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addDeduction}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Deduction
+            </button>
           </div>
         </section>
-        
+
         <section className="mt-6 pt-6 border-t-2 border-black">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[1.1em]">
             <div className="p-4 bg-slate-100 rounded">
-              <span className="font-semibold block opacity-70">Gross Earnings</span>
-              <span className="font-bold text-slate-800">{formatCurrency(grossEarnings)}</span>
+              <span className="font-semibold block opacity-70">
+                Gross Earnings
+              </span>
+              <span className="font-bold text-slate-800">
+                {formatCurrency(grossEarnings)}
+              </span>
             </div>
-             <div className="p-4 bg-slate-100 rounded">
-              <span className="font-semibold block opacity-70">Total Deductions</span>
-              <span className="font-bold text-slate-800">{formatCurrency(totalDeductions)}</span>
+            <div className="p-4 bg-slate-100 rounded">
+              <span className="font-semibold block opacity-70">
+                Total Deductions
+              </span>
+              <span className="font-bold text-slate-800">
+                {formatCurrency(totalDeductions)}
+              </span>
             </div>
-             <div className="p-4 rounded text-white" style={{ backgroundColor: "var(--accent-color)" }}>
-              <span className="font-semibold block opacity-70 text-white/80">Net Pay</span>
+            <div
+              className="p-4 rounded text-white"
+              style={{ backgroundColor: "var(--accent-color)" }}
+            >
+              <span className="font-semibold block opacity-70 text-white/80">
+                Net Pay
+              </span>
               <span className="font-bold">{formatCurrency(netPay)}</span>
             </div>
           </div>
@@ -1234,15 +1547,34 @@ function TemplatePayslipClassic({
   );
 }
 
-
 // --- Template 3: Compact Payslip ---
 function TemplatePayslipCompact({
-  companyName, setCompanyName,
-  employeeName, setEmployeeName, employeeId, setEmployeeId, employeePosition, setEmployeePosition,
-  payPeriodStart, setPayPeriodStart, payPeriodEnd, setPayPeriodEnd, payDate, setPayDate,
-  earnings, handleEarningChange, addEarning, removeEarning,
-  deductions, handleDeductionChange, addDeduction, removeDeduction,
-  grossEarnings, totalDeductions, netPay, formatCurrency
+  companyName,
+  setCompanyName,
+  employeeName,
+  setEmployeeName,
+  employeeId,
+  setEmployeeId,
+  employeePosition,
+  setEmployeePosition,
+  payPeriodStart,
+  setPayPeriodStart,
+  payPeriodEnd,
+  setPayPeriodEnd,
+  payDate,
+  setPayDate,
+  earnings,
+  handleEarningChange,
+  addEarning,
+  removeEarning,
+  deductions,
+  handleDeductionChange,
+  addDeduction,
+  removeDeduction,
+  grossEarnings,
+  totalDeductions,
+  netPay,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative">
@@ -1250,74 +1582,170 @@ function TemplatePayslipCompact({
         <header className="flex flex-col sm:flex-row justify-between items-start pb-6">
           <div className="mb-4 sm:mb-0">
             <h1 className="font-bold" style={{ fontSize: "1.8em" }}>
-              <EditableField value={companyName} onChange={setCompanyName} placeholder="Company Name" />
+              <EditableField
+                value={companyName}
+                onChange={setCompanyName}
+                placeholder="Company Name"
+              />
             </h1>
             <div className="mt-1 text-[0.9em] opacity-70">
-              <EditableField value={employeeName} onChange={setEmployeeName} placeholder="Employee Name" />
+              <EditableField
+                value={employeeName}
+                onChange={setEmployeeName}
+                placeholder="Employee Name"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right">
-            <h2 className="font-bold uppercase" style={{ fontSize: "1.8em" }}>Pay Summary</h2>
+            <h2 className="font-bold uppercase" style={{ fontSize: "1.8em" }}>
+              Pay Summary
+            </h2>
             <div className="mt-1 text-[0.9em] opacity-70">
-              <EditableField type="date" value={payDate} onChange={setPayDate} placeholder="Pay Date" />
+              <EditableField
+                type="date"
+                value={payDate}
+                onChange={setPayDate}
+                placeholder="Pay Date"
+              />
             </div>
           </div>
         </header>
 
-        <section className="mt-6 p-6 rounded-lg" style={{ backgroundColor: "var(--accent-color)", color: "white" }}>
+        <section
+          className="mt-6 p-6 rounded-lg"
+          style={{ backgroundColor: "var(--accent-color)", color: "white" }}
+        >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <span className="font-semibold mb-1 sm:mb-0" style={{ fontSize: "1.5em" }}>Net Pay</span>
-            <span className="font-bold" style={{ fontSize: "2.5em" }}>{formatCurrency(netPay)}</span>
+            <span
+              className="font-semibold mb-1 sm:mb-0"
+              style={{ fontSize: "1.5em" }}
+            >
+              Net Pay
+            </span>
+            <span className="font-bold" style={{ fontSize: "2.5em" }}>
+              {formatCurrency(netPay)}
+            </span>
           </div>
         </section>
 
         <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Earnings</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Earnings
+            </h3>
             {earnings.map((item, index) => (
               <div key={item.id} className="flex items-center gap-2">
-                <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleEarningChange(index, "name", v)} placeholder="Earning Name" /></div>
-                <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleEarningChange(index, "amount", v)} placeholder="0.00" /></div>
-                <button data-html2canvas-ignore="true" onClick={() => removeEarning(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div className="flex-1">
+                  <EditableField
+                    value={item.name}
+                    onChange={(v) => handleEarningChange(index, "name", v)}
+                    placeholder="Earning Name"
+                  />
+                </div>
+                <div className="w-28 text-right">
+                  <EditableField
+                    type="number"
+                    value={item.amount}
+                    onChange={(v) => handleEarningChange(index, "amount", v)}
+                    placeholder="0.00"
+                  />
+                </div>
+                <button
+                  data-html2canvas-ignore="true"
+                  onClick={() => removeEarning(item.id)}
+                  className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                >
+                  <RiDeleteBinLine />
+                </button>
               </div>
             ))}
-            <button data-html2canvas-ignore="true" onClick={addEarning} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addEarning}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add
+            </button>
             <div className="mt-4 pt-2 border-t border-slate-300 flex justify-between font-semibold text-[1.1em]">
               <span>Gross:</span>
               <span>{formatCurrency(grossEarnings)}</span>
             </div>
           </div>
           <div>
-            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Deductions</h3>
+            <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+              Deductions
+            </h3>
             {deductions.map((item, index) => (
               <div key={item.id} className="flex items-center gap-2">
-                <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleDeductionChange(index, "name", v)} placeholder="Deduction Name" /></div>
-                <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleDeductionChange(index, "amount", v)} placeholder="0.00" /></div>
-                <button data-html2canvas-ignore="true" onClick={() => removeDeduction(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div className="flex-1">
+                  <EditableField
+                    value={item.name}
+                    onChange={(v) => handleDeductionChange(index, "name", v)}
+                    placeholder="Deduction Name"
+                  />
+                </div>
+                <div className="w-28 text-right">
+                  <EditableField
+                    type="number"
+                    value={item.amount}
+                    onChange={(v) => handleDeductionChange(index, "amount", v)}
+                    placeholder="0.00"
+                  />
+                </div>
+                <button
+                  data-html2canvas-ignore="true"
+                  onClick={() => removeDeduction(item.id)}
+                  className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                >
+                  <RiDeleteBinLine />
+                </button>
               </div>
             ))}
-            <button data-html2canvas-ignore="true" onClick={addDeduction} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add</button>
-             <div className="mt-4 pt-2 border-t border-slate-300 flex justify-between font-semibold text-[1.1em]">
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addDeduction}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add
+            </button>
+            <div className="mt-4 pt-2 border-t border-slate-300 flex justify-between font-semibold text-[1.1em]">
               <span>Total:</span>
               <span>{formatCurrency(totalDeductions)}</span>
             </div>
           </div>
         </section>
-        
+
         <section className="mt-6 pt-6 border-t border-slate-200 text-[0.9em]">
-          <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">Details</h3>
+          <h3 className="text-[1.1em] font-semibold uppercase opacity-70 mb-2">
+            Details
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 opacity-70">
             <div>
               <span className="font-semibold block">Position</span>
-              <EditableField value={employeePosition} onChange={setEmployeePosition} placeholder="Job Title" />
+              <EditableField
+                value={employeePosition}
+                onChange={setEmployeePosition}
+                placeholder="Job Title"
+              />
             </div>
             <div>
               <span className="font-semibold block">Employee ID</span>
-              <EditableField value={employeeId} onChange={setEmployeeId} placeholder="EMP-001" />
+              <EditableField
+                value={employeeId}
+                onChange={setEmployeeId}
+                placeholder="EMP-001"
+              />
             </div>
             <div>
               <span className="font-semibold block">Pay Period</span>
-              <EditableField type="date" value={payPeriodStart} onChange={setPayPeriodStart} placeholder="Start" />
+              <EditableField
+                type="date"
+                value={payPeriodStart}
+                onChange={setPayPeriodStart}
+                placeholder="Start"
+              />
             </div>
           </div>
         </section>
@@ -1328,38 +1756,75 @@ function TemplatePayslipCompact({
 
 // --- Template 4: Bold Payslip ---
 function TemplatePayslipBold({
-  companyName, setCompanyName,
-  employeeName, setEmployeeName,
-  payDate, setPayDate,
-  earnings, handleEarningChange, addEarning, removeEarning,
-  deductions, handleDeductionChange, addDeduction, removeDeduction,
-  grossEarnings, totalDeductions, netPay, formatCurrency
+  companyName,
+  setCompanyName,
+  employeeName,
+  setEmployeeName,
+  payDate,
+  setPayDate,
+  earnings,
+  handleEarningChange,
+  addEarning,
+  removeEarning,
+  deductions,
+  handleDeductionChange,
+  addDeduction,
+  removeDeduction,
+  grossEarnings,
+  totalDeductions,
+  netPay,
+  formatCurrency,
 }) {
   return (
     <div className="relative">
-      <header className="p-8 sm:p-10 md:p-12" style={{ backgroundColor: "var(--accent-color)", color: "white" }}>
+      <header
+        className="p-8 sm:p-10 md:p-12"
+        style={{ backgroundColor: "var(--accent-color)", color: "white" }}
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start">
           <div className="mb-4 sm:mb-0">
             <h1 className="font-bold" style={{ fontSize: "2.5em" }}>
-              <EditableField value={companyName} onChange={setCompanyName} placeholder="Company Name" />
+              <EditableField
+                value={companyName}
+                onChange={setCompanyName}
+                placeholder="Company Name"
+              />
             </h1>
-            <h2 className="font-semibold uppercase" style={{ fontSize: "1.5em", opacity: 0.8 }}>Pay Statement</h2>
+            <h2
+              className="font-semibold uppercase"
+              style={{ fontSize: "1.5em", opacity: 0.8 }}
+            >
+              Pay Statement
+            </h2>
           </div>
         </div>
       </header>
-      
+
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-[1.1em] font-bold uppercase opacity-70 mb-2">Employee</h3>
+            <h3 className="text-[1.1em] font-bold uppercase opacity-70 mb-2">
+              Employee
+            </h3>
             <div className="text-[1.2em] font-semibold">
-              <EditableField value={employeeName} onChange={setEmployeeName} placeholder="Employee Name" />
+              <EditableField
+                value={employeeName}
+                onChange={setEmployeeName}
+                placeholder="Employee Name"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right">
-            <h3 className="text-[1.1em] font-bold uppercase opacity-70 mb-2">Pay Date</h3>
+            <h3 className="text-[1.1em] font-bold uppercase opacity-70 mb-2">
+              Pay Date
+            </h3>
             <div className="text-[1.2em] font-semibold">
-              <EditableField type="date" value={payDate} onChange={setPayDate} placeholder="Pay Date" />
+              <EditableField
+                type="date"
+                value={payDate}
+                onChange={setPayDate}
+                placeholder="Pay Date"
+              />
             </div>
           </div>
         </section>
@@ -1370,41 +1835,111 @@ function TemplatePayslipBold({
             <div className="mt-2 space-y-2">
               {earnings.map((item, index) => (
                 <div key={item.id} className="flex items-center gap-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleEarningChange(index, "name", v)} placeholder="Earning Name" /></div>
-                  <div className="w-28 text-right font-medium"><EditableField type="number" value={item.amount} onChange={(v) => handleEarningChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeEarning(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleEarningChange(index, "name", v)}
+                      placeholder="Earning Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right font-medium">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) => handleEarningChange(index, "amount", v)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeEarning(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addEarning} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Earning</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addEarning}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Earning
+            </button>
           </div>
           <div>
             <h3 className="text-[1.2em] font-bold pb-2">Deductions</h3>
             <div className="mt-2 space-y-2">
               {deductions.map((item, index) => (
                 <div key={item.id} className="flex items-center gap-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleDeductionChange(index, "name", v)} placeholder="Deduction Name" /></div>
-                  <div className="w-28 text-right font-medium"><EditableField type="number" value={item.amount} onChange={(v) => handleDeductionChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeDeduction(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleDeductionChange(index, "name", v)}
+                      placeholder="Deduction Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right font-medium">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) =>
+                        handleDeductionChange(index, "amount", v)
+                      }
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeDeduction(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addDeduction} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Deduction</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addDeduction}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Deduction
+            </button>
           </div>
         </section>
 
         <section className="mt-10 pt-6 border-t-4 border-double border-black">
           <div className="flex justify-between items-center mb-2">
             <span className="text-[1.1em] font-semibold">Gross Earnings:</span>
-            <span className="text-[1.1em] font-semibold">{formatCurrency(grossEarnings)}</span>
+            <span className="text-[1.1em] font-semibold">
+              {formatCurrency(grossEarnings)}
+            </span>
           </div>
           <div className="flex justify-between items-center mb-4">
-            <span className="text-[1.1em] font-semibold">Total Deductions:</span>
-            <span className="text-[1.1em] font-semibold">{formatCurrency(totalDeductions)}</span>
+            <span className="text-[1.1em] font-semibold">
+              Total Deductions:
+            </span>
+            <span className="text-[1.1em] font-semibold">
+              {formatCurrency(totalDeductions)}
+            </span>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border-2 border-black rounded-lg">
-            <h2 className="font-bold mb-2 sm:mb-0" style={{ fontSize: "1.8em" }}>NET PAY</h2>
-            <span className="font-bold" style={{ fontSize: "2.2em", color: "var(--accent-color)" }}>{formatCurrency(netPay)}</span>
+            <h2
+              className="font-bold mb-2 sm:mb-0"
+              style={{ fontSize: "1.8em" }}
+            >
+              NET PAY
+            </h2>
+            <span
+              className="font-bold"
+              style={{ fontSize: "2.2em", color: "var(--accent-color)" }}
+            >
+              {formatCurrency(netPay)}
+            </span>
           </div>
         </section>
       </div>
@@ -1414,75 +1949,188 @@ function TemplatePayslipBold({
 
 // --- Template 5: Minimal Payslip ---
 function TemplatePayslipMinimal({
-  companyName, setCompanyName,
-  employeeName, setEmployeeName, payDate, setPayDate,
-  earnings, handleEarningChange, addEarning, removeEarning,
-  deductions, handleDeductionChange, addDeduction, removeDeduction,
-  grossEarnings, totalDeductions, netPay, formatCurrency
+  companyName,
+  setCompanyName,
+  employeeName,
+  setEmployeeName,
+  payDate,
+  setPayDate,
+  earnings,
+  handleEarningChange,
+  addEarning,
+  removeEarning,
+  deductions,
+  handleDeductionChange,
+  addDeduction,
+  removeDeduction,
+  grossEarnings,
+  totalDeductions,
+  netPay,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative">
       <div className="relative z-10">
         <header className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b border-slate-300">
-          <h1 className="font-semibold mb-4 sm:mb-0" style={{ fontSize: "1.5em" }}>
-            <EditableField value={companyName} onChange={setCompanyName} placeholder="Company Name" />
+          <h1
+            className="font-semibold mb-4 sm:mb-0"
+            style={{ fontSize: "1.5em" }}
+          >
+            <EditableField
+              value={companyName}
+              onChange={setCompanyName}
+              placeholder="Company Name"
+            />
           </h1>
-          <h2 className="font-semibold uppercase opacity-70" style={{ fontSize: "1.2em" }}>Payslip</h2>
+          <h2
+            className="font-semibold uppercase opacity-70"
+            style={{ fontSize: "1.2em" }}
+          >
+            Payslip
+          </h2>
         </header>
 
         <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 text-[0.9em] opacity-80">
           <div>
-            <span className="text-[0.9em] font-medium uppercase opacity-60 block">Employee</span>
-            <EditableField value={employeeName} onChange={setEmployeeName} placeholder="Employee Name" />
+            <span className="text-[0.9em] font-medium uppercase opacity-60 block">
+              Employee
+            </span>
+            <EditableField
+              value={employeeName}
+              onChange={setEmployeeName}
+              placeholder="Employee Name"
+            />
           </div>
           <div>
-            <span className="text-[0.9em] font-medium uppercase opacity-60 block">Pay Date</span>
-            <EditableField type="date" value={payDate} onChange={setPayDate} placeholder="Pay Date" />
+            <span className="text-[0.9em] font-medium uppercase opacity-60 block">
+              Pay Date
+            </span>
+            <EditableField
+              type="date"
+              value={payDate}
+              onChange={setPayDate}
+              placeholder="Pay Date"
+            />
           </div>
         </section>
 
         <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
-            <h3 className="text-[1em] font-medium uppercase opacity-60 mb-3">Earnings</h3>
+            <h3 className="text-[1em] font-medium uppercase opacity-60 mb-3">
+              Earnings
+            </h3>
             <div className="mt-2 space-y-2">
               {earnings.map((item, index) => (
-                <div key={item.id} className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleEarningChange(index, "name", v)} placeholder="Earning Name" /></div>
-                  <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleEarningChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeEarning(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 border-b border-slate-200 pb-2"
+                >
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleEarningChange(index, "name", v)}
+                      placeholder="Earning Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) => handleEarningChange(index, "amount", v)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeEarning(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addEarning} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Earning</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addEarning}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Earning
+            </button>
           </div>
           <div>
-            <h3 className="text-[1em] font-medium uppercase opacity-60 mb-3">Deductions</h3>
+            <h3 className="text-[1em] font-medium uppercase opacity-60 mb-3">
+              Deductions
+            </h3>
             <div className="mt-2 space-y-2">
               {deductions.map((item, index) => (
-                <div key={item.id} className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <div className="flex-1"><EditableField value={item.name} onChange={(v) => handleDeductionChange(index, "name", v)} placeholder="Deduction Name" /></div>
-                  <div className="w-28 text-right"><EditableField type="number" value={item.amount} onChange={(v) => handleDeductionChange(index, "amount", v)} placeholder="0.00" /></div>
-                  <button data-html2canvas-ignore="true" onClick={() => removeDeduction(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"><RiDeleteBinLine /></button>
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 border-b border-slate-200 pb-2"
+                >
+                  <div className="flex-1">
+                    <EditableField
+                      value={item.name}
+                      onChange={(v) => handleDeductionChange(index, "name", v)}
+                      placeholder="Deduction Name"
+                    />
+                  </div>
+                  <div className="w-28 text-right">
+                    <EditableField
+                      type="number"
+                      value={item.amount}
+                      onChange={(v) =>
+                        handleDeductionChange(index, "amount", v)
+                      }
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <button
+                    data-html2canvas-ignore="true"
+                    onClick={() => removeDeduction(item.id)}
+                    className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
                 </div>
               ))}
             </div>
-            <button data-html2canvas-ignore="true" onClick={addDeduction} className="mt-2 flex items-center gap-1 text-[0.9em] font-medium" style={{ color: "var(--accent-color)" }}><RiAddLine /> Add Deduction</button>
+            <button
+              data-html2canvas-ignore="true"
+              onClick={addDeduction}
+              className="mt-2 flex items-center gap-1 text-[0.9em] font-medium"
+              style={{ color: "var(--accent-color)" }}
+            >
+              <RiAddLine /> Add Deduction
+            </button>
           </div>
         </section>
-        
+
         <section className="mt-10 pt-6 border-t border-slate-300">
           <div className="w-full max-w-sm ml-auto space-y-2">
             <div className="flex justify-between items-center text-[1.1em]">
               <span className="font-medium opacity-70">Gross Earnings:</span>
-              <span className="font-medium">{formatCurrency(grossEarnings)}</span>
+              <span className="font-medium">
+                {formatCurrency(grossEarnings)}
+              </span>
             </div>
             <div className="flex justify-between items-center text-[1.1em]">
               <span className="font-medium opacity-70">Total Deductions:</span>
-              <span className="font-medium">{formatCurrency(totalDeductions)}</span>
+              <span className="font-medium">
+                {formatCurrency(totalDeductions)}
+              </span>
             </div>
             <div className="flex justify-between items-center pt-2 border-t border-slate-300">
-              <span className="font-semibold" style={{ fontSize: "1.2em" }}>Net Pay:</span>
-              <span className="font-bold" style={{ fontSize: "1.5em", color: "var(--accent-color)" }}>{formatCurrency(netPay)}</span>
+              <span className="font-semibold" style={{ fontSize: "1.2em" }}>
+                Net Pay:
+              </span>
+              <span
+                className="font-bold"
+                style={{ fontSize: "1.5em", color: "var(--accent-color)" }}
+              >
+                {formatCurrency(netPay)}
+              </span>
             </div>
           </div>
         </section>
@@ -1491,7 +2139,7 @@ function TemplatePayslipMinimal({
   );
 }
 
-
+// --- Template Modal Component ---
 // --- Template Modal Component ---
 function TemplateModal({
   isOpen,
@@ -1508,41 +2156,92 @@ function TemplateModal({
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex justify-between items-center">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">Choose a Template</Dialog.Title>
-                  <button onClick={onClose} className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"><RiCloseLine className="h-5 w-5" /></button>
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                  >
+                    Choose a Template
+                  </Dialog.Title>
+                  <button
+                    onClick={onClose}
+                    className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    <RiCloseLine className="h-5 w-5" />
+                  </button>
                 </div>
 
-                <RadioGroup value={selectedTemplate} onChange={handleSelect} className="mt-4">
-                  <RadioGroup.Label className="sr-only">Choose a template</RadioGroup.Label>
+                <RadioGroup
+                  value={selectedTemplate}
+                  onChange={handleSelect}
+                  className="mt-4"
+                >
+                  <RadioGroup.Label className="sr-only">
+                    Choose a template
+                  </RadioGroup.Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {templates.map((template) => (
                       <RadioGroup.Option
                         key={template.id}
                         value={template.id}
                         className={({ active, checked }) =>
-                          `relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
-                          ${checked ? "border-blue-500 ring-2 ring-blue-500" : "border-slate-200 dark:border-slate-700 hover:border-blue-300"}
+                          // UPDATED: Added 'group' for hover effect
+                          `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
+                          ${
+                            checked
+                              ? "border-blue-500 ring-2 ring-blue-500"
+                              : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                          }
                           ${active ? "ring-2 ring-offset-2 ring-blue-400" : ""}`
                         }
                       >
                         {({ checked }) => (
                           <>
                             <div className="flex w-full flex-col items-center gap-2">
-                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400">
-                                <RiImageAddLine className="h-10 w-10" />
+                              {/* UPDATED: Replaced placeholder div with Image component */}
+                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 overflow-hidden relative">
+                                <Image
+                                  src={template.preview}
+                                  alt={template.name}
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="group-hover:scale-105 transition-transform duration-300"
+                                />
                               </div>
-                              <RadioGroup.Label as="span" className="font-medium text-sm text-slate-800 dark:text-slate-200">{template.name}</RadioGroup.Label>
+                              <RadioGroup.Label
+                                as="span"
+                                className="font-medium text-sm text-slate-800 dark:text-slate-200"
+                              >
+                                {template.name}
+                              </RadioGroup.Label>
                               {checked && (
-                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white"><RiCheckLine className="h-4 w-4" /></div>
+                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                  <RiCheckLine className="h-4 w-4" />
+                                </div>
                               )}
                             </div>
                           </>
@@ -1559,25 +2258,46 @@ function TemplateModal({
     </Transition>
   );
 }
-
 // --- Limit Reached Modal Component ---
 function LimitModal({ isOpen, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
-                    <RiErrorWarningLine className="h-6 w-6 text-orange-600 dark:text-orange-400" aria-hidden="true"/>
+                    <RiErrorWarningLine
+                      className="h-6 w-6 text-orange-600 dark:text-orange-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       One-Page Limit Reached
                     </Dialog.Title>
                   </div>
@@ -1585,12 +2305,16 @@ function LimitModal({ isOpen, onClose }) {
                 <div className="mt-4">
                   <p className="text-sm text-slate-600 dark:text-slate-300">
                     This free tool is designed for single-page documents. To
-                    keep your payslip clean and printable, you cannot add
-                    any more items.
+                    keep your payslip clean and printable, you cannot add any
+                    more items.
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     Got it, thanks!
                   </button>
                 </div>
@@ -1608,19 +2332,41 @@ function NotificationModal({ isOpen, message, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                    <RiInformationLine className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true"/>
+                    <RiInformationLine
+                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       Notification
                     </Dialog.Title>
                   </div>
@@ -1631,7 +2377,11 @@ function NotificationModal({ isOpen, message, onClose }) {
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     OK
                   </button>
                 </div>

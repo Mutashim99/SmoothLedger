@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useState, useRef, Fragment, useMemo, useEffect } from "react";
+import Image from "next/image"; // NEW: Import Image component
 import {
   RiAddLine,
   RiDeleteBinLine,
@@ -151,7 +152,10 @@ export default function InvoiceGeneratorPage() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: "" });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -522,11 +526,8 @@ export default function InvoiceGeneratorPage() {
   // --- RENDER ---
   return (
     <>
-      {/* UPDATED: Main layout container */}
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-slate-100 dark:bg-slate-900">
-        
         {/* --- 1. Controls Panel (Sidebar) --- */}
-        {/* UPDATED: Added sticky positioning and fixed height for desktop scroll */}
         <aside className="w-full lg:w-80 xl:w-96 bg-white dark:bg-slate-950 p-6 border-r border-slate-200 dark:border-slate-800 space-y-8 overflow-y-auto lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
             Invoice Studio
@@ -554,9 +555,7 @@ export default function InvoiceGeneratorPage() {
             <RiEyeLine className="h-5 w-5" /> Change Template
           </button>
 
-          {/* UPDATED: Re-ordered sections */}
           <div className="space-y-6">
-            
             {/* Styling */}
             <div>
               <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
@@ -913,14 +912,13 @@ export default function InvoiceGeneratorPage() {
           className="flex-1 p-4 sm:p-8 lg:p-12 overflow-y-auto"
           style={{ fontFamily: mainStyles.fontFamily }}
         >
-          {/* UPDATED: Container no longer has fixed aspect ratio on mobile */}
           <div className="w-full max-w-4xl mx-auto">
             <div
               ref={invoicePrintRef}
               className={`bg-white shadow-2xl overflow-hidden relative ${
-                selectedTemplate === "classic" ? "" : "lg:rounded-lg" // UPDATED: Only round on lg screens for classic
+                selectedTemplate === "classic" ? "" : "lg:rounded-lg"
               } w-full ${
-                selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]" // UPDATED: A4 ratio only on lg screens
+                selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"
               }`}
               style={{
                 "--accent-color": accentColor,
@@ -993,10 +991,30 @@ export default function InvoiceGeneratorPage() {
 
 // --- Template 1: Modern ---
 function TemplateInvoiceModern({
-  from, setFrom, to, setTo, invoiceNumber, setInvoiceNumber, date, setDate,
-  dueDate, setDueDate, items, handleItemChange, removeItem, addItem,
-  notes, setNotes, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  invoiceNumber,
+  setInvoiceNumber,
+  date,
+  setDate,
+  dueDate,
+  setDueDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  notes,
+  setNotes,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
@@ -1006,36 +1024,78 @@ function TemplateInvoiceModern({
           style={{ borderColor: "var(--accent-color)" }}
         >
           <div className="w-full sm:w-1/2 mb-6 sm:mb-0">
-            {logo ? (<img src={logo} alt="Logo" className="max-h-24 max-w-48 object-contain"/>) : (
-              <div className="font-bold" style={{ fontSize: "2.2em", color: "var(--accent-color)" }}>Your Logo Here</div>
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain"
+              />
+            ) : (
+              <div
+                className="font-bold"
+                style={{ fontSize: "2.2em", color: "var(--accent-color)" }}
+              >
+                Your Logo Here
+              </div>
             )}
             <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+              <EditableField
+                value={from}
+                onChange={setFrom}
+                area={true}
+                placeholder="Your Company Info"
+              />
             </div>
           </div>
           <div className="w-full sm:w-1/2 text-left sm:text-right">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.5em", lineHeight: '1' }}>Invoice</h1>
+            <h1
+              className="font-bold uppercase"
+              style={{ fontSize: "2.5em", lineHeight: "1" }}
+            >
+              Invoice
+            </h1>
             <div className="mt-4 text-[1em] space-y-1">
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Invoice #</span>
-                <EditableField value={invoiceNumber} onChange={setInvoiceNumber} placeholder="INV-001" />
+                <EditableField
+                  value={invoiceNumber}
+                  onChange={setInvoiceNumber}
+                  placeholder="INV-001"
+                />
               </div>
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
+                <EditableField
+                  type="date"
+                  value={date}
+                  onChange={setDate}
+                  placeholder="Date"
+                />
               </div>
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Due Date:</span>
-                <EditableField type="date" value={dueDate} onChange={setDueDate} placeholder="Due Date" />
+                <EditableField
+                  type="date"
+                  value={dueDate}
+                  onChange={setDueDate}
+                  placeholder="Due Date"
+                />
               </div>
             </div>
           </div>
         </header>
 
         <section className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Bill To</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Bill To
+          </h2>
           <div className="mt-2 text-[1em] whitespace-pre-wrap">
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
         </section>
 
@@ -1043,7 +1103,10 @@ function TemplateInvoiceModern({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] text-left">
               <thead>
-                <tr className="text-[0.9em] uppercase opacity-70" style={{ borderBottom: "2px solid var(--accent-color)" }}>
+                <tr
+                  className="text-[0.9em] uppercase opacity-70"
+                  style={{ borderBottom: "2px solid var(--accent-color)" }}
+                >
                   <th className="py-3 pr-4 w-1/2">Item</th>
                   <th className="py-3 px-4 text-center">Qty</th>
                   <th className="py-3 px-4 text-right">Price</th>
@@ -1054,37 +1117,101 @@ function TemplateInvoiceModern({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
 
         <section className="mt-8 flex flex-col items-end">
           <div className="w-full max-w-xs text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 text-[1.2em]"><span className="opacity-70">Total:</span><span className="font-bold">{formatCurrency(total)}</span></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between border-t border-slate-200 pt-2 text-[1.2em]">
+              <span className="opacity-70">Total:</span>
+              <span className="font-bold">{formatCurrency(total)}</span>
+            </div>
           </div>
         </section>
 
         <section className="mt-10">
-           <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Notes</h2>
-           <div className="mt-2 text-[0.9em]">
-             <EditableField value={notes} onChange={setNotes} area={true} placeholder="Thank you for your business." />
-           </div>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Notes
+          </h2>
+          <div className="mt-2 text-[0.9em]">
+            <EditableField
+              value={notes}
+              onChange={setNotes}
+              area={true}
+              placeholder="Thank you for your business."
+            />
+          </div>
         </section>
       </div>
     </div>
@@ -1093,55 +1220,110 @@ function TemplateInvoiceModern({
 
 // --- Template 2: Bold ---
 function TemplateInvoiceBold({
-  from, setFrom, to, setTo, invoiceNumber, setInvoiceNumber, date, setDate,
-  dueDate, setDueDate, items, handleItemChange, removeItem, addItem,
-  notes, setNotes, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  invoiceNumber,
+  setInvoiceNumber,
+  date,
+  setDate,
+  dueDate,
+  setDueDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  notes,
+  setNotes,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="relative" style={{ fontSize: "1em" }}>
-      <header className="p-8 sm:p-10 md:p-12 text-white" style={{ backgroundColor: "var(--accent-color)" }}>
+      <header
+        className="p-8 sm:p-10 md:p-12 text-white"
+        style={{ backgroundColor: "var(--accent-color)" }}
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start">
           <div className="mb-6 sm:mb-0">
             {logo ? (
               <div className="bg-white/20 p-2 rounded-lg inline-block">
-                <img src={logo} alt="Logo" className="max-h-20 max-w-40 object-contain filter brightness-0 invert" />
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="max-h-20 max-w-40 object-contain filter brightness-0 invert"
+                />
               </div>
             ) : (
-              <div className="font-bold" style={{ fontSize: "2.2em" }}>Your Logo</div>
+              <div className="font-bold" style={{ fontSize: "2.2em" }}>
+                Your Logo
+              </div>
             )}
           </div>
           <div className="text-left sm:text-right">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>Invoice</h1>
+            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+              Invoice
+            </h1>
             <div className="mt-4 text-[1em]">
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Invoice #</span>
-                <EditableField value={invoiceNumber} onChange={setInvoiceNumber} placeholder="INV-001" />
+                <EditableField
+                  value={invoiceNumber}
+                  onChange={setInvoiceNumber}
+                  placeholder="INV-001"
+                />
               </div>
             </div>
           </div>
         </div>
-         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-[0.9em]">
-            <div>
-              <h2 className="font-semibold uppercase mb-2">From</h2>
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-[0.9em]">
+          <div>
+            <h2 className="font-semibold uppercase mb-2">From</h2>
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
+          </div>
+          <div>
+            <h2 className="font-semibold uppercase mb-2">To</h2>
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
+          </div>
+          <div>
+            <h2 className="font-semibold uppercase mb-2">Details</h2>
+            <div className="flex gap-2 items-center">
+              <span className="font-semibold">Date:</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
             </div>
-            <div>
-              <h2 className="font-semibold uppercase mb-2">To</h2>
-              <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <div className="flex gap-2 mt-1 items-center">
+              <span className="font-semibold">Due:</span>
+              <EditableField
+                type="date"
+                value={dueDate}
+                onChange={setDueDate}
+                placeholder="Due Date"
+              />
             </div>
-            <div>
-              <h2 className="font-semibold uppercase mb-2">Details</h2>
-              <div className="flex gap-2 items-center">
-                <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
-              </div>
-              <div className="flex gap-2 mt-1 items-center">
-                <span className="font-semibold">Due:</span>
-                <EditableField type="date" value={dueDate} onChange={setDueDate} placeholder="Due Date" />
-              </div>
-            </div>
-         </div>
+          </div>
+        </div>
       </header>
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <section>
@@ -1159,45 +1341,104 @@ function TemplateInvoiceBold({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
         <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Notes</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              Notes
+            </h2>
             <div className="mt-2 text-[0.9em]">
-              <EditableField value={notes} onChange={setNotes} area={true} placeholder="Thank you for your business." />
+              <EditableField
+                value={notes}
+                onChange={setNotes}
+                area={true}
+                placeholder="Thank you for your business."
+              />
             </div>
           </div>
           <div className="space-y-2 text-[0.9em]">
             <div className="flex justify-between p-4 bg-slate-100 rounded-lg">
               <span className="text-slate-500">Subtotal:</span>
-              <span className="font-medium text-slate-800">{formatCurrency(subtotal)}</span>
+              <span className="font-medium text-slate-800">
+                {formatCurrency(subtotal)}
+              </span>
             </div>
             <div className="flex justify-between p-4 items-center">
               <span className="opacity-70">Tax (%):</span>
-              <EditableField type="number" value={tax} onChange={setTax} placeholder="0" />
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
             </div>
-             <div className="flex justify-between p-4 items-center">
+            <div className="flex justify-between p-4 items-center">
               <span className="opacity-70">Discount (%):</span>
-              <EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" />
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
             </div>
-            <div className="flex justify-between p-4 rounded-lg text-white" style={{ backgroundColor: "var(--accent-color)" }}>
+            <div
+              className="flex justify-between p-4 rounded-lg text-white"
+              style={{ backgroundColor: "var(--accent-color)" }}
+            >
               <span className="font-bold text-[1.2em]">Total:</span>
-              <span className="font-bold text-[1.2em]">{formatCurrency(total)}</span>
+              <span className="font-bold text-[1.2em]">
+                {formatCurrency(total)}
+              </span>
             </div>
           </div>
         </section>
@@ -1208,49 +1449,106 @@ function TemplateInvoiceBold({
 
 // --- Template 3: Classic ---
 function TemplateInvoiceClassic({
-  from, setFrom, to, setTo, invoiceNumber, setInvoiceNumber, date, setDate,
-  dueDate, setDueDate, items, handleItemChange, removeItem, addItem,
-  notes, setNotes, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  invoiceNumber,
+  setInvoiceNumber,
+  date,
+  setDate,
+  dueDate,
+  setDueDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  notes,
+  setNotes,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
-    <div className="relative border-2 border-black h-full" style={{ fontSize: "1em" }}>
+    <div
+      className="relative border-2 border-black h-full"
+      style={{ fontSize: "1em" }}
+    >
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
           <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>INVOICE</h1>
+            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+              INVOICE
+            </h1>
             <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+              <EditableField
+                value={from}
+                onChange={setFrom}
+                area={true}
+                placeholder="Your Company Info"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right w-full sm:w-auto">
             {logo ? (
-              <img src={logo} alt="Logo" className="max-h-24 max-w-48 object-contain sm:ml-auto"/>
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain sm:ml-auto"
+              />
             ) : (
-              <div className="text-[1.2em] font-bold opacity-70">[Your Logo]</div>
+              <div className="text-[1.2em] font-bold opacity-70">
+                [Your Logo]
+              </div>
             )}
           </div>
         </header>
         <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">BILL TO</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              BILL TO
+            </h2>
             <div className="mt-2 text-[1em] whitespace-pre-wrap">
-              <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+              <EditableField
+                value={to}
+                onChange={setTo}
+                area={true}
+                placeholder="Client's Info"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
-             <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Invoice #:</span>
-                <EditableField value={invoiceNumber} onChange={setInvoiceNumber} placeholder="INV-001" />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Due Date:</span>
-                <EditableField type="date" value={dueDate} onChange={setDueDate} placeholder="Due Date" />
-              </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Invoice #:</span>
+              <EditableField
+                value={invoiceNumber}
+                onChange={setInvoiceNumber}
+                placeholder="INV-001"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Date:</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Due Date:</span>
+              <EditableField
+                type="date"
+                value={dueDate}
+                onChange={setDueDate}
+                placeholder="Due Date"
+              />
+            </div>
           </div>
         </section>
         <section className="mt-10">
@@ -1258,47 +1556,116 @@ function TemplateInvoiceClassic({
             <table className="w-full min-w-[600px] text-left border-collapse">
               <thead>
                 <tr className="text-[0.9em] uppercase bg-slate-100">
-                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">Item</th>
-                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">Qty</th>
-                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">Price</th>
-                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">Total</th>
+                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
+                    Item
+                  </th>
+                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Total
+                  </th>
                   <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-300">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800" data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
         <section className="mt-8 flex flex-col items-end">
           <div className="w-full max-w-xs text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
-              <span className="font-bold">Total:</span><span className="font-bold">{formatCurrency(total)}</span>
+              <span className="font-bold">Total:</span>
+              <span className="font-bold">{formatCurrency(total)}</span>
             </div>
           </div>
         </section>
         <section className="mt-10">
-           <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Notes</h2>
-           <div className="mt-2 text-[0.9em]">
-             <EditableField value={notes} onChange={setNotes} area={true} placeholder="Thank you for your business." />
-           </div>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Notes
+          </h2>
+          <div className="mt-2 text-[0.9em]">
+            <EditableField
+              value={notes}
+              onChange={setNotes}
+              area={true}
+              placeholder="Thank you for your business."
+            />
+          </div>
         </section>
       </div>
     </div>
@@ -1307,38 +1674,114 @@ function TemplateInvoiceClassic({
 
 // --- Template 4: Minimal ---
 function TemplateInvoiceMinimal({
-  from, setFrom, to, setTo, invoiceNumber, setInvoiceNumber, date, setDate,
-  dueDate, setDueDate, items, handleItemChange, removeItem, addItem,
-  notes, setNotes, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  invoiceNumber,
+  setInvoiceNumber,
+  date,
+  setDate,
+  dueDate,
+  setDueDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  notes,
+  setNotes,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
       <div className="relative z-10">
         <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
           <div className="mb-6 sm:mb-0">
-            {logo ? (<img src={logo} alt="Logo" className="max-h-16 max-w-40 object-contain"/>) : (
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-16 max-w-40 object-contain"
+              />
+            ) : (
               <div className="font-semibold" style={{ fontSize: "1.8em" }}>
-                <EditableField value={from.split("\n")[0]} onChange={(v) => setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))} placeholder="Your Company" />
+                <EditableField
+                  value={from.split("\n")[0]}
+                  onChange={(v) =>
+                    setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))
+                  }
+                  placeholder="Your Company"
+                />
               </div>
             )}
           </div>
-          <h1 className="font-bold uppercase opacity-80" style={{ fontSize: "2.5em" }}>Invoice</h1>
+          <h1
+            className="font-bold uppercase opacity-80"
+            style={{ fontSize: "2.5em" }}
+          >
+            Invoice
+          </h1>
         </header>
         <section className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-10 text-[0.9em]">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Billed To</h2>
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Billed To
+            </h2>
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">From</h2>
-            <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              From
+            </h2>
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
           </div>
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Details</h2>
-            <div className="flex justify-between"><span>Invoice #</span><EditableField value={invoiceNumber} onChange={setInvoiceNumber} placeholder="001" /></div>
-            <div className="flex justify-between mt-1"><span>Date</span><EditableField type="date" value={date} onChange={setDate} placeholder="Date" /></div>
-            <div className="flex justify-between mt-1"><span>Due Date</span><EditableField type="date" value={dueDate} onChange={setDueDate} placeholder="Due" /></div>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Details
+            </h2>
+            <div className="flex justify-between">
+              <span>Invoice #</span>
+              <EditableField
+                value={invoiceNumber}
+                onChange={setInvoiceNumber}
+                placeholder="001"
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span>Date</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span>Due Date</span>
+              <EditableField
+                type="date"
+                value={dueDate}
+                onChange={setDueDate}
+                placeholder="Due"
+              />
+            </div>
           </div>
         </section>
         <section className="mt-12">
@@ -1356,36 +1799,102 @@ function TemplateInvoiceMinimal({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
         <section className="mt-10 flex flex-col-reverse sm:flex-row justify-between items-start gap-8">
           <div className="w-full sm:w-1/2">
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Notes</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Notes
+            </h2>
             <div className="mt-2 text-[0.9em]">
-              <EditableField value={notes} onChange={setNotes} area={true} placeholder="Thank you for your business." />
+              <EditableField
+                value={notes}
+                onChange={setNotes}
+                area={true}
+                placeholder="Thank you for your business."
+              />
             </div>
           </div>
           <div className="w-full sm:w-auto sm:max-w-xs ml-auto text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between border-t border-slate-300 pt-2 mt-2 text-[1.2em]">
               <span className="font-semibold">Total:</span>
-              <span className="font-semibold" style={{ color: "var(--accent-color)" }}>{formatCurrency(total)}</span>
+              <span
+                className="font-semibold"
+                style={{ color: "var(--accent-color)" }}
+              >
+                {formatCurrency(total)}
+              </span>
             </div>
           </div>
         </section>
@@ -1396,99 +1905,232 @@ function TemplateInvoiceMinimal({
 
 // --- Template 5: Creative ---
 function TemplateInvoiceCreative({
-  from, setFrom, to, setTo, invoiceNumber, setInvoiceNumber, date, setDate,
-  dueDate, setDueDate, items, handleItemChange, removeItem, addItem,
-  notes, setNotes, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  invoiceNumber,
+  setInvoiceNumber,
+  date,
+  setDate,
+  dueDate,
+  setDueDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  notes,
+  setNotes,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
-    <div className="relative flex flex-col lg:flex-row h-full" style={{ fontSize: "1em" }}>
+    <div
+      className="relative flex flex-col lg:flex-row h-full"
+      style={{ fontSize: "1em" }}
+    >
       {/* Sidebar */}
-      <div className="w-full lg:w-1/3 p-8 sm:p-10 text-white" style={{ backgroundColor: "var(--accent-color)" }}>
-        {logo ? (<img src={logo} alt="Logo" className="max-h-20 object-contain filter brightness-0 invert"/>) : (
+      <div
+        className="w-full lg:w-1/3 p-8 sm:p-10 text-white"
+        style={{ backgroundColor: "var(--accent-color)" }}
+      >
+        {logo ? (
+          <img
+            src={logo}
+            alt="Logo"
+            className="max-h-20 object-contain filter brightness-0 invert"
+          />
+        ) : (
           <div className="font-bold" style={{ fontSize: "2em" }}>
-            <EditableField value={from.split("\n")[0]} onChange={(v) => setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))} placeholder="Your Company" />
+            <EditableField
+              value={from.split("\n")[0]}
+              onChange={(v) =>
+                setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))
+              }
+              placeholder="Your Company"
+            />
           </div>
         )}
         <div className="mt-10">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">From</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            From
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">Bill To</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            Bill To
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">Notes</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            Notes
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={notes} onChange={setNotes} area={true} placeholder="Thank you..." />
+            <EditableField
+              value={notes}
+              onChange={setNotes}
+              area={true}
+              placeholder="Thank you..."
+            />
           </div>
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div className="w-full lg:w-2/3 p-8 sm:p-10 md:p-12 relative z-10">
         <header className="text-left sm:text-right mb-10">
-          <h1 className="font-bold uppercase" style={{ fontSize: "3.5em" }}>Invoice</h1>
+          <h1 className="font-bold uppercase" style={{ fontSize: "3.5em" }}>
+            Invoice
+          </h1>
           <div className="mt-2 text-[1em] space-y-1 opacity-70">
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Invoice #</span>
-              <EditableField value={invoiceNumber} onChange={setInvoiceNumber} placeholder="INV-001" />
+              <EditableField
+                value={invoiceNumber}
+                onChange={setInvoiceNumber}
+                placeholder="INV-001"
+              />
             </div>
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Date:</span>
-              <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
             </div>
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Due Date:</span>
-              <EditableField type="date" value={dueDate} onChange={setDueDate} placeholder="Due Date" />
+              <EditableField
+                type="date"
+                value={dueDate}
+                onChange={setDueDate}
+                placeholder="Due Date"
+              />
             </div>
           </div>
         </header>
 
         <section>
-          {/* UPDATED: Table responsive wrapper */}
           <div className="overflow-x-auto">
-            {/* UPDATED: Removed min-w, added % widths */}
             <table className="w-full text-left">
               <thead>
                 <tr className="text-[0.9em] uppercase opacity-70 border-b-2 border-slate-300">
                   <th className="py-3 pr-4 w-[50%] font-semibold">Item</th>
-                  <th className="py-3 px-4 w-[15%] text-center font-semibold">Qty</th>
-                  <th className="py-3 px-4 w-[20%] text-right font-semibold">Price</th>
-                  <th className="py-3 pl-4 w-[15%] text-right font-semibold">Total</th>
+                  <th className="py-3 px-4 w-[15%] text-center font-semibold">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 w-[20%] text-right font-semibold">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 w-[15%] text-right font-semibold">
+                    Total
+                  </th>
                   <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
 
         <section className="mt-10 pt-6 border-t-2 border-slate-300">
           <div className="w-full max-w-xs ml-auto text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between mt-4 pt-4 border-t-2 border-black text-[1.5em]">
               <span className="font-bold">Total:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
@@ -1499,7 +2141,6 @@ function TemplateInvoiceCreative({
     </div>
   );
 }
-
 
 // --- Template Modal Component ---
 function TemplateModal({
@@ -1517,41 +2158,92 @@ function TemplateModal({
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex justify-between items-center">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">Choose a Template</Dialog.Title>
-                  <button onClick={onClose} className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"><RiCloseLine className="h-5 w-5" /></button>
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                  >
+                    Choose a Template
+                  </Dialog.Title>
+                  <button
+                    onClick={onClose}
+                    className="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    <RiCloseLine className="h-5 w-5" />
+                  </button>
                 </div>
 
-                <RadioGroup value={selectedTemplate} onChange={handleSelect} className="mt-4">
-                  <RadioGroup.Label className="sr-only">Choose a template</RadioGroup.Label>
+                <RadioGroup
+                  value={selectedTemplate}
+                  onChange={handleSelect}
+                  className="mt-4"
+                >
+                  <RadioGroup.Label className="sr-only">
+                    Choose a template
+                  </RadioGroup.Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {templates.map((template) => (
                       <RadioGroup.Option
                         key={template.id}
                         value={template.id}
                         className={({ active, checked }) =>
-                          `relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
-                          ${checked ? "border-blue-500 ring-2 ring-blue-500" : "border-slate-200 dark:border-slate-700 hover:border-blue-300"}
+                          // UPDATED: Added 'group' for hover effect
+                          `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
+                          ${
+                            checked
+                              ? "border-blue-500 ring-2 ring-blue-500"
+                              : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                          }
                           ${active ? "ring-2 ring-offset-2 ring-blue-400" : ""}`
                         }
                       >
                         {({ checked }) => (
                           <>
                             <div className="flex w-full flex-col items-center gap-2">
-                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400">
-                                <RiImageAddLine className="h-10 w-10" />
+                              {/* UPDATED: Replaced placeholder div with Image component */}
+                              <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 overflow-hidden relative">
+                                <Image
+                                  src={template.preview}
+                                  alt={template.name}
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="group-hover:scale-105 transition-transform duration-300"
+                                />
                               </div>
-                              <RadioGroup.Label as="span" className="font-medium text-sm text-slate-800 dark:text-slate-200">{template.name}</RadioGroup.Label>
+                              <RadioGroup.Label
+                                as="span"
+                                className="font-medium text-sm text-slate-800 dark:text-slate-200"
+                              >
+                                {template.name}
+                              </RadioGroup.Label>
                               {checked && (
-                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white"><RiCheckLine className="h-4 w-4" /></div>
+                                <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                  <RiCheckLine className="h-4 w-4" />
+                                </div>
                               )}
                             </div>
                           </>
@@ -1574,19 +2266,41 @@ function LimitModal({ isOpen, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
-                    <RiErrorWarningLine className="h-6 w-6 text-orange-600 dark:text-orange-400" aria-hidden="true"/>
+                    <RiErrorWarningLine
+                      className="h-6 w-6 text-orange-600 dark:text-orange-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       One-Page Limit Reached
                     </Dialog.Title>
                   </div>
@@ -1599,7 +2313,11 @@ function LimitModal({ isOpen, onClose }) {
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     Got it, thanks!
                   </button>
                 </div>
@@ -1617,19 +2335,41 @@ function NotificationModal({ isOpen, message, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                    <RiInformationLine className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true"/>
+                    <RiInformationLine
+                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       Notification
                     </Dialog.Title>
                   </div>
@@ -1640,7 +2380,11 @@ function NotificationModal({ isOpen, message, onClose }) {
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     OK
                   </button>
                 </div>
