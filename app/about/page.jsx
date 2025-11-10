@@ -76,7 +76,7 @@ export default function AboutPage() {
           className="mt-6 text-lg sm:text-xl max-w-3xl mx-auto text-slate-600 dark:text-slate-300"
           variants={itemVariants}
         >
-          We're building the financial tools we always wished we had. We believe
+          We are building the financial tools we always wished we had. We believe
           professional, beautiful financial tools should be simple, intuitive,
           and accessible to everyone—not locked behind paywalls or cluttered
           with ads.
@@ -233,7 +233,7 @@ export default function AboutPage() {
               {
                 name: "Premium by Default",
                 description:
-                  "A beautiful design and powerful features like 'Save to Device' and multiple templates aren't upsells. They are standard.",
+                  "A beautiful design and powerful features like 'Save to Device' and multiple templates are not upsells. They are standard.",
                 icon: RiLayoutLine,
               },
             ].map((feature, i) => (

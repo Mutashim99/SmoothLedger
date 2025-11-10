@@ -667,7 +667,7 @@ function TestimonialsSection() {
             Loved by Freelancers & Founders
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Don&apost just take our word for it. See what real users are saying.
+            Dont just take our word for it. See what real users are saying.
           </p>
         </motion.div>
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
