@@ -3,18 +3,18 @@
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-import { ThemeProvider, ThemeToggle } from "./theme-provider";
+import { ThemeProvider } from "./theme-provider"; // ThemeToggle removed
+import { ModernNavbar } from "@/app/components/ModernNavbar"; // <-- NEW IMPORT
 import {
-  RiPagesLine,
-  RiCalculatorLine,
-  RiPercentLine,
-  RiFileTextLine,
-  RiMoneyDollarCircleLine,
+  RiGithubFill,
+  RiTwitterFill,
+  RiLinkedinFill,
+  RiSendPlaneFill
 } from "react-icons/ri";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// SEO Metadata (as requested)
+// SEO Metadata (Stays the same)
 export const metadata = {
   title: {
     template: "%s | SmoothLedger",
@@ -24,115 +24,124 @@ export const metadata = {
     "Free, simple, and beautifully designed financial tools for freelancers and small businesses. No signups. No fees. Just fast, professional tools.",
 };
 
-// --- Navbar Component ---
-// Defined in layout.jsx as requested
-function Navbar() {
-  const navLinks = [
-    {
-      name: "Invoice",
-      href: "/invoice-generator",
-      icon: <RiFileTextLine />,
-    },
-    {
-      name: "Payslip",
-      href: "/payslip-generator",
-      icon: <RiPagesLine />,
-    },
-    {
-      name: "Quotation",
-      href: "/quotation-generator",
-      icon: <RiMoneyDollarCircleLine />,
-    },
-    {
-      name: "Loan Calc",
-      href: "/loan-calculator",
-      icon: <RiCalculatorLine />,
-    },
-    {
-      name: "Margin Calc",
-      href: "/profit-margin-calculator",
-      icon: <RiPercentLine />,
-    },
+// --- Footer Component (Redesigned) ---
+function Footer() {
+  const toolLinks = [
+    { name: "Invoice Generator", href: "/invoice-generator" },
+    { name: "Payslip Generator", href: "/payslip-generator" },
+    { name: "Quotation Generator", href: "/quotation-generator" },
+    { name: "Loan Calculator", href: "/loan-calculator" },
+    { name: "Margin Calculator", href: "/profit-margin-calculator" },
+  ];
+
+  const companyLinks = [
+    { name: "About Us", href: "/about" },
+    { name: "Blogs", href: "/blogs" },
+    { name: "Contact Us", href: "/contact" },
+  ];
+
+  const legalLinks = [
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms-of-service" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* 1. Text-Based Logo */}
-          <div className="flex-shrink-0 flex items-center">
+    <footer className="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* 1. Logo & Slogan */}
+          <div className="lg:col-span-4">
             <Link
               href="/"
               className="text-2xl font-bold text-slate-900 dark:text-white"
             >
               Smooth<span className="text-blue-600 dark:text-blue-500">Ledger</span>
             </Link>
-          </div>
-
-          {/* 2. Desktop Navigation Links */}
-          <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
-              >
-                {link.icon}
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* 3. Theme Toggle & Mobile Menu (Placeholder) */}
-          <div className="flex items-center">
-            <ThemeToggle />
-            {/* Mobile menu button can be added here */}
-          </div>
-        </div>
-      </div>
-      {/* Mobile Menu (Dropdown) - TODO */}
-    </nav>
-  );
-}
-
-// --- Footer Component ---
-// Defined in layout.jsx as requested
-function Footer() {
-  return (
-    <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex flex-col items-center md:items-start">
-            <div className="text-xl font-bold text-slate-900 dark:text-white">
-              Smooth<span className="text-blue-600 dark:text-blue-500">Ledger</span>
-            </div>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-base text-slate-500 dark:text-slate-400">
               Financial Tools, Beautifully Simple.
             </p>
+            <div className="mt-6 flex space-x-4">
+              <a href="#" className="text-slate-400 hover:text-slate-500">
+                <RiTwitterFill className="h-6 w-6" />
+              </a>
+              <a href="#" className="text-slate-400 hover:text-slate-500">
+                <RiGithubFill className="h-6 w-6" />
+              </a>
+              <a href="#" className="text-slate-400 hover:text-slate-500">
+                <RiLinkedinFill className="h-6 w-6" />
+              </a>
+            </div>
           </div>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link
-              href="/invoice-generator"
-              className="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            >
-              Invoice
-            </Link>
-            <Link
-              href="/payslip-generator"
-              className="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            >
-              Payslip
-            </Link>
-            <Link
-              href="/loan-calculator"
-              className="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            >
-              Loan Calculator
-            </Link>
+
+          {/* 2. Link Columns */}
+          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white tracking-wider uppercase">Tools</h3>
+              <ul className="mt-4 space-y-2">
+                {toolLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-base text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white tracking-wider uppercase">Company</h3>
+              <ul className="mt-4 space-y-2">
+                {companyLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-base text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white tracking-wider uppercase">Legal</h3>
+              <ul className="mt-4 space-y-2">
+                {legalLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-base text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* 3. Newsletter Section */}
+            <div className="md:col-span-2">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white tracking-wider uppercase">Subscribe to our newsletter</h3>
+              <p className="mt-4 text-base text-slate-600 dark:text-slate-300">
+                Get the latest news, articles, and free tools, sent straight to your inbox.
+              </p>
+              <form className="mt-4 flex flex-col sm:flex-row gap-2">
+                <label htmlFor="email-address" className="sr-only">Email address</label>
+                <input
+                  type="email"
+                  id="email-address"
+                  autoComplete="email"
+                  required
+                  className="w-full px-4 py-2 text-base text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter your email"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <RiSendPlaneFill className="h-5 w-5" />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8 text-center">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+
+        {/* 4. Bottom Copyright */}
+        <div className="mt-12 border-t border-slate-200 dark:border-slate-800 pt-8">
+          <p className="text-base text-slate-500 dark:text-slate-400 text-center">
             © {new Date().getFullYear()} SmoothLedger. All rights reserved.
           </p>
         </div>
@@ -141,23 +150,22 @@ function Footer() {
   );
 }
 
-// --- Root Layout ---
+// --- Root Layout (Imports the new components) ---
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
+          <ModernNavbar /> 
           <main className="flex-grow">{children}</main>
-          <Footer />
+          <Footer /> {/* <-- Renders redesigned Server Component Footer */}
         </ThemeProvider>
       </body>
     </html>
   );
 }
-

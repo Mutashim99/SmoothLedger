@@ -215,6 +215,7 @@ function MockupMargin() {
 
 
 // --- 1. Hero Section ---
+// --- 1. Hero Section ---
 function HeroSection() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -241,13 +242,14 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-slate-950">
+    <section className="relative overflow-hidden bg-white dark:bg-slate-950 min-h-screen flex items-center">
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-[150px]"
         aria-hidden="true"
       />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:h-[calc(100vh-4rem)] py-24 sm:py-32 lg:py-0">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* --- FIX #1: Added items-center back to vertically align columns --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* --- Left Column (Text Content) --- */}
           <motion.div
@@ -291,7 +293,7 @@ function HeroSection() {
             </motion.div>
             
             <motion.ul
-              className="mt-8 space-y-2 text-left max-w-md mx-auto lg:mx-0"
+              className="mt-8 space-y-2 text-left max-w-md mx-auto lg:mx-0" // <-- Re-centered text-left
               variants={itemVariants}
             >
               <li className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
@@ -329,36 +331,35 @@ function HeroSection() {
           </motion.div>
 
           {/* --- Right Column (Visual Mockups) --- */}
+          {/* --- FIX #2: Changed to hidden md:block, adjusted heights --- */}
           <motion.div
-            className="relative w-full h-[400px] lg:h-[600px] hidden md:block"
+            className="relative w-full h-[450px] md:h-[500px] lg:h-[600px] hidden md:block" // <-- Shows on tablet up, with responsive heights
             style={{ perspective: "1000px" }}
             initial="hidden"
             animate="visible"
           >
-            {/* Card 1: Invoice (Top) */}
+            {/* --- FIX #3: Changed max-w-lg to max-w-md to fit smaller screens --- */}
             <motion.div
-              className="absolute w-full max-w-sm sm:max-w-md lg:max-w-lg"
-              style={{ top: '5%', left: '15%', rotate: '4deg', zIndex: 30 }}
+              className="absolute w-full max-w-sm sm:max-w-md" // <-- Removed lg:max-w-lg
+              style={{ top: '0%', left: '15%', rotate: '4deg', zIndex: 30 }} // <-- Adjusted top/left
               variants={cardVariants}
               custom={1}
             >
               <MockupInvoice />
             </motion.div>
             
-            {/* Card 2: Payslip (Middle) */}
             <motion.div
-              className="absolute w-full max-w-sm sm:max-w-md lg:max-w-lg"
-              style={{ top: '35%', left: '0%', rotate: '-3deg', zIndex: 20 }}
+              className="absolute w-full max-w-sm sm:max-w-md"
+              style={{ top: '25%', left: '0%', rotate: '-3deg', zIndex: 20 }} // <-- Adjusted top
               variants={cardVariants}
               custom={2}
             >
               <MockupPayslip />
             </motion.div>
             
-            {/* Card 3: Quotation (Bottom) */}
             <motion.div
-              className="absolute w-full max-w-sm sm:max-w-md lg:max-w-lg"
-              style={{ top: '60%', left: '20%', rotate: '2deg', zIndex: 10 }}
+              className="absolute w-full max-w-sm sm:max-w-md"
+              style={{ top: '50%', left: '20%', rotate: '2deg', zIndex: 10 }} // <-- Adjusted top
               variants={cardVariants}
               custom={3}
             >
@@ -679,8 +680,9 @@ function TestimonialsSection() {
               viewport={{ once: true, amount: 0.5 }}
               className="flex flex-col justify-between p-6 bg-slate-50 dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800"
             >
+              {/* --- FIX #2: Removed the quotes "" around the variable --- */}
               <blockquote className="text-lg text-slate-800 dark:text-slate-200">
-                "{testimonial.quote}"
+                {testimonial.quote}
               </blockquote>
               <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <div className="font-semibold text-slate-900 dark:text-white">
