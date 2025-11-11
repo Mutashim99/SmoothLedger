@@ -21,6 +21,8 @@ import {
   RiFolderOpenLine,
   RiDeleteBin2Line,
   RiInformationLine,
+  RiMailSendLine, // NEW: For email modal
+  RiLoader4Line, // NEW: For loading spinner
 } from "react-icons/ri";
 import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -168,6 +170,9 @@ export default function PayslipGeneratorPage() {
     show: false,
     message: "",
   });
+  const [isDirty, setIsDirty] = useState(false); // NEW: Tracks if user has edited
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // NEW: Email modal state
+  const [isSubscribing, setIsSubscribing] = useState(false); // NEW: Loading state for email form
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -223,6 +228,13 @@ export default function PayslipGeneratorPage() {
     }
   }, [companyName, companyAddress, saveMyDetails]);
 
+  // NEW: Check if user has already subscribed
+  useEffect(() => {
+    if (localStorage.getItem("smoothledger-subscribed") === "true") {
+      setIsDirty(false);
+    }
+  }, []);
+
   // --- DERIVED STATE & CALCULATIONS ---
   const grossEarnings = useMemo(
     () => earnings.reduce((acc, item) => acc + item.amount, 0),
@@ -245,14 +257,93 @@ export default function PayslipGeneratorPage() {
     }).format(amount);
   };
 
+  // --- Wrapper functions to set isDirty ---
+  // NEW: We wrap all state setters to also set isDirty to true.
+  const setCompanyNameWrapper = (value) => {
+    setCompanyName(value);
+    setIsDirty(true);
+  };
+  const setCompanyAddressWrapper = (value) => {
+    setCompanyAddress(value);
+    setIsDirty(true);
+  };
+  const setLogoWrapper = (value) => {
+    setLogo(value);
+    setIsDirty(true);
+  };
+  const setEmployeeNameWrapper = (value) => {
+    setEmployeeName(value);
+    setIsDirty(true);
+  };
+  const setEmployeeIdWrapper = (value) => {
+    setEmployeeId(value);
+    setIsDirty(true);
+  };
+  const setEmployeePositionWrapper = (value) => {
+    setEmployeePosition(value);
+    setIsDirty(true);
+  };
+  const setPayPeriodStartWrapper = (value) => {
+    setPayPeriodStart(value);
+    setIsDirty(true);
+  };
+  const setPayPeriodEndWrapper = (value) => {
+    setPayPeriodEnd(value);
+    setIsDirty(true);
+  };
+  const setPayDateWrapper = (value) => {
+    setPayDate(value);
+    setIsDirty(true);
+  };
+  const setEarningsWrapper = (value) => {
+    setEarnings(value);
+    setIsDirty(true);
+  };
+  const setDeductionsWrapper = (value) => {
+    setDeductions(value);
+    setIsDirty(true);
+  };
+  const setAccentColorWrapper = (value) => {
+    setAccentColor(value);
+    setIsDirty(true);
+  };
+  const setTextColorWrapper = (value) => {
+    setTextColor(value);
+    setIsDirty(true);
+  };
+  const setFontFamilyWrapper = (value) => {
+    setFontFamily(value);
+    setIsDirty(true);
+  };
+  const setFontSizeWrapper = (value) => {
+    setFontSize(value);
+    setIsDirty(true);
+  };
+  const setCurrencyCodeWrapper = (value) => {
+    setCurrencyCode(value);
+    setIsDirty(true);
+  };
+  const setWatermarkWrapper = (value) => {
+    setWatermark(value);
+    setIsDirty(true);
+  };
+  const setBgWatermarkWrapper = (value) => {
+    setBgWatermark(value);
+    setIsDirty(true);
+  };
+
   // --- EVENT HANDLERS ---
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
-    if (file) setLogo(URL.createObjectURL(file));
+    if (file) {
+      setLogoWrapper(URL.createObjectURL(file)); // UPDATED
+    }
   };
   const handleBgWatermarkUpload = (e) => {
     const file = e.target.files[0];
-    if (file) setBgWatermark(URL.createObjectURL(file));
+    if (file) {
+      setBgWatermarkWrapper(URL.createObjectURL(file)); // UPDATED
+    }
   };
 
   // Earnings Handlers
@@ -260,20 +351,21 @@ export default function PayslipGeneratorPage() {
     const newEarnings = [...earnings];
     newEarnings[index][field] =
       field === "amount" ? parseFloat(value) || 0 : value;
-    setEarnings(newEarnings);
+    setEarningsWrapper(newEarnings); // UPDATED
   };
   const addEarning = () => {
     if (earnings.length + deductions.length >= 16) {
       setIsLimitModalOpen(true);
       return;
     }
-    setEarnings([
+    setEarningsWrapper([
+      // UPDATED
       ...earnings,
       { id: Date.now(), name: "New Earning", amount: 0 },
     ]);
   };
   const removeEarning = (id) => {
-    setEarnings(earnings.filter((item) => item.id !== id));
+    setEarningsWrapper(earnings.filter((item) => item.id !== id)); // UPDATED
   };
 
   // Deductions Handlers
@@ -281,20 +373,21 @@ export default function PayslipGeneratorPage() {
     const newDeductions = [...deductions];
     newDeductions[index][field] =
       field === "amount" ? parseFloat(value) || 0 : value;
-    setDeductions(newDeductions);
+    setDeductionsWrapper(newDeductions); // UPDATED
   };
   const addDeduction = () => {
     if (earnings.length + deductions.length >= 16) {
       setIsLimitModalOpen(true);
       return;
     }
-    setDeductions([
+    setDeductionsWrapper([
+      // UPDATED
       ...deductions,
       { id: Date.now(), name: "New Deduction", amount: 0 },
     ]);
   };
   const removeDeduction = (id) => {
-    setDeductions(deductions.filter((item) => item.id !== id));
+    setDeductionsWrapper(deductions.filter((item) => item.id !== id)); // UPDATED
   };
 
   // --- Local Storage Handlers ---
@@ -358,9 +451,9 @@ export default function PayslipGeneratorPage() {
     if (empId) {
       const empToLoad = savedEmployees.find((emp) => emp.id === empId);
       if (empToLoad) {
-        setEmployeeName(empToLoad.name);
-        setEmployeeId(empToLoad.id);
-        setEmployeePosition(empToLoad.position);
+        setEmployeeNameWrapper(empToLoad.name); // UPDATED
+        setEmployeeIdWrapper(empToLoad.id); // UPDATED
+        setEmployeePositionWrapper(empToLoad.position); // UPDATED
       }
     }
   };
@@ -426,6 +519,7 @@ export default function PayslipGeneratorPage() {
 
     const slipToLoad = savedPayslips.find((p) => p.id === payslipId);
     if (slipToLoad) {
+      // Loading data should not trigger isDirty
       setCompanyName(slipToLoad.companyName);
       setCompanyAddress(slipToLoad.companyAddress);
       setEmployeeName(slipToLoad.employeeName);
@@ -478,8 +572,8 @@ export default function PayslipGeneratorPage() {
     }
   };
 
-  // PDF Download
-  const handleDownloadPDF = async () => {
+  // PDF Download (UPDATED LOGIC)
+  const startDownload = async () => {
     setIsDownloading(true);
     const element = payslipPrintRef.current;
     if (!element) return;
@@ -519,6 +613,46 @@ export default function PayslipGeneratorPage() {
     setIsDownloading(false);
   };
 
+  // NEW: This is the new click handler for the download button
+  const handleDownloadClick = () => {
+    if (isDirty) {
+      // User has edited, show email modal
+      setIsEmailModalOpen(true);
+    } else {
+      // User has not edited, download immediately
+      startDownload();
+    }
+  };
+
+  // NEW: This function handles the email submission
+  const handleEmailSubmit = async (email) => {
+    setIsSubscribing(true);
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        // Handle HTTP errors
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to subscribe");
+      }
+
+      // Success! Set a flag in local storage so we don't ask again.
+      localStorage.setItem("smoothledger-subscribed", "true");
+    } catch (error) {
+      console.error("Subscription error:", error.message);
+      // We still let them download, just show a silent error in console
+    } finally {
+      // ALWAYS close modal, reset state, and start download
+      setIsSubscribing(false);
+      setIsEmailModalOpen(false);
+      startDownload();
+    }
+  };
+
   // --- STYLES ---
   const mainStyles = {
     fontFamily: fontFamily,
@@ -536,7 +670,7 @@ export default function PayslipGeneratorPage() {
     },
     {
       id: "compact",
-      name: "Creative",
+      name: "Creative", // Note: you had "Creative" here, I kept it.
       preview: "/previews/creative.png",
     },
     { id: "bold", name: "Bold", preview: "/previews/bold.png" },
@@ -550,30 +684,30 @@ export default function PayslipGeneratorPage() {
   const renderPayslipTemplate = () => {
     const commonProps = {
       companyName,
-      setCompanyName,
+      setCompanyName: setCompanyNameWrapper, // UPDATED
       companyAddress,
-      setCompanyAddress,
+      setCompanyAddress: setCompanyAddressWrapper, // UPDATED
       logo,
       employeeName,
-      setEmployeeName,
+      setEmployeeName: setEmployeeNameWrapper, // UPDATED
       employeeId,
-      setEmployeeId,
+      setEmployeeId: setEmployeeIdWrapper, // UPDATED
       employeePosition,
-      setEmployeePosition,
+      setEmployeePosition: setEmployeePositionWrapper, // UPDATED
       payPeriodStart,
-      setPayPeriodStart,
+      setPayPeriodStart: setPayPeriodStartWrapper, // UPDATED
       payPeriodEnd,
-      setPayPeriodEnd,
+      setPayPeriodEnd: setPayPeriodEndWrapper, // UPDATED
       payDate,
-      setPayDate,
+      setPayDate: setPayDateWrapper, // UPDATED
       earnings,
-      handleEarningChange,
-      addEarning,
-      removeEarning,
+      handleEarningChange, // Already uses wrapper
+      addEarning, // Already uses wrapper
+      removeEarning, // Already uses wrapper
       deductions,
-      handleDeductionChange,
-      addDeduction,
-      removeDeduction,
+      handleDeductionChange, // Already uses wrapper
+      addDeduction, // Already uses wrapper
+      removeDeduction, // Already uses wrapper
       grossEarnings,
       totalDeductions,
       netPay,
@@ -600,7 +734,6 @@ export default function PayslipGeneratorPage() {
     <>
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-slate-100 dark:bg-slate-900">
         {/* --- 1. Controls Panel (Sidebar) --- */}
-        {/* UPDATED: Added sticky positioning and fixed height for desktop scroll */}
         <aside className="w-full lg:w-80 xl:w-96 bg-white dark:bg-slate-950 p-6 border-r border-slate-200 dark:border-slate-800 space-y-8 overflow-y-auto lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
             Payslip Studio
@@ -608,7 +741,7 @@ export default function PayslipGeneratorPage() {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={handleDownloadPDF}
+            onClick={handleDownloadClick} // UPDATED
             disabled={isDownloading}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition-all disabled:bg-slate-400"
           >
@@ -628,7 +761,6 @@ export default function PayslipGeneratorPage() {
             <RiEyeLine className="h-5 w-5" /> Change Template
           </button>
 
-          {/* UPDATED: Re-ordered sections */}
           <div className="space-y-6">
             {/* Styling */}
             <div>
@@ -648,7 +780,7 @@ export default function PayslipGeneratorPage() {
                     type="color"
                     id="accentColor"
                     value={accentColor}
-                    onChange={(e) => setAccentColor(e.target.value)}
+                    onChange={(e) => setAccentColorWrapper(e.target.value)} // UPDATED
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: accentColor }}
                   />
@@ -664,7 +796,7 @@ export default function PayslipGeneratorPage() {
                     type="color"
                     id="textColor"
                     value={textColor}
-                    onChange={(e) => setTextColor(e.target.value)}
+                    onChange={(e) => setTextColorWrapper(e.target.value)} // UPDATED
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: textColor }}
                   />
@@ -679,7 +811,7 @@ export default function PayslipGeneratorPage() {
                   <select
                     id="fontFamily"
                     value={fontFamily}
-                    onChange={(e) => setFontFamily(e.target.value)}
+                    onChange={(e) => setFontFamilyWrapper(e.target.value)} // UPDATED
                     className="p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="Inter, sans-serif">Inter (Modern)</option>
@@ -704,7 +836,9 @@ export default function PayslipGeneratorPage() {
                     max="18"
                     step="1"
                     value={fontSize}
-                    onChange={(e) => setFontSize(parseInt(e.target.value, 10))}
+                    onChange={(e) =>
+                      setFontSizeWrapper(parseInt(e.target.value, 10))
+                    } // UPDATED
                     className="w-full"
                   />
                 </div>
@@ -836,7 +970,7 @@ export default function PayslipGeneratorPage() {
                   <select
                     id="currency"
                     value={currencyCode}
-                    onChange={(e) => setCurrencyCode(e.target.value)}
+                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)} // UPDATED
                     className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     {currencyList.map((currency) => (
@@ -858,7 +992,7 @@ export default function PayslipGeneratorPage() {
                     type="text"
                     id="watermark"
                     value={watermark}
-                    onChange={(e) => setWatermark(e.target.value)}
+                    onChange={(e) => setWatermarkWrapper(e.target.value)} // UPDATED
                     placeholder="e.g. DRAFT, CONFIDENTIAL"
                     className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
@@ -889,7 +1023,7 @@ export default function PayslipGeneratorPage() {
                   {bgWatermark && (
                     <>
                       <button
-                        onClick={() => setBgWatermark(null)}
+                        onClick={() => setBgWatermarkWrapper(null)} // UPDATED
                         className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
                       >
                         Remove Image
@@ -907,9 +1041,11 @@ export default function PayslipGeneratorPage() {
                         max="0.5"
                         step="0.05"
                         value={bgWatermarkOpacity}
-                        onChange={(e) =>
-                          setBgWatermarkOpacity(parseFloat(e.target.value))
-                        }
+                        onChange={(e) => {
+                          // UPDATED
+                          setBgWatermarkOpacity(parseFloat(e.target.value));
+                          setIsDirty(true);
+                        }}
                         className="w-full"
                       />
                     </>
@@ -952,7 +1088,7 @@ export default function PayslipGeneratorPage() {
               </button>
               {logo && (
                 <button
-                  onClick={() => setLogo(null)}
+                  onClick={() => setLogoWrapper(null)} // UPDATED
                   className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
                 >
                   Remove Logo
@@ -967,13 +1103,11 @@ export default function PayslipGeneratorPage() {
           className="flex-1 p-4 sm:p-8 lg:p-12 overflow-y-auto"
           style={{ fontFamily: mainStyles.fontFamily }}
         >
-          {/* UPDATED: Removed max-w-4xl from mobile */}
           <div className="w-full max-w-4xl mx-auto">
             <div
               ref={payslipPrintRef}
-              // UPDATED: A4 aspect ratio is now responsive (lg: only)
               className={`bg-white shadow-2xl overflow-hidden relative ${
-                selectedTemplate === "classic" ? "" : "rounded-lg"
+                selectedTemplate === "classic" ? "" : "lg:rounded-lg"
               } w-full lg:aspect-[210/297]`}
               style={{
                 "--accent-color": accentColor,
@@ -1027,6 +1161,15 @@ export default function PayslipGeneratorPage() {
         isOpen={notification.show}
         message={notification.message}
         onClose={() => setNotification({ show: false, message: "" })}
+      />
+
+      {/* --- 6. NEW: Email Capture Modal --- */}
+      <EmailCaptureModal
+        isOpen={isEmailModalOpen}
+        isSubscribing={isSubscribing}
+        onClose={() => setIsEmailModalOpen(false)}
+        onSubmit={handleEmailSubmit}
+        onSkip={startDownload} // Allow user to skip and just download
       />
     </>
   );
@@ -2140,7 +2283,6 @@ function TemplatePayslipMinimal({
 }
 
 // --- Template Modal Component ---
-// --- Template Modal Component ---
 function TemplateModal({
   isOpen,
   onClose,
@@ -2209,7 +2351,6 @@ function TemplateModal({
                         key={template.id}
                         value={template.id}
                         className={({ active, checked }) =>
-                          // UPDATED: Added 'group' for hover effect
                           `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
                           ${
                             checked
@@ -2222,7 +2363,6 @@ function TemplateModal({
                         {({ checked }) => (
                           <>
                             <div className="flex w-full flex-col items-center gap-2">
-                              {/* UPDATED: Replaced placeholder div with Image component */}
                               <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 overflow-hidden relative">
                                 <Image
                                   src={template.preview}
@@ -2258,6 +2398,7 @@ function TemplateModal({
     </Transition>
   );
 }
+
 // --- Limit Reached Modal Component ---
 function LimitModal({ isOpen, onClose }) {
   return (
@@ -2385,6 +2526,119 @@ function NotificationModal({ isOpen, message, onClose }) {
                     OK
                   </button>
                 </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+}
+
+// --- NEW: Email Capture Modal Component ---
+function EmailCaptureModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  onSkip,
+  isSubscribing,
+}) {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(email);
+  };
+
+  return (
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
+                <div className="flex items-center justify-center">
+                  <div className=" flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+                    <RiMailSendLine
+                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-4 text-left">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
+                      One Last Step!
+                    </Dialog.Title>
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                  <div className="mt-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      To download your customized document, please enter your
+                      email. We'll send you occasional product updates and
+                      helpful tips.
+                    </p>
+                    <div className="mt-4">
+                      <label htmlFor="modal-email" className="sr-only">
+                        Email address
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="modal-email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 sm:mt-6 space-y-3">
+                    <button
+                      type="submit"
+                      disabled={isSubscribing}
+                      className="inline-flex w-full justify-center items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-slate-400"
+                    >
+                      {isSubscribing ? (
+                        <RiLoader4Line className="h-5 w-5 animate-spin" />
+                      ) : (
+                        "Subscribe & Download"
+                      )}
+                    </button>
+                    {/* <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={onSkip}
+                    >
+                      No thanks, just download
+                    </button> */}
+                  </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

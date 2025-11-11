@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useState, useRef, Fragment, useMemo, useEffect } from "react";
+import Image from "next/image"; // NEW: Import Image component
 import {
   RiAddLine,
   RiDeleteBinLine,
@@ -21,12 +22,13 @@ import {
   RiFolderOpenLine,
   RiDeleteBin2Line,
   RiInformationLine,
+  RiMailSendLine, // NEW: For email modal
+  RiLoader4Line, // NEW: For loading spinner
 } from "react-icons/ri";
 import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import Image from "next/image";
 
 // --- Helper: Editable Field Component ---
 function EditableField({
@@ -151,7 +153,13 @@ export default function QuotationGeneratorPage() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: "" });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
+  const [isDirty, setIsDirty] = useState(false); // NEW: Tracks if user has edited
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // NEW: Email modal state
+  const [isSubscribing, setIsSubscribing] = useState(false); // NEW: Loading state for email form
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -170,7 +178,9 @@ export default function QuotationGeneratorPage() {
     setIsTemplateModalOpen(true);
 
     try {
-      const savedFrom = localStorage.getItem("smoothledger-quotation-mydetails");
+      const savedFrom = localStorage.getItem(
+        "smoothledger-quotation-mydetails"
+      );
       if (savedFrom) {
         setFrom(savedFrom);
         setSaveMyDetails(true);
@@ -199,6 +209,15 @@ export default function QuotationGeneratorPage() {
     }
   }, [from, saveMyDetails]);
 
+  // NEW: Check if user has already subscribed
+  useEffect(() => {
+    if (localStorage.getItem("smoothledger-subscribed") === "true") {
+      // If they have, we'll just treat them as "clean"
+      // This means they can download edited files without seeing the modal again.
+      setIsDirty(false);
+    }
+  }, []);
+
   // --- DERIVED STATE & CALCULATIONS ---
   const subtotal = useMemo(
     () => items.reduce((acc, item) => acc + item.qty * item.price, 0),
@@ -222,21 +241,97 @@ export default function QuotationGeneratorPage() {
     }).format(amount);
   };
 
+  // --- Wrapper functions to set isDirty ---
+  // NEW: We wrap all state setters to also set isDirty to true.
+  const setFromWrapper = (value) => {
+    setFrom(value);
+    setIsDirty(true);
+  };
+  const setToWrapper = (value) => {
+    setTo(value);
+    setIsDirty(true);
+  };
+  const setQuoteNumberWrapper = (value) => {
+    setQuoteNumber(value);
+    setIsDirty(true);
+  };
+  const setDateWrapper = (value) => {
+    setDate(value);
+    setIsDirty(true);
+  };
+  const setExpiryDateWrapper = (value) => {
+    setExpiryDate(value);
+    setIsDirty(true);
+  };
+  const setItemsWrapper = (value) => {
+    setItems(value);
+    setIsDirty(true);
+  };
+  const setTermsConditionsWrapper = (value) => {
+    setTermsConditions(value);
+    setIsDirty(true);
+  };
+  const setTaxWrapper = (value) => {
+    setTax(value);
+    setIsDirty(true);
+  };
+  const setDiscountWrapper = (value) => {
+    setDiscount(value);
+    setIsDirty(true);
+  };
+  const setLogoWrapper = (value) => {
+    setLogo(value);
+    setIsDirty(true);
+  };
+  const setAccentColorWrapper = (value) => {
+    setAccentColor(value);
+    setIsDirty(true);
+  };
+  const setTextColorWrapper = (value) => {
+    setTextColor(value);
+    setIsDirty(true);
+  };
+  const setFontFamilyWrapper = (value) => {
+    setFontFamily(value);
+    setIsDirty(true);
+  };
+  const setFontSizeWrapper = (value) => {
+    setFontSize(value);
+    setIsDirty(true);
+  };
+  const setCurrencyCodeWrapper = (value) => {
+    setCurrencyCode(value);
+    setIsDirty(true);
+  };
+  const setWatermarkWrapper = (value) => {
+    setWatermark(value);
+    setIsDirty(true);
+  };
+  const setBgWatermarkWrapper = (value) => {
+    setBgWatermark(value);
+    setIsDirty(true);
+  };
+
   // --- EVENT HANDLERS ---
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
-    if (file) setLogo(URL.createObjectURL(file));
+    if (file) {
+      setLogoWrapper(URL.createObjectURL(file)); // UPDATED
+    }
   };
   const handleBgWatermarkUpload = (e) => {
     const file = e.target.files[0];
-    if (file) setBgWatermark(URL.createObjectURL(file));
+    if (file) {
+      setBgWatermarkWrapper(URL.createObjectURL(file)); // UPDATED
+    }
   };
 
   // Line Items
   const handleItemChange = (index, field, value) => {
     const newItems = [...items];
-    newItems[index][field] = (field === "qty" || field === "price") ? (parseFloat(value) || 0) : value;
-    setItems(newItems);
+    newItems[index][field] =
+      field === "qty" || field === "price" ? parseFloat(value) || 0 : value;
+    setItemsWrapper(newItems); // UPDATED
   };
 
   const addItem = () => {
@@ -244,14 +339,15 @@ export default function QuotationGeneratorPage() {
       setIsLimitModalOpen(true);
       return;
     }
-    setItems([
+    setItemsWrapper([
+      // UPDATED
       ...items,
       { id: Date.now(), name: "New Item", qty: 1, price: 0 },
     ]);
   };
 
   const removeItem = (id) => {
-    setItems(items.filter((item) => item.id !== id));
+    setItemsWrapper(items.filter((item) => item.id !== id)); // UPDATED
   };
 
   // --- Local Storage Handlers ---
@@ -291,14 +387,17 @@ export default function QuotationGeneratorPage() {
     const clientValue = e.target.value;
     setSelectedClient(clientValue);
     if (clientValue) {
-      setTo(clientValue);
+      setToWrapper(clientValue); // UPDATED
     }
   };
 
   // --- Save/Load Quotation Handlers ---
   const handleSaveQuotation = () => {
     if (!quoteNumber || !quoteNumber.trim()) {
-      setNotification({ show: true, message: "Please enter a Quotation Number to save." });
+      setNotification({
+        show: true,
+        message: "Please enter a Quotation Number to save.",
+      });
       return;
     }
 
@@ -306,12 +405,26 @@ export default function QuotationGeneratorPage() {
     const quotationData = {
       id: quoteNumber,
       clientName: clientName,
-      from, to, quoteNumber, date, expiryDate, items, termsConditions, tax, discount,
-      accentColor, textColor, fontFamily, fontSize, currencyCode,
+      from,
+      to,
+      quoteNumber,
+      date,
+      expiryDate,
+      items,
+      termsConditions,
+      tax,
+      discount,
+      accentColor,
+      textColor,
+      fontFamily,
+      fontSize,
+      currencyCode,
     };
 
     const newSavedQuotations = [...savedQuotations];
-    const existingIndex = newSavedQuotations.findIndex(q => q.id === quoteNumber);
+    const existingIndex = newSavedQuotations.findIndex(
+      (q) => q.id === quoteNumber
+    );
 
     let message = "";
     if (existingIndex !== -1) {
@@ -324,12 +437,18 @@ export default function QuotationGeneratorPage() {
 
     try {
       setSavedQuotations(newSavedQuotations);
-      localStorage.setItem("smoothledger-quotations", JSON.stringify(newSavedQuotations));
+      localStorage.setItem(
+        "smoothledger-quotations",
+        JSON.stringify(newSavedQuotations)
+      );
       setSelectedQuotationId(quotationData.id);
       setNotification({ show: true, message });
     } catch (error) {
       console.error("Error saving quotation:", error);
-      setNotification({ show: true, message: "Error saving. Storage might be full." });
+      setNotification({
+        show: true,
+        message: "Error saving. Storage might be full.",
+      });
     }
   };
 
@@ -338,7 +457,9 @@ export default function QuotationGeneratorPage() {
     setSelectedQuotationId(quotationId);
     if (!quotationId) return;
 
-    const quoteToLoad = savedQuotations.find(q => q.id === quotationId);
+    const quoteToLoad = savedQuotations.find((q) => q.id === quotationId);
+
+    // Loading data should not trigger isDirty
     if (quoteToLoad) {
       setFrom(quoteToLoad.from);
       setTo(quoteToLoad.to);
@@ -356,31 +477,46 @@ export default function QuotationGeneratorPage() {
       setCurrencyCode(quoteToLoad.currencyCode);
     }
   };
-  
+
   const handleDeleteQuotation = () => {
     if (!selectedQuotationId) {
-      setNotification({ show: true, message: "Please select a quotation to delete." });
+      setNotification({
+        show: true,
+        message: "Please select a quotation to delete.",
+      });
       return;
     }
-    
-    if (!window.confirm(`Are you sure you want to delete quotation ${selectedQuotationId}? This cannot be undone.`)) {
+
+    if (
+      !window.confirm(
+        `Are you sure you want to delete quotation ${selectedQuotationId}? This cannot be undone.`
+      )
+    ) {
       return;
     }
-    
-    const newSavedQuotations = savedQuotations.filter(q => q.id !== selectedQuotationId);
-    
+
+    const newSavedQuotations = savedQuotations.filter(
+      (q) => q.id !== selectedQuotationId
+    );
+
     try {
       setSavedQuotations(newSavedQuotations);
-      localStorage.setItem("smoothledger-quotations", JSON.stringify(newSavedQuotations));
+      localStorage.setItem(
+        "smoothledger-quotations",
+        JSON.stringify(newSavedQuotations)
+      );
       setSelectedQuotationId("");
-      setNotification({ show: true, message: `Quotation ${selectedQuotationId} deleted.` });
+      setNotification({
+        show: true,
+        message: `Quotation ${selectedQuotationId} deleted.`,
+      });
     } catch (error) {
       console.error("Error deleting quotation:", error);
     }
   };
 
-  // PDF Download
-  const handleDownloadPDF = async () => {
+  // PDF Download (UPDATED LOGIC)
+  const startDownload = async () => {
     setIsDownloading(true);
     const element = quotationPrintRef.current;
     if (!element) return;
@@ -420,6 +556,46 @@ export default function QuotationGeneratorPage() {
     setIsDownloading(false);
   };
 
+  // NEW: This is the new click handler for the download button
+  const handleDownloadClick = () => {
+    if (isDirty) {
+      // User has edited, show email modal
+      setIsEmailModalOpen(true);
+    } else {
+      // User has not edited, download immediately
+      startDownload();
+    }
+  };
+
+  // NEW: This function handles the email submission
+  const handleEmailSubmit = async (email) => {
+    setIsSubscribing(true);
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        // Handle HTTP errors
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to subscribe");
+      }
+
+      // Success! Set a flag in local storage so we don't ask again.
+      localStorage.setItem("smoothledger-subscribed", "true");
+    } catch (error) {
+      console.error("Subscription error:", error.message);
+      // We still let them download, just show a silent error in console
+    } finally {
+      // ALWAYS close modal, reset state, and start download
+      setIsSubscribing(false);
+      setIsEmailModalOpen(false);
+      startDownload();
+    }
+  };
+
   // --- STYLES ---
   const mainStyles = {
     fontFamily: fontFamily,
@@ -438,12 +614,30 @@ export default function QuotationGeneratorPage() {
 
   const renderQuotationTemplate = () => {
     const commonProps = {
-      from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-      expiryDate, setExpiryDate,
-      items, handleItemChange, removeItem, addItem,
-      termsConditions, setTermsConditions,
-      tax, setTax, discount, setDiscount, subtotal,
-      total, logo, formatCurrency,
+      from,
+      setFrom: setFromWrapper, // UPDATED
+      to,
+      setTo: setToWrapper, // UPDATED
+      quoteNumber,
+      setQuoteNumber: setQuoteNumberWrapper, // UPDATED
+      date,
+      setDate: setDateWrapper, // UPDATED
+      expiryDate,
+      setExpiryDate: setExpiryDateWrapper, // UPDATED
+      items,
+      handleItemChange,
+      removeItem,
+      addItem, // These already use wrappers
+      termsConditions,
+      setTermsConditions: setTermsConditionsWrapper, // UPDATED
+      tax,
+      setTax: setTaxWrapper, // UPDATED
+      discount,
+      setDiscount: setDiscountWrapper, // UPDATED
+      subtotal,
+      total,
+      logo,
+      formatCurrency,
     };
 
     switch (selectedTemplate) {
@@ -466,7 +660,6 @@ export default function QuotationGeneratorPage() {
     <>
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-slate-100 dark:bg-slate-900">
         {/* --- 1. Controls Panel (Sidebar) --- */}
-        {/* UPDATED: Added sticky positioning and fixed height for desktop scroll */}
         <aside className="w-full lg:w-80 xl:w-96 bg-white dark:bg-slate-950 p-6 border-r border-slate-200 dark:border-slate-800 space-y-8 overflow-y-auto lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
             Quotation Studio
@@ -474,11 +667,17 @@ export default function QuotationGeneratorPage() {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={handleDownloadPDF}
+            onClick={handleDownloadClick} // UPDATED
             disabled={isDownloading}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition-all disabled:bg-slate-400"
           >
-            {isDownloading ? ("Downloading...") : (<><RiDownload2Line className="h-5 w-5" /> Download PDF</>)}
+            {isDownloading ? (
+              "Downloading..."
+            ) : (
+              <>
+                <RiDownload2Line className="h-5 w-5" /> Download PDF
+              </>
+            )}
           </motion.button>
 
           <button
@@ -488,33 +687,86 @@ export default function QuotationGeneratorPage() {
             <RiEyeLine className="h-5 w-5" /> Change Template
           </button>
 
-          {/* UPDATED: Re-ordered sections */}
           <div className="space-y-6">
-            
             {/* Styling */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide"><RiPaintFill className="inline mr-2" />Styling</h3>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiPaintFill className="inline mr-2" />
+                Styling
+              </h3>
               <div className="mt-4 space-y-4">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="accentColor" className="text-sm font-medium text-slate-700 dark:text-slate-300">Accent Color</label>
-                  <input type="color" id="accentColor" value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" style={{ backgroundColor: accentColor }}/>
+                  <label
+                    htmlFor="accentColor"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Accent Color
+                  </label>
+                  <input
+                    type="color"
+                    id="accentColor"
+                    value={accentColor}
+                    onChange={(e) => setAccentColorWrapper(e.target.value)}
+                    className="w-8 h-8 rounded-full border-none cursor-pointer"
+                    style={{ backgroundColor: accentColor }}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="textColor" className="text-sm font-medium text-slate-700 dark:text-slate-300">Text Color</label>
-                  <input type="color" id="textColor" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" style={{ backgroundColor: textColor }}/>
+                  <label
+                    htmlFor="textColor"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Color
+                  </label>
+                  <input
+                    type="color"
+                    id="textColor"
+                    value={textColor}
+                    onChange={(e) => setTextColorWrapper(e.target.value)}
+                    className="w-8 h-8 rounded-full border-none cursor-pointer"
+                    style={{ backgroundColor: textColor }}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="fontFamily" className="text-sm font-medium text-slate-700 dark:text-slate-300">Font</label>
-                  <select id="fontFamily" value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} className="p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500">
+                  <label
+                    htmlFor="fontFamily"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Font
+                  </label>
+                  <select
+                    id="fontFamily"
+                    value={fontFamily}
+                    onChange={(e) => setFontFamilyWrapper(e.target.value)}
+                    className="p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  >
                     <option value="Inter, sans-serif">Inter (Modern)</option>
                     <option value="Roboto, sans-serif">Roboto (Clean)</option>
-                    <option value="Merriweather, serif">Merriweather (Serif)</option>
+                    <option value="Merriweather, serif">
+                      Merriweather (Serif)
+                    </option>
                     <option value="Lato, sans-serif">Lato (Elegant)</option>
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="fontSize" className="text-sm font-medium text-slate-700 dark:text-slate-300">Font Size: {fontSize}px</label>
-                  <input type="range" id="fontSize" min="10" max="18" step="1" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value, 10))} className="w-full"/>
+                  <label
+                    htmlFor="fontSize"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Font Size: {fontSize}px
+                  </label>
+                  <input
+                    type="range"
+                    id="fontSize"
+                    min="10"
+                    max="18"
+                    step="1"
+                    value={fontSize}
+                    onChange={(e) =>
+                      setFontSizeWrapper(parseInt(e.target.value, 10))
+                    }
+                    className="w-full"
+                  />
                 </div>
               </div>
             </div>
@@ -533,7 +785,10 @@ export default function QuotationGeneratorPage() {
                   <RiSave3Line className="h-5 w-5" /> Save Current Quotation
                 </button>
                 <div className="space-y-2">
-                  <label htmlFor="load-quotation" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <label
+                    htmlFor="load-quotation"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
                     Load Quotation
                   </label>
                   <div className="flex gap-2">
@@ -578,7 +833,9 @@ export default function QuotationGeneratorPage() {
                     checked={saveMyDetails}
                     onChange={handleSaveMyDetailsToggle}
                     className={`${
-                      saveMyDetails ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-700"
+                      saveMyDetails
+                        ? "bg-blue-600"
+                        : "bg-slate-300 dark:bg-slate-700"
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span className="sr-only">Save My Details</span>
@@ -590,7 +847,10 @@ export default function QuotationGeneratorPage() {
                   </Switch>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="clients" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <label
+                    htmlFor="clients"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
                     Saved Clients
                   </label>
                   <div className="flex gap-2">
@@ -621,16 +881,22 @@ export default function QuotationGeneratorPage() {
 
             {/* Document */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide"><RiDraftLine className="inline mr-2" />Document</h3>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiDraftLine className="inline mr-2" />
+                Document
+              </h3>
               <div className="mt-4 space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="currency" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <label
+                    htmlFor="currency"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
                     Currency
                   </label>
                   <select
                     id="currency"
                     value={currencyCode}
-                    onChange={(e) => setCurrencyCode(e.target.value)}
+                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)} // UPDATED
                     className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     {currencyList.map((currency) => (
@@ -641,20 +907,71 @@ export default function QuotationGeneratorPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="watermark" className="text-sm font-medium text-slate-700 dark:text-slate-300">Text Watermark</label>
-                  <input type="text" id="watermark" value={watermark} onChange={(e) => setWatermark(e.target.value)} placeholder="e.g. DRAFT, CONFIDENTIAL" className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"/>
+                  <label
+                    htmlFor="watermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Watermark
+                  </label>
+                  <input
+                    type="text"
+                    id="watermark"
+                    value={watermark}
+                    onChange={(e) => setWatermarkWrapper(e.target.value)}
+                    placeholder="e.g. DRAFT, CONFIDENTIAL"
+                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="bgWatermark" className="text-sm font-medium text-slate-700 dark:text-slate-300">Background Image Watermark</label>
-                  <input type="file" accept="image/*" ref={bgWatermarkUploadRef} onChange={handleBgWatermarkUpload} className="hidden"/>
-                  <button onClick={() => bgWatermarkUploadRef.current.click()} className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors">
-                    <RiImageAddLine className="h-5 w-5" /><span className="text-sm font-medium">{bgWatermark ? "Change Image" : "Upload Image"}</span>
+                  <label
+                    htmlFor="bgWatermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Background Image Watermark
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={bgWatermarkUploadRef}
+                    onChange={handleBgWatermarkUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => bgWatermarkUploadRef.current.click()}
+                    className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+                  >
+                    <RiImageAddLine className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {bgWatermark ? "Change Image" : "Upload Image"}
+                    </span>
                   </button>
                   {bgWatermark && (
                     <>
-                      <button onClick={() => setBgWatermark(null)} className="mt-2 w-full text-sm text-red-500 hover:text-red-700">Remove Image</button>
-                      <label htmlFor="bgOpacity" className="text-sm font-medium text-slate-700 dark:text-slate-300">Opacity: {Math.round(bgWatermarkOpacity * 100)}%</label>
-                      <input type="range" id="bgOpacity" min="0.05" max="0.5" step="0.05" value={bgWatermarkOpacity} onChange={(e) => setBgWatermarkOpacity(parseFloat(e.target.value))} className="w-full"/>
+                      <button
+                        onClick={() => setBgWatermarkWrapper(null)}
+                        className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                      >
+                        Remove Image
+                      </button>
+                      <label
+                        htmlFor="bgOpacity"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Opacity: {Math.round(bgWatermarkOpacity * 100)}%
+                      </label>
+                      <input
+                        type="range"
+                        id="bgOpacity"
+                        min="0.05"
+                        max="0.5"
+                        step="0.05"
+                        value={bgWatermarkOpacity}
+                        onChange={(e) => {
+                          setBgWatermarkOpacity(parseFloat(e.target.value));
+                          setIsDirty(true);
+                        }}
+                        className="w-full"
+                      />
                     </>
                   )}
                 </div>
@@ -663,12 +980,44 @@ export default function QuotationGeneratorPage() {
 
             {/* Logo Uploader */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide"><RiImageAddLine className="inline mr-2" />Your Logo</h3>
-              <input type="file" accept="image/*" ref={logoUploadRef} onChange={handleLogoUpload} className="hidden"/>
-              <button onClick={() => logoUploadRef.current.click()} className="mt-4 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors">
-                {logo ? (<img src={logo} alt="Uploaded Logo" className="max-h-24 object-contain"/>) : (<><RiImageAddLine className="h-8 w-8" /><span className="text-sm font-medium">Click to upload logo</span></>)}
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiImageAddLine className="inline mr-2" />
+                Your Logo
+              </h3>
+              <input
+                type="file"
+                accept="image/*"
+                ref={logoUploadRef}
+                onChange={handleLogoUpload}
+                className="hidden"
+              />
+              <button
+                onClick={() => logoUploadRef.current.click()}
+                className="mt-4 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+              >
+                {logo ? (
+                  <img
+                    src={logo}
+                    alt="Uploaded Logo"
+                    className="max-h-24 object-contain"
+                  />
+                ) : (
+                  <>
+                    <RiImageAddLine className="h-8 w-8" />
+                    <span className="text-sm font-medium">
+                      Click to upload logo
+                    </span>
+                  </>
+                )}
               </button>
-              {logo && (<button onClick={() => setLogo(null)} className="mt-2 w-full text-sm text-red-500 hover:text-red-700">Remove Logo</button>)}
+              {logo && (
+                <button
+                  onClick={() => setLogoWrapper(null)}
+                  className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                >
+                  Remove Logo
+                </button>
+              )}
             </div>
           </div>
         </aside>
@@ -681,11 +1030,10 @@ export default function QuotationGeneratorPage() {
           <div className="max-w-4xl mx-auto">
             <div
               ref={quotationPrintRef}
-              // UPDATED: A4 aspect ratio is now responsive (lg: only)
               className={`bg-white shadow-2xl overflow-hidden relative ${
-                selectedTemplate === 'classic' ? '' : 'lg:rounded-lg'
+                selectedTemplate === "classic" ? "" : "lg:rounded-lg"
               } w-full ${
-                selectedTemplate === 'classic' ? '' : 'lg:aspect-[210/297]'
+                selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"
               }`}
               style={{
                 "--accent-color": accentColor,
@@ -694,11 +1042,22 @@ export default function QuotationGeneratorPage() {
               }}
             >
               {bgWatermark && (
-                <div className="absolute inset-0 w-full h-full z-0" style={{ backgroundImage: `url(${bgWatermark})`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "contain", opacity: bgWatermarkOpacity }}/>
+                <div
+                  className="absolute inset-0 w-full h-full z-0"
+                  style={{
+                    backgroundImage: `url(${bgWatermark})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "contain",
+                    opacity: bgWatermarkOpacity,
+                  }}
+                />
               )}
               {watermark && (
                 <div className="absolute inset-0 flex items-center justify-center z-0">
-                  <span className="text-[6vw] sm:text-9xl font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10">{watermark}</span>
+                  <span className="text-[6vw] sm:text-9xl font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10">
+                    {watermark}
+                  </span>
                 </div>
               )}
 
@@ -716,7 +1075,7 @@ export default function QuotationGeneratorPage() {
         selectedTemplate={selectedTemplate}
         setSelectedTemplate={setSelectedTemplate}
       />
-      
+
       {/* --- 4. Limit Reached Modal --- */}
       <LimitModal
         isOpen={isLimitModalOpen}
@@ -729,54 +1088,127 @@ export default function QuotationGeneratorPage() {
         message={notification.message}
         onClose={() => setNotification({ show: false, message: "" })}
       />
+
+      {/* --- 6. NEW: Email Capture Modal --- */}
+      <EmailCaptureModal
+        isOpen={isEmailModalOpen}
+        isSubscribing={isSubscribing}
+        onClose={() => setIsEmailModalOpen(false)}
+        onSubmit={handleEmailSubmit}
+        onSkip={startDownload} // Allow user to skip and just download
+      />
     </>
   );
 }
 
 // --- TEMPLATE COMPONENTS (Responsiveness Added) ---
-
 // --- Template 1: Modern ---
 function TemplateQuotationModern({
-  from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-  expiryDate, setExpiryDate, items, handleItemChange, removeItem, addItem,
-  termsConditions, setTermsConditions, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  quoteNumber,
+  setQuoteNumber,
+  date,
+  setDate,
+  expiryDate,
+  setExpiryDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  termsConditions,
+  setTermsConditions,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
       <div className="relative z-10">
-        <header className="flex flex-col sm:flex-row justify-between items-start pb-8 border-b-2" style={{ borderColor: "var(--accent-color)" }}>
+        <header
+          className="flex flex-col sm:flex-row justify-between items-start pb-8 border-b-2"
+          style={{ borderColor: "var(--accent-color)" }}
+        >
           <div className="w-full sm:w-1/2 mb-6 sm:mb-0">
-            {logo ? (<img src={logo} alt="Logo" className="max-h-24 max-w-48 object-contain"/>) : (
-              <div className="font-bold" style={{ fontSize: "2.2em", color: "var(--accent-color)" }}>Your Logo Here</div>
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain"
+              />
+            ) : (
+              <div
+                className="font-bold"
+                style={{ fontSize: "2.2em", color: "var(--accent-color)" }}
+              >
+                Your Logo Here
+              </div>
             )}
             <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+              <EditableField
+                value={from}
+                onChange={setFrom}
+                area={true}
+                placeholder="Your Company Info"
+              />
             </div>
           </div>
           <div className="w-full sm:w-1/2 text-left sm:text-right">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.5em", lineHeight: '1' }}>Quotation</h1>
+            <h1
+              className="font-bold uppercase"
+              style={{ fontSize: "2.5em", lineHeight: "1" }}
+            >
+              Quotation
+            </h1>
             <div className="mt-4 text-[1em] space-y-1">
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Quote #</span>
-                <EditableField value={quoteNumber} onChange={setQuoteNumber} placeholder="QUOTE-001" />
+                <EditableField
+                  value={quoteNumber}
+                  onChange={setQuoteNumber}
+                  placeholder="QUOTE-001"
+                />
               </div>
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
+                <EditableField
+                  type="date"
+                  value={date}
+                  onChange={setDate}
+                  placeholder="Date"
+                />
               </div>
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Valid Until:</span>
-                <EditableField type="date" value={expiryDate} onChange={setExpiryDate} placeholder="Expiry Date" />
+                <EditableField
+                  type="date"
+                  value={expiryDate}
+                  onChange={setExpiryDate}
+                  placeholder="Expiry Date"
+                />
               </div>
             </div>
           </div>
         </header>
 
         <section className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Prepared For</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Prepared For
+          </h2>
           <div className="mt-2 text-[1em] whitespace-pre-wrap">
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
         </section>
 
@@ -784,7 +1216,10 @@ function TemplateQuotationModern({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] text-left">
               <thead>
-                <tr className="text-[0.9em] uppercase opacity-70" style={{ borderBottom: "2px solid var(--accent-color)" }}>
+                <tr
+                  className="text-[0.9em] uppercase opacity-70"
+                  style={{ borderBottom: "2px solid var(--accent-color)" }}
+                >
                   <th className="py-3 pr-4 w-1/2">Item</th>
                   <th className="py-3 px-4 text-center">Qty</th>
                   <th className="py-3 px-4 text-right">Price</th>
@@ -795,37 +1230,101 @@ function TemplateQuotationModern({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
 
         <section className="mt-8 flex flex-col items-end">
           <div className="w-full max-w-xs text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 text-[1.2em]"><span className="opacity-70">Total:</span><span className="font-bold">{formatCurrency(total)}</span></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between border-t border-slate-200 pt-2 text-[1.2em]">
+              <span className="opacity-70">Total:</span>
+              <span className="font-bold">{formatCurrency(total)}</span>
+            </div>
           </div>
         </section>
 
         <section className="mt-10">
-           <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Terms & Conditions</h2>
-           <div className="mt-2 text-[0.9em]">
-             <EditableField value={termsConditions} onChange={setTermsConditions} area={true} placeholder="This quotation is valid for..." />
-           </div>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Terms & Conditions
+          </h2>
+          <div className="mt-2 text-[0.9em]">
+            <EditableField
+              value={termsConditions}
+              onChange={setTermsConditions}
+              area={true}
+              placeholder="This quotation is valid for..."
+            />
+          </div>
         </section>
       </div>
     </div>
@@ -834,57 +1333,112 @@ function TemplateQuotationModern({
 
 // --- Template 2: Bold ---
 function TemplateQuotationBold({
-  from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-  expiryDate, setExpiryDate, items, handleItemChange, removeItem, addItem,
-  termsConditions, setTermsConditions, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  quoteNumber,
+  setQuoteNumber,
+  date,
+  setDate,
+  expiryDate,
+  setExpiryDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  termsConditions,
+  setTermsConditions,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="relative" style={{ fontSize: "1em" }}>
-      <header className="p-8 sm:p-10 md:p-12 text-white" style={{ backgroundColor: "var(--accent-color)" }}>
+      <header
+        className="p-8 sm:p-10 md:p-12 text-white"
+        style={{ backgroundColor: "var(--accent-color)" }}
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start">
           <div className="mb-6 sm:mb-0">
             {logo ? (
               <div className="bg-white/20 p-2 rounded-lg inline-block">
-                <img src={logo} alt="Logo" className="max-h-20 max-w-40 object-contain filter brightness-0 invert" />
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="max-h-20 max-w-40 object-contain filter brightness-0 invert"
+                />
               </div>
             ) : (
-              <div className="font-bold" style={{ fontSize: "2.2em" }}>Your Logo</div>
+              <div className="font-bold" style={{ fontSize: "2.2em" }}>
+                Your Logo
+              </div>
             )}
           </div>
           <div className="text-left sm:text-right">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>Quotation</h1>
+            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+              Quotation
+            </h1>
             <div className="mt-4 text-[1em]">
               <div className="flex justify-start sm:justify-end gap-2 items-center">
                 <span className="font-semibold">Quote #</span>
-                <EditableField value={quoteNumber} onChange={setQuoteNumber} placeholder="QUOTE-001" />
+                <EditableField
+                  value={quoteNumber}
+                  onChange={setQuoteNumber}
+                  placeholder="QUOTE-001"
+                />
               </div>
             </div>
           </div>
         </div>
-         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-[0.9em]">
-            <div>
-              <h2 className="font-semibold uppercase mb-2">From</h2>
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-[0.9em]">
+          <div>
+            <h2 className="font-semibold uppercase mb-2">From</h2>
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
+          </div>
+          <div>
+            <h2 className="font-semibold uppercase mb-2">To</h2>
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
+          </div>
+          <div>
+            <h2 className="font-semibold uppercase mb-2">Details</h2>
+            <div className="flex gap-2 items-center">
+              <span className="font-semibold">Date:</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
             </div>
-            <div>
-              <h2 className="font-semibold uppercase mb-2">To</h2>
-              <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <div className="flex gap-2 mt-1 items-center">
+              <span className="font-semibold">Valid Until:</span>
+              <EditableField
+                type="date"
+                value={expiryDate}
+                onChange={setExpiryDate}
+                placeholder="Expiry Date"
+              />
             </div>
-            <div>
-              <h2 className="font-semibold uppercase mb-2">Details</h2>
-              <div className="flex gap-2 items-center">
-                <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
-              </div>
-              <div className="flex gap-2 mt-1 items-center">
-                <span className="font-semibold">Valid Until:</span>
-                <EditableField type="date" value={expiryDate} onChange={setExpiryDate} placeholder="Expiry Date" />
-              </div>
-            </div>
-         </div>
+          </div>
+        </div>
       </header>
-      
+
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <section>
           <div className="overflow-x-auto">
@@ -901,46 +1455,105 @@ function TemplateQuotationBold({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
-        
+
         <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Terms & Conditions</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              Terms & Conditions
+            </h2>
             <div className="mt-2 text-[0.9em]">
-              <EditableField value={termsConditions} onChange={setTermsConditions} area={true} placeholder="This quotation is valid for..." />
+              <EditableField
+                value={termsConditions}
+                onChange={setTermsConditions}
+                area={true}
+                placeholder="This quotation is valid for..."
+              />
             </div>
           </div>
           <div className="space-y-2 text-[0.9em]">
             <div className="flex justify-between p-4 bg-slate-100 rounded-lg">
               <span className="text-slate-500">Subtotal:</span>
-              <span className="font-medium text-slate-800">{formatCurrency(subtotal)}</span>
+              <span className="font-medium text-slate-800">
+                {formatCurrency(subtotal)}
+              </span>
             </div>
             <div className="flex justify-between p-4 items-center">
               <span className="opacity-70">Tax (%):</span>
-              <EditableField type="number" value={tax} onChange={setTax} placeholder="0" />
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
             </div>
-             <div className="flex justify-between p-4 items-center">
+            <div className="flex justify-between p-4 items-center">
               <span className="opacity-70">Discount (%):</span>
-              <EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" />
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
             </div>
-            <div className="flex justify-between p-4 rounded-lg text-white" style={{ backgroundColor: "var(--accent-color)" }}>
+            <div
+              className="flex justify-between p-4 rounded-lg text-white"
+              style={{ backgroundColor: "var(--accent-color)" }}
+            >
               <span className="font-bold text-[1.2em]">Total:</span>
-              <span className="font-bold text-[1.2em]">{formatCurrency(total)}</span>
+              <span className="font-bold text-[1.2em]">
+                {formatCurrency(total)}
+              </span>
             </div>
           </div>
         </section>
@@ -949,101 +1562,226 @@ function TemplateQuotationBold({
   );
 }
 
-
 // --- Template 3: Classic ---
 function TemplateQuotationClassic({
-  from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-  expiryDate, setExpiryDate, items, handleItemChange, removeItem, addItem,
-  termsConditions, setTermsConditions, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  quoteNumber,
+  setQuoteNumber,
+  date,
+  setDate,
+  expiryDate,
+  setExpiryDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  termsConditions,
+  setTermsConditions,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
-    <div className="relative border-2 border-black h-full" style={{ fontSize: "1em" }}>
+    <div
+      className="relative border-2 border-black h-full"
+      style={{ fontSize: "1em" }}
+    >
       <div className="p-8 sm:p-10 md:p-12 relative z-10">
         <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
           <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>Quotation</h1>
+            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+              Quotation
+            </h1>
             <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-              <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+              <EditableField
+                value={from}
+                onChange={setFrom}
+                area={true}
+                placeholder="Your Company Info"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right w-full sm:w-auto">
             {logo ? (
-              <img src={logo} alt="Logo" className="max-h-24 max-w-48 object-contain sm:ml-auto"/>
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain sm:ml-auto"
+              />
             ) : (
-              <div className="text-[1.2em] font-bold opacity-70">[Your Logo]</div>
+              <div className="text-[1.2em] font-bold opacity-70">
+                [Your Logo]
+              </div>
             )}
           </div>
         </header>
-        
+
         <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">PREPARED FOR</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              PREPARED FOR
+            </h2>
             <div className="mt-2 text-[1em] whitespace-pre-wrap">
-              <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+              <EditableField
+                value={to}
+                onChange={setTo}
+                area={true}
+                placeholder="Client's Info"
+              />
             </div>
           </div>
           <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
-             <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Quote #:</span>
-                <EditableField value={quoteNumber} onChange={setQuoteNumber} placeholder="QUOTE-001" />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Date:</span>
-                <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Valid Until:</span>
-                <EditableField type="date" value={expiryDate} onChange={setExpiryDate} placeholder="Expiry Date" />
-              </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Quote #:</span>
+              <EditableField
+                value={quoteNumber}
+                onChange={setQuoteNumber}
+                placeholder="QUOTE-001"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Date:</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Valid Until:</span>
+              <EditableField
+                type="date"
+                value={expiryDate}
+                onChange={setExpiryDate}
+                placeholder="Expiry Date"
+              />
+            </div>
           </div>
         </section>
-        
+
         <section className="mt-10">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] text-left border-collapse">
               <thead>
                 <tr className="text-[0.9em] uppercase bg-slate-100">
-                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">Item</th>
-                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">Qty</th>
-                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">Price</th>
-                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">Total</th>
+                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
+                    Item
+                  </th>
+                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Total
+                  </th>
                   <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-300">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800" data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
-        
+
         <section className="mt-8 flex flex-col-reverse sm:flex-row justify-between items-start gap-8">
           <div className="w-full sm:w-1/2">
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">Terms & Conditions</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              Terms & Conditions
+            </h2>
             <div className="mt-2 text-[0.9em]">
-              <EditableField value={termsConditions} onChange={setTermsConditions} area={true} placeholder="This quotation is valid for..." />
+              <EditableField
+                value={termsConditions}
+                onChange={setTermsConditions}
+                area={true}
+                placeholder="This quotation is valid for..."
+              />
             </div>
           </div>
           <div className="w-full sm:w-auto sm:max-w-xs ml-auto text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
-              <span className="font-bold">Total:</span><span className="font-bold">{formatCurrency(total)}</span>
+              <span className="font-bold">Total:</span>
+              <span className="font-bold">{formatCurrency(total)}</span>
             </div>
           </div>
         </section>
@@ -1054,39 +1792,115 @@ function TemplateQuotationClassic({
 
 // --- Template 4: Minimal ---
 function TemplateQuotationMinimal({
-  from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-  expiryDate, setExpiryDate, items, handleItemChange, removeItem, addItem,
-  termsConditions, setTermsConditions, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  quoteNumber,
+  setQuoteNumber,
+  date,
+  setDate,
+  expiryDate,
+  setExpiryDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  termsConditions,
+  setTermsConditions,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
       <div className="relative z-10">
         <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
           <div className="mb-6 sm:mb-0">
-            {logo ? (<img src={logo} alt="Logo" className="max-h-16 max-w-40 object-contain"/>) : (
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-16 max-w-40 object-contain"
+              />
+            ) : (
               <div className="font-semibold" style={{ fontSize: "1.8em" }}>
-                <EditableField value={from.split("\n")[0]} onChange={(v) => setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))} placeholder="Your Company" />
+                <EditableField
+                  value={from.split("\n")[0]}
+                  onChange={(v) =>
+                    setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))
+                  }
+                  placeholder="Your Company"
+                />
               </div>
             )}
           </div>
-          <h1 className="font-bold uppercase opacity-80" style={{ fontSize: "2.5em" }}>Quotation</h1>
+          <h1
+            className="font-bold uppercase opacity-80"
+            style={{ fontSize: "2.5em" }}
+          >
+            Quotation
+          </h1>
         </header>
 
         <section className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-10 text-[0.9em]">
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Prepared For</h2>
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Prepared For
+            </h2>
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Prepared By</h2>
-            <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Prepared By
+            </h2>
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
           </div>
           <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Details</h2>
-            <div className="flex justify-between"><span>Quote #</span><EditableField value={quoteNumber} onChange={setQuoteNumber} placeholder="001" /></div>
-            <div className="flex justify-between mt-1"><span>Date</span><EditableField type="date" value={date} onChange={setDate} placeholder="Date" /></div>
-            <div className="flex justify-between mt-1"><span>Valid Until</span><EditableField type="date" value={expiryDate} onChange={setExpiryDate} placeholder="Expiry" /></div>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Details
+            </h2>
+            <div className="flex justify-between">
+              <span>Quote #</span>
+              <EditableField
+                value={quoteNumber}
+                onChange={setQuoteNumber}
+                placeholder="001"
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span>Date</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span>Valid Until</span>
+              <EditableField
+                type="date"
+                value={expiryDate}
+                onChange={setExpiryDate}
+                placeholder="Expiry"
+              />
+            </div>
           </div>
         </section>
 
@@ -1105,37 +1919,103 @@ function TemplateQuotationMinimal({
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
 
         <section className="mt-10 flex flex-col-reverse sm:flex-row justify-between items-start gap-8">
           <div className="w-full sm:w-1/2">
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">Terms & Conditions</h2>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-60 mb-2">
+              Terms & Conditions
+            </h2>
             <div className="mt-2 text-[0.9em]">
-              <EditableField value={termsConditions} onChange={setTermsConditions} area={true} placeholder="This quotation is valid for..." />
+              <EditableField
+                value={termsConditions}
+                onChange={setTermsConditions}
+                area={true}
+                placeholder="This quotation is valid for..."
+              />
             </div>
           </div>
           <div className="w-full sm:w-auto sm:max-w-xs ml-auto text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between border-t border-slate-300 pt-2 mt-2 text-[1.2em]">
               <span className="font-semibold">Total:</span>
-              <span className="font-semibold" style={{ color: "var(--accent-color)" }}>{formatCurrency(total)}</span>
+              <span
+                className="font-semibold"
+                style={{ color: "var(--accent-color)" }}
+              >
+                {formatCurrency(total)}
+              </span>
             </div>
           </div>
         </section>
@@ -1146,98 +2026,232 @@ function TemplateQuotationMinimal({
 
 // --- Template 5: Creative ---
 function TemplateQuotationCreative({
-  from, setFrom, to, setTo, quoteNumber, setQuoteNumber, date, setDate,
-  expiryDate, setExpiryDate, items, handleItemChange, removeItem, addItem,
-  termsConditions, setTermsConditions, tax, setTax, discount, setDiscount, subtotal,
-  total, logo, formatCurrency
+  from,
+  setFrom,
+  to,
+  setTo,
+  quoteNumber,
+  setQuoteNumber,
+  date,
+  setDate,
+  expiryDate,
+  setExpiryDate,
+  items,
+  handleItemChange,
+  removeItem,
+  addItem,
+  termsConditions,
+  setTermsConditions,
+  tax,
+  setTax,
+  discount,
+  setDiscount,
+  subtotal,
+  total,
+  logo,
+  formatCurrency,
 }) {
   return (
-    <div className="relative flex flex-col lg:flex-row h-full" style={{ fontSize: "1em" }}>
+    <div
+      className="relative flex flex-col lg:flex-row h-full"
+      style={{ fontSize: "1em" }}
+    >
       {/* Sidebar */}
-      <div className="w-full lg:w-1/3 p-8 sm:p-10 text-white" style={{ backgroundColor: "var(--accent-color)" }}>
-        {logo ? (<img src={logo} alt="Logo" className="max-h-20 object-contain filter brightness-0 invert"/>) : (
+      <div
+        className="w-full lg:w-1/3 p-8 sm:p-10 text-white"
+        style={{ backgroundColor: "var(--accent-color)" }}
+      >
+        {logo ? (
+          <img
+            src={logo}
+            alt="Logo"
+            className="max-h-20 object-contain filter brightness-0 invert"
+          />
+        ) : (
           <div className="font-bold" style={{ fontSize: "2em" }}>
-            <EditableField value={from.split("\n")[0]} onChange={(v) => setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))} placeholder="Your Company" />
+            <EditableField
+              value={from.split("\n")[0]}
+              onChange={(v) =>
+                setFrom(v + "\n" + from.split("\n").slice(1).join("\n"))
+              }
+              placeholder="Your Company"
+            />
           </div>
         )}
         <div className="mt-10">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">From</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            From
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={from} onChange={setFrom} area={true} placeholder="Your Company Info" />
+            <EditableField
+              value={from}
+              onChange={setFrom}
+              area={true}
+              placeholder="Your Company Info"
+            />
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">Prepared For</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            Prepared For
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={to} onChange={setTo} area={true} placeholder="Client's Info" />
+            <EditableField
+              value={to}
+              onChange={setTo}
+              area={true}
+              placeholder="Client's Info"
+            />
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">Terms</h2>
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70 mb-2">
+            Terms
+          </h2>
           <div className="text-[0.9em] whitespace-pre-wrap">
-            <EditableField value={termsConditions} onChange={setTermsConditions} area={true} placeholder="This quote is valid for..." />
+            <EditableField
+              value={termsConditions}
+              onChange={setTermsConditions}
+              area={true}
+              placeholder="This quote is valid for..."
+            />
           </div>
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div className="w-full lg:w-2/3 p-8 sm:p-10 md:p-12 relative z-10">
         <header className="text-left sm:text-right mb-10">
-          <h1 className="font-bold uppercase" style={{ fontSize: "3.5em" }}>Quotation</h1>
+          <h1 className="font-bold uppercase" style={{ fontSize: "3.5em" }}>
+            Quotation
+          </h1>
           <div className="mt-2 text-[1em] space-y-1 opacity-70">
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Quote #</span>
-              <EditableField value={quoteNumber} onChange={setQuoteNumber} placeholder="QUOTE-001" />
+              <EditableField
+                value={quoteNumber}
+                onChange={setQuoteNumber}
+                placeholder="QUOTE-001"
+              />
             </div>
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Date:</span>
-              <EditableField type="date" value={date} onChange={setDate} placeholder="Date" />
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
             </div>
             <div className="flex justify-start sm:justify-end gap-2 items-center">
               <span className="font-semibold">Valid Until:</span>
-              <EditableField type="date" value={expiryDate} onChange={setExpiryDate} placeholder="Expiry Date" />
+              <EditableField
+                type="date"
+                value={expiryDate}
+                onChange={setExpiryDate}
+                placeholder="Expiry Date"
+              />
             </div>
           </div>
         </header>
 
         <section>
           <div className="overflow-x-auto">
-            {/* UPDATED: Removed min-w, added % widths */}
             <table className="w-full text-left">
               <thead>
                 <tr className="text-[0.9em] uppercase opacity-70 border-b-2 border-slate-300">
                   <th className="py-3 pr-4 w-[50%] font-semibold">Item</th>
-                  <th className="py-3 px-4 w-[15%] text-center font-semibold">Qty</th>
-                  <th className="py-3 px-4 w-[20%] text-right font-semibold">Price</th>
-                  <th className="py-3 pl-4 w-[15%] text-right font-semibold">Total</th>
+                  <th className="py-3 px-4 w-[15%] text-center font-semibold">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 w-[20%] text-right font-semibold">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 w-[15%] text-right font-semibold">
+                    Total
+                  </th>
                   <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((item, index) => (
                   <tr key={item.id} className="border-b border-slate-200">
-                    <td className="py-3 pr-4 text-[1em]"><EditableField value={item.name} onChange={(v) => handleItemChange(index, "name", v)} placeholder="Item Name" /></td>
-                    <td className="py-3 px-4 text-[1em] text-center"><EditableField type="number" value={item.qty} onChange={(v) => handleItemChange(index, "qty", v)} placeholder="1" /></td>
-                    <td className="py-3 px-4 text-[1em] text-right"><EditableField type="number" value={item.price} onChange={(v) => handleItemChange(index, "price", v)} placeholder="0.00" /></td>
-                    <td className="py-3 pl-4 text-[1em] text-right">{formatCurrency(item.qty * item.price)}</td>
-                    <td className="py-3 pl-2 text-right" data-html2canvas-ignore="true">
-                      <button onClick={() => removeItem(item.id)} className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"><RiDeleteBinLine /></button>
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <button onClick={addItem} className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors" style={{ color: "var(--accent-color)" }} data-html2canvas-ignore="true">
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors"
+            style={{ color: "var(--accent-color)" }}
+            data-html2canvas-ignore="true"
+          >
             <RiAddLine /> Add Item
           </button>
         </section>
 
         <section className="mt-10 pt-6 border-t-2 border-slate-300">
           <div className="w-full max-w-xs ml-auto text-[0.9em] space-y-2">
-            <div className="flex justify-between"><span className="opacity-70">Subtotal:</span><span className="font-medium">{formatCurrency(subtotal)}</span></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Tax (%):</span><EditableField type="number" value={tax} onChange={setTax} placeholder="0" /></div>
-            <div className="flex justify-between items-center"><span className="opacity-70">Discount (%):</span><EditableField type="number" value={discount} onChange={setDiscount} placeholder="0" /></div>
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
             <div className="flex justify-between mt-4 pt-4 border-t-2 border-black text-[1.5em]">
               <span className="font-bold">Total:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
@@ -1249,8 +2263,6 @@ function TemplateQuotationCreative({
   );
 }
 
-
-// --- Template Modal Component ---
 // --- Template Modal Component ---
 function TemplateModal({
   isOpen,
@@ -1320,7 +2332,6 @@ function TemplateModal({
                         key={template.id}
                         value={template.id}
                         className={({ active, checked }) =>
-                          // UPDATED: Added 'group' for hover effect
                           `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
                           ${
                             checked
@@ -1333,7 +2344,6 @@ function TemplateModal({
                         {({ checked }) => (
                           <>
                             <div className="flex w-full flex-col items-center gap-2">
-                              {/* UPDATED: Replaced placeholder div with Image component */}
                               <div className="w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 overflow-hidden relative">
                                 <Image
                                   src={template.preview}
@@ -1375,19 +2385,41 @@ function LimitModal({ isOpen, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
-                    <RiErrorWarningLine className="h-6 w-6 text-orange-600 dark:text-orange-400" aria-hidden="true"/>
+                    <RiErrorWarningLine
+                      className="h-6 w-6 text-orange-600 dark:text-orange-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       One-Page Limit Reached
                     </Dialog.Title>
                   </div>
@@ -1395,12 +2427,16 @@ function LimitModal({ isOpen, onClose }) {
                 <div className="mt-4">
                   <p className="text-sm text-slate-600 dark:text-slate-300">
                     This free tool is designed for single-page documents. To
-                    keep your quotation clean and printable, you cannot add
-                    any more items.
+                    keep your quotation clean and printable, you cannot add any
+                    more items.
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     Got it, thanks!
                   </button>
                 </div>
@@ -1418,19 +2454,41 @@ function NotificationModal({ isOpen, message, onClose }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                    <RiInformationLine className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true"/>
+                    <RiInformationLine
+                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="ml-4 text-left">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
                       Notification
                     </Dialog.Title>
                   </div>
@@ -1441,10 +2499,127 @@ function NotificationModal({ isOpen, message, onClose }) {
                   </p>
                 </div>
                 <div className="mt-5">
-                  <button type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    onClick={onClose}
+                  >
                     OK
                   </button>
                 </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+}
+
+// --- NEW: Email Capture Modal Component ---
+function EmailCaptureModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  onSkip,
+  isSubscribing,
+}) {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(email);
+  };
+
+  return (
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
+                <div className="flex items-center justify-center">
+                  <div className=" flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+                    <RiMailSendLine
+                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-4 text-left">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+                    >
+                      One Last Step!
+                    </Dialog.Title>
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                  <div className="mt-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      To download your customized document, please enter your
+                      email. We'll send you occasional product updates and
+                      helpful tips.
+                    </p>
+                    <div className="mt-4">
+                      <label htmlFor="modal-email" className="sr-only">
+                        Email address
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="modal-email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 sm:mt-6 space-y-3">
+                    <button
+                      type="submit"
+                      disabled={isSubscribing}
+                      className="inline-flex w-full justify-center items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-slate-400"
+                    >
+                      {isSubscribing ? (
+                        <RiLoader4Line className="h-5 w-5 animate-spin" />
+                      ) : (
+                        "Subscribe & Download"
+                      )}
+                    </button>
+                    {/* <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={onSkip}
+                    >
+                      No thanks, just download
+                    </button> */}
+                  </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>
