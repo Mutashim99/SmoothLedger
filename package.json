@@ -13,6 +13,7 @@
     "@react-email/components": "^1.0.0",
     "@react-email/render": "^2.0.0",
     "@supabase/supabase-js": "^2.81.1",
+    "@vercel/analytics": "^1.5.0",
     "chart.js": "^4.4.3",
     "framer-motion": "^11.3.8",
     "html2canvas": "^1.4.1",

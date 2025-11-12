@@ -1,5 +1,5 @@
 /* File: app/layout.jsx */
-
+import { Analytics } from '@vercel/analytics/next';
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
@@ -154,6 +154,7 @@ function Footer() {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      
       <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}>
         <ThemeProvider
           attribute="class"
@@ -165,6 +166,7 @@ export default function RootLayout({ children }) {
           <main className="flex-grow">{children}</main>
           <Footer /> {/* <-- Renders redesigned Server Component Footer */}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
