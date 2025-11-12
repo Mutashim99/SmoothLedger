@@ -521,12 +521,23 @@ export default function QuotationGeneratorPage() {
     const element = quotationPrintRef.current;
     if (!element) return;
 
+    // 1. Store Original Width
+    const originalWidth = element.style.width;
+
+    // 2. Force Desktop Width (A4 Size approx in px)
+    // This ensures html2canvas sees a "Desktop" layout even on mobile
+    element.style.width = "794px";
+
     const scale = 2;
     const canvas = await html2canvas(element, {
       scale: scale,
       useCORS: true,
       backgroundColor: "#ffffff",
+      windowWidth: 1200, // Force 'lg' breakpoints to trigger
     });
+
+    // 3. Restore Original Width (So UI doesn't stay broken)
+    element.style.width = originalWidth;
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({

@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
+
+// /api/broadcast
 export async function POST(request) {
   try {
     const { email } = await request.json();

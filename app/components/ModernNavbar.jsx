@@ -1,6 +1,6 @@
 /* File: components/ModernNavbar.jsx */
 
-"use client"; 
+"use client";
 
 import { Fragment } from "react";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import {
   RiMenuLine,
   RiCloseLine,
 } from "react-icons/ri";
+import Image from "next/image";
 
 // Helper function to join class names
 function classNames(...classes) {
@@ -25,9 +26,23 @@ const toolLinks = [
   // Using shortened names for the desktop
   { name: "Invoice", href: "/invoice-generator", icon: RiFileTextLine },
   { name: "Payslip", href: "/payslip-generator", icon: RiPagesLine },
-  { name: "Quotation", href: "/quotation-generator", icon: RiMoneyDollarCircleLine },
-  { name: "Loan", href: "/loan-calculator", icon: RiCalculatorLine, mobileName: "Loan Calc" },
-  { name: "Margin", href: "/profit-margin-calculator", icon: RiPercentLine, mobileName: "Margin Calc" },
+  {
+    name: "Quotation",
+    href: "/quotation-generator",
+    icon: RiMoneyDollarCircleLine,
+  },
+  {
+    name: "Loan",
+    href: "/loan-calculator",
+    icon: RiCalculatorLine,
+    mobileName: "Loan Calc",
+  },
+  {
+    name: "Margin",
+    href: "/profit-margin-calculator",
+    icon: RiPercentLine,
+    mobileName: "Margin Calc",
+  },
 ];
 
 const mainLinks = [
@@ -40,24 +55,46 @@ export function ModernNavbar() {
   const pathname = usePathname();
 
   return (
-    <Disclosure as="nav" className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-sm">
+    <Disclosure
+      as="nav"
+      className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-sm"
+    >
       {({ open }) => (
         <>
           {/* Main Navbar */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-              
               {/* Wrapper for Logo + Company Links */}
-              <div className="flex items-center space-x-8"> {/* <-- Increased space */}
+              <div className="flex items-center space-x-8">
+                {" "}
+                {/* <-- Increased space */}
                 {/* 1. Logo */}
                 <div className="flex-shrink-0 flex items-center">
-                  <Link href="/" className="text-2xl font-bold text-slate-900 dark:text-white">
-                    Smooth<span className="text-blue-600 dark:text-blue-500">Ledger</span>
+                  {/* I've set width and height to 40px as an example.
+      You can adjust these values.
+    */}
+                  {/* <Image
+                    src={"/SLlogo1.png"}
+                    alt={"logo"}
+                    width={40}
+                    height={40}
+                    objectFit="contain" // 'contain' is better for logos
+                    className="transition-transform duration-300 "
+                  /> */}
+                  <Link
+                    href="/"
+                    className="ml-3 text-2xl font-bold text-slate-900 dark:text-white" // Added ml-3 for spacing
+                  >
+                    Smooth
+                    <span className="text-blue-600 dark:text-blue-500">
+                      Ledger
+                    </span>
                   </Link>
                 </div>
-
                 {/* 2. Desktop "Company" Links */}
-                <div className="hidden lg:flex lg:space-x-7"> {/* <-- Increased space */}
+                <div className="hidden lg:flex lg:space-x-7">
+                  {" "}
+                  {/* <-- Increased space */}
                   {mainLinks.map((link) => (
                     <Link
                       key={link.name}
@@ -76,7 +113,9 @@ export function ModernNavbar() {
               </div>
 
               {/* Desktop "Tool" Links (pushed to right) */}
-              <div className="hidden lg:flex lg:items-center lg:space-x-7"> {/* <-- Increased space */}
+              <div className="hidden lg:flex lg:items-center lg:space-x-7">
+                {" "}
+                {/* <-- Increased space */}
                 {toolLinks.map((link) => {
                   const Icon = link.icon; // Alias the icon
                   return (
@@ -90,7 +129,8 @@ export function ModernNavbar() {
                         "inline-flex items-center gap-1.5 text-base font-medium transition-colors" // <-- FIX: Changed to text-base
                       )}
                     >
-                      <Icon className="h-5 w-5" /> {/* <-- FIX: Icon is back! */}
+                      <Icon className="h-5 w-5" />{" "}
+                      {/* <-- FIX: Icon is back! */}
                       {link.name}
                     </Link>
                   );
@@ -139,7 +179,7 @@ export function ModernNavbar() {
                     {item.name}
                   </Disclosure.Button>
                 ))}
-                
+
                 {/* Mobile Tools Links */}
                 <div className="pt-3">
                   <h3 className="px-3 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">

@@ -22,8 +22,8 @@ import {
   RiFolderOpenLine,
   RiDeleteBin2Line,
   RiInformationLine,
-  RiMailSendLine, // NEW: For email modal
-  RiLoader4Line, // NEW: For loading spinner
+  RiMailSendLine,
+  RiLoader4Line,
 } from "react-icons/ri";
 import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -158,9 +158,9 @@ export default function InvoiceGeneratorPage() {
     show: false,
     message: "",
   });
-  const [isDirty, setIsDirty] = useState(false); // NEW: Tracks if user has edited
-  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // NEW: Email modal state
-  const [isSubscribing, setIsSubscribing] = useState(false); // NEW: Loading state for email form
+  const [isDirty, setIsDirty] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -197,7 +197,6 @@ export default function InvoiceGeneratorPage() {
     }
   }, []);
 
-  // Auto-save "My Details" if toggle is on
   useEffect(() => {
     if (saveMyDetails) {
       try {
@@ -208,11 +207,8 @@ export default function InvoiceGeneratorPage() {
     }
   }, [from, saveMyDetails]);
 
-  // NEW: Check if user has already subscribed
   useEffect(() => {
     if (localStorage.getItem("smoothledger-subscribed") === "true") {
-      // If they have, we'll just treat them as "clean"
-      // This means they can download edited files without seeing the modal again.
       setIsDirty(false);
     }
   }, []);
@@ -240,8 +236,7 @@ export default function InvoiceGeneratorPage() {
     }).format(amount);
   };
 
-  // --- Wrapper functions to set isDirty ---
-  // NEW: We wrap all state setters to also set isDirty to true.
+  // Wrappers
   const setFromWrapper = (value) => {
     setFrom(value);
     setIsDirty(true);
@@ -315,26 +310,25 @@ export default function InvoiceGeneratorPage() {
     setIsDirty(true);
   };
 
-  // --- EVENT HANDLERS ---
+  // Handlers
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLogoWrapper(URL.createObjectURL(file)); // UPDATED
+      setLogoWrapper(URL.createObjectURL(file));
     }
   };
   const handleBgWatermarkUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setBgWatermarkWrapper(URL.createObjectURL(file)); // UPDATED
+      setBgWatermarkWrapper(URL.createObjectURL(file));
     }
   };
 
-  // Line Items
   const handleItemChange = (index, field, value) => {
     const newItems = [...items];
     newItems[index][field] =
       field === "qty" || field === "price" ? parseFloat(value) || 0 : value;
-    setItemsWrapper(newItems); // UPDATED
+    setItemsWrapper(newItems);
   };
 
   const addItem = () => {
@@ -343,17 +337,15 @@ export default function InvoiceGeneratorPage() {
       return;
     }
     setItemsWrapper([
-      // UPDATED
       ...items,
       { id: Date.now(), name: "New Item", qty: 1, price: 0 },
     ]);
   };
 
   const removeItem = (id) => {
-    setItemsWrapper(items.filter((item) => item.id !== id)); // UPDATED
+    setItemsWrapper(items.filter((item) => item.id !== id));
   };
 
-  // --- Local Storage Handlers ---
   const handleSaveMyDetailsToggle = (isOn) => {
     setSaveMyDetails(isOn);
     if (!isOn) {
@@ -390,11 +382,10 @@ export default function InvoiceGeneratorPage() {
     const clientValue = e.target.value;
     setSelectedClient(clientValue);
     if (clientValue) {
-      setToWrapper(clientValue); // UPDATED
+      setToWrapper(clientValue);
     }
   };
 
-  // --- Save/Load Invoice Handlers ---
   const handleSaveInvoice = () => {
     if (!invoiceNumber || !invoiceNumber.trim()) {
       setNotification({
@@ -461,8 +452,6 @@ export default function InvoiceGeneratorPage() {
     setSelectedInvoiceId(invoiceId);
     if (!invoiceId) return;
     const invoiceToLoad = savedInvoices.find((inv) => inv.id === invoiceId);
-
-    // Loading data should not trigger the "isDirty" state
     if (invoiceToLoad) {
       setFrom(invoiceToLoad.from);
       setTo(invoiceToLoad.to);
@@ -491,8 +480,6 @@ export default function InvoiceGeneratorPage() {
       return;
     }
 
-    // NOTE: We are keeping window.confirm for this delete action
-    // as it's destructive and we already use modals for simple notifications.
     if (
       !window.confirm(
         `Are you sure you want to delete invoice ${selectedInvoiceId}? This cannot be undone.`
@@ -521,18 +508,29 @@ export default function InvoiceGeneratorPage() {
     }
   };
 
-  // PDF Download (UPDATED LOGIC)
+  // --- PDF Download Logic (FIXED FOR MOBILE) ---
   const startDownload = async () => {
     setIsDownloading(true);
     const element = invoicePrintRef.current;
     if (!element) return;
+
+    // 1. Store Original Width
+    const originalWidth = element.style.width;
+
+    // 2. Force Desktop Width (A4 Size approx in px)
+    // This ensures html2canvas sees a "Desktop" layout even on mobile
+    element.style.width = "794px";
 
     const scale = 2;
     const canvas = await html2canvas(element, {
       scale: scale,
       useCORS: true,
       backgroundColor: "#ffffff",
+      windowWidth: 1200, // Force 'lg' breakpoints to trigger
     });
+
+    // 3. Restore Original Width (So UI doesn't stay broken)
+    element.style.width = originalWidth;
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
@@ -562,18 +560,14 @@ export default function InvoiceGeneratorPage() {
     setIsDownloading(false);
   };
 
-  // NEW: This is the new click handler for the download button
   const handleDownloadClick = () => {
     if (isDirty) {
-      // User has edited, show email modal
       setIsEmailModalOpen(true);
     } else {
-      // User has not edited, download immediately
       startDownload();
     }
   };
 
-  // NEW: This function handles the email submission
   const handleEmailSubmit = async (email) => {
     setIsSubscribing(true);
     try {
@@ -584,18 +578,14 @@ export default function InvoiceGeneratorPage() {
       });
 
       if (!response.ok) {
-        // Handle HTTP errors
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to subscribe");
       }
 
-      // Success! Set a flag in local storage so we don't ask again.
       localStorage.setItem("smoothledger-subscribed", "true");
     } catch (error) {
       console.error("Subscription error:", error.message);
-      // We still let them download, just show a silent error in console
     } finally {
-      // ALWAYS close modal, reset state, and start download
       setIsSubscribing(false);
       setIsEmailModalOpen(false);
       startDownload();
@@ -621,25 +611,25 @@ export default function InvoiceGeneratorPage() {
   const renderInvoiceTemplate = () => {
     const commonProps = {
       from,
-      setFrom: setFromWrapper, // UPDATED
+      setFrom: setFromWrapper,
       to,
-      setTo: setToWrapper, // UPDATED
+      setTo: setToWrapper,
       invoiceNumber,
-      setInvoiceNumber: setInvoiceNumberWrapper, // UPDATED
+      setInvoiceNumber: setInvoiceNumberWrapper,
       date,
-      setDate: setDateWrapper, // UPDATED
+      setDate: setDateWrapper,
       dueDate,
-      setDueDate: setDueDateWrapper, // UPDATED
+      setDueDate: setDueDateWrapper,
       items,
-      handleItemChange, // This already calls the wrapper
-      removeItem, // This already calls the wrapper
-      addItem, // This already calls the wrapper
+      handleItemChange,
+      removeItem,
+      addItem,
       notes,
-      setNotes: setNotesWrapper, // UPDATED
+      setNotes: setNotesWrapper,
       tax,
-      setTax: setTaxWrapper, // UPDATED
+      setTax: setTaxWrapper,
       discount,
-      setDiscount: setDiscountWrapper, // UPDATED
+      setDiscount: setDiscountWrapper,
       subtotal,
       total,
       logo,
@@ -673,7 +663,7 @@ export default function InvoiceGeneratorPage() {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={handleDownloadClick} // UPDATED: This is the new logic
+            onClick={handleDownloadClick}
             disabled={isDownloading}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition-all disabled:bg-slate-400"
           >
@@ -712,7 +702,7 @@ export default function InvoiceGeneratorPage() {
                     type="color"
                     id="accentColor"
                     value={accentColor}
-                    onChange={(e) => setAccentColorWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setAccentColorWrapper(e.target.value)}
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: accentColor }}
                   />
@@ -728,7 +718,7 @@ export default function InvoiceGeneratorPage() {
                     type="color"
                     id="textColor"
                     value={textColor}
-                    onChange={(e) => setTextColorWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setTextColorWrapper(e.target.value)}
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: textColor }}
                   />
@@ -743,7 +733,7 @@ export default function InvoiceGeneratorPage() {
                   <select
                     id="fontFamily"
                     value={fontFamily}
-                    onChange={(e) => setFontFamilyWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setFontFamilyWrapper(e.target.value)}
                     className="p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="Inter, sans-serif">Inter (Modern)</option>
@@ -770,7 +760,7 @@ export default function InvoiceGeneratorPage() {
                     value={fontSize}
                     onChange={(e) =>
                       setFontSizeWrapper(parseInt(e.target.value, 10))
-                    } // UPDATED
+                    }
                     className="w-full"
                   />
                 </div>
@@ -838,17 +828,11 @@ export default function InvoiceGeneratorPage() {
                   <Switch
                     checked={saveMyDetails}
                     onChange={handleSaveMyDetailsToggle}
-                    className={`${
-                      saveMyDetails
-                        ? "bg-blue-600"
-                        : "bg-slate-300 dark:bg-slate-700"
-                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                    className={`${saveMyDetails ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-700"} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span className="sr-only">Save My Details</span>
                     <span
-                      className={`${
-                        saveMyDetails ? "translate-x-6" : "translate-x-1"
-                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                      className={`${saveMyDetails ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
                 </div>
@@ -902,7 +886,7 @@ export default function InvoiceGeneratorPage() {
                   <select
                     id="currency"
                     value={currencyCode}
-                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)}
                     className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     {currencyList.map((currency) => (
@@ -912,7 +896,6 @@ export default function InvoiceGeneratorPage() {
                     ))}
                   </select>
                 </div>
-
                 <div className="space-y-2">
                   <label
                     htmlFor="watermark"
@@ -924,7 +907,7 @@ export default function InvoiceGeneratorPage() {
                     type="text"
                     id="watermark"
                     value={watermark}
-                    onChange={(e) => setWatermarkWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setWatermarkWrapper(e.target.value)}
                     placeholder="e.g. DRAFT, CONFIDENTIAL"
                     className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
@@ -955,7 +938,7 @@ export default function InvoiceGeneratorPage() {
                   {bgWatermark && (
                     <>
                       <button
-                        onClick={() => setBgWatermarkWrapper(null)} // UPDATED
+                        onClick={() => setBgWatermarkWrapper(null)}
                         className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
                       >
                         Remove Image
@@ -974,7 +957,6 @@ export default function InvoiceGeneratorPage() {
                         step="0.05"
                         value={bgWatermarkOpacity}
                         onChange={(e) => {
-                          // UPDATED
                           setBgWatermarkOpacity(parseFloat(e.target.value));
                           setIsDirty(true);
                         }}
@@ -989,16 +971,12 @@ export default function InvoiceGeneratorPage() {
                   </span>
                   <Switch
                     checked={isPaid}
-                    onChange={setIsPaidWrapper} // UPDATED
-                    className={`${
-                      isPaid ? "bg-green-500" : "bg-slate-300 dark:bg-slate-700"
-                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                    onChange={setIsPaidWrapper}
+                    className={`${isPaid ? "bg-green-500" : "bg-slate-300 dark:bg-slate-700"} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span className="sr-only">Mark as Paid</span>
                     <span
-                      className={`${
-                        isPaid ? "translate-x-6" : "translate-x-1"
-                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                      className={`${isPaid ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
                 </div>
@@ -1039,7 +1017,7 @@ export default function InvoiceGeneratorPage() {
               </button>
               {logo && (
                 <button
-                  onClick={() => setLogoWrapper(null)} // UPDATED
+                  onClick={() => setLogoWrapper(null)}
                   className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
                 >
                   Remove Logo
@@ -1057,11 +1035,7 @@ export default function InvoiceGeneratorPage() {
           <div className="w-full max-w-4xl mx-auto">
             <div
               ref={invoicePrintRef}
-              className={`bg-white shadow-2xl overflow-hidden relative ${
-                selectedTemplate === "classic" ? "" : "lg:rounded-lg"
-              } w-full ${
-                selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"
-              }`}
+              className={`bg-white shadow-2xl overflow-hidden relative ${selectedTemplate === "classic" ? "" : "lg:rounded-lg"} w-full ${selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"}`}
               style={{
                 "--accent-color": accentColor,
                 color: mainStyles.color,
@@ -1132,15 +1106,16 @@ export default function InvoiceGeneratorPage() {
         isSubscribing={isSubscribing}
         onClose={() => setIsEmailModalOpen(false)}
         onSubmit={handleEmailSubmit}
-        onSkip={startDownload} // Allow user to skip and just download
+        onSkip={startDownload}
       />
     </>
   );
 }
 
 // --- TEMPLATE COMPONENTS (Responsiveness Added) ---
+// ... (Template components: Modern, Bold, Classic, Minimal, Creative are same as previous) ...
+// I will re-add them here to ensure the file is complete and copy-pasteable.
 
-// --- Template 1: Modern ---
 function TemplateInvoiceModern({
   from,
   setFrom,
@@ -1252,16 +1227,23 @@ function TemplateInvoiceModern({
 
         <section className="mt-10">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[600px] text-left">
+            {/* UPDATED: removed min-w-[600px] */}
+            <table className="w-full text-left">
               <thead>
                 <tr
                   className="text-[0.9em] uppercase opacity-70"
                   style={{ borderBottom: "2px solid var(--accent-color)" }}
                 >
-                  <th className="py-3 pr-4 w-1/2">Item</th>
-                  <th className="py-3 px-4 text-center">Qty</th>
-                  <th className="py-3 px-4 text-right">Price</th>
-                  <th className="py-3 pl-4 text-right">Total</th>
+                  <th className="py-3 pr-4 w-[50%] font-semibold">Item</th>
+                  <th className="py-3 px-4 w-[15%] text-center font-semibold">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 w-[20%] text-right font-semibold">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 w-[15%] text-right font-semibold">
+                    Total
+                  </th>
                   <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
                 </tr>
               </thead>
@@ -1369,7 +1351,6 @@ function TemplateInvoiceModern({
   );
 }
 
-// --- Template 2: Bold ---
 function TemplateInvoiceBold({
   from,
   setFrom,
@@ -1598,7 +1579,6 @@ function TemplateInvoiceBold({
   );
 }
 
-// --- Template 3: Classic ---
 function TemplateInvoiceClassic({
   from,
   setFrom,
@@ -1626,206 +1606,203 @@ function TemplateInvoiceClassic({
   formatCurrency,
 }) {
   return (
-    <div className="relative p-2 h-full" style={{ fontSize: "1em" }}>
-      <div className="border-2 border-black">
-        <div className="p-8 sm:p-10 md:p-12 relative z-10">
-          <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
-            <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
-              <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
-                INVOICE
-              </h1>
-              <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-                <EditableField
-                  value={from}
-                  onChange={setFrom}
-                  area={true}
-                  placeholder="Your Company Info"
-                />
-              </div>
-            </div>
-            <div className="text-left sm:text-right w-full sm:w-auto">
-              {logo ? (
-                <img
-                  src={logo}
-                  alt="Logo"
-                  className="max-h-24 max-w-48 object-contain sm:ml-auto"
-                />
-              ) : (
-                <div className="text-[1.2em] font-bold opacity-70">
-                  [Your Logo]
-                </div>
-              )}
-            </div>
-          </header>
-          <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
-            <div>
-              <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
-                BILL TO
-              </h2>
-              <div className="mt-2 text-[1em] whitespace-pre-wrap">
-                <EditableField
-                  value={to}
-                  onChange={setTo}
-                  area={true}
-                  placeholder="Client's Info"
-                />
-              </div>
-            </div>
-            <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Invoice #:</span>
-                <EditableField
-                  value={invoiceNumber}
-                  onChange={setInvoiceNumber}
-                  placeholder="INV-001"
-                />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Date:</span>
-                <EditableField
-                  type="date"
-                  value={date}
-                  onChange={setDate}
-                  placeholder="Date"
-                />
-              </div>
-              <div className="flex justify-start sm:justify-end gap-2 items-center">
-                <span className="font-semibold">Due Date:</span>
-                <EditableField
-                  type="date"
-                  value={dueDate}
-                  onChange={setDueDate}
-                  placeholder="Due Date"
-                />
-              </div>
-            </div>
-          </section>
-          <section className="mt-10">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px] text-left border-collapse">
-                <thead>
-                  <tr className="text-[0.9em] uppercase bg-slate-100">
-                    <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
-                      Item
-                    </th>
-                    <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
-                      Qty
-                    </th>
-                    <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
-                      Price
-                    </th>
-                    <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
-                      Total
-                    </th>
-                    <th
-                      className="py-3 pl-2"
-                      data-html2canvas-ignore="true"
-                    ></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item, index) => (
-                    <tr key={item.id} className="border-b border-slate-300">
-                      <td className="py-3 pr-4 text-[1em]">
-                        <EditableField
-                          value={item.name}
-                          onChange={(v) => handleItemChange(index, "name", v)}
-                          placeholder="Item Name"
-                        />
-                      </td>
-                      <td className="py-3 px-4 text-[1em] text-center">
-                        <EditableField
-                          type="number"
-                          value={item.qty}
-                          onChange={(v) => handleItemChange(index, "qty", v)}
-                          placeholder="1"
-                        />
-                      </td>
-                      <td className="py-3 px-4 text-[1em] text-right">
-                        <EditableField
-                          type="number"
-                          value={item.price}
-                          onChange={(v) => handleItemChange(index, "price", v)}
-                          placeholder="0.00"
-                        />
-                      </td>
-                      <td className="py-3 pl-4 text-[1em] text-right">
-                        {formatCurrency(item.qty * item.price)}
-                      </td>
-                      <td
-                        className="py-3 pl-2 text-right"
-                        data-html2canvas-ignore="true"
-                      >
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
-                        >
-                          <RiDeleteBinLine />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <button
-              onClick={addItem}
-              className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
-              data-html2canvas-ignore="true"
-            >
-              <RiAddLine /> Add Item
-            </button>
-          </section>
-          <section className="mt-8 flex flex-col items-end">
-            <div className="w-full max-w-xs text-[0.9em] space-y-2">
-              <div className="flex justify-between">
-                <span className="opacity-70">Subtotal:</span>
-                <span className="font-medium">{formatCurrency(subtotal)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="opacity-70">Tax (%):</span>
-                <EditableField
-                  type="number"
-                  value={tax}
-                  onChange={setTax}
-                  placeholder="0"
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="opacity-70">Discount (%):</span>
-                <EditableField
-                  type="number"
-                  value={discount}
-                  onChange={setDiscount}
-                  placeholder="0"
-                />
-              </div>
-              <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
-                <span className="font-bold">Total:</span>
-                <span className="font-bold">{formatCurrency(total)}</span>
-              </div>
-            </div>
-          </section>
-          <section className="mt-10">
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
-              Notes
-            </h2>
-            <div className="mt-2 text-[0.9em]">
+    <div
+      className="relative border-2 border-black h-full"
+      style={{ fontSize: "1em" }}
+    >
+      <div className="p-8 sm:p-10 md:p-12 relative z-10">
+        <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
+          <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
+            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+              INVOICE
+            </h1>
+            <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
               <EditableField
-                value={notes}
-                onChange={setNotes}
+                value={from}
+                onChange={setFrom}
                 area={true}
-                placeholder="Thank you for your business."
+                placeholder="Your Company Info"
               />
             </div>
-          </section>
-        </div>
+          </div>
+          <div className="text-left sm:text-right w-full sm:w-auto">
+            {logo ? (
+              <img
+                src={logo}
+                alt="Logo"
+                className="max-h-24 max-w-48 object-contain sm:ml-auto"
+              />
+            ) : (
+              <div className="text-[1.2em] font-bold opacity-70">
+                [Your Logo]
+              </div>
+            )}
+          </div>
+        </header>
+        <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
+          <div>
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              BILL TO
+            </h2>
+            <div className="mt-2 text-[1em] whitespace-pre-wrap">
+              <EditableField
+                value={to}
+                onChange={setTo}
+                area={true}
+                placeholder="Client's Info"
+              />
+            </div>
+          </div>
+          <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Invoice #:</span>
+              <EditableField
+                value={invoiceNumber}
+                onChange={setInvoiceNumber}
+                placeholder="INV-001"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Date:</span>
+              <EditableField
+                type="date"
+                value={date}
+                onChange={setDate}
+                placeholder="Date"
+              />
+            </div>
+            <div className="flex justify-start sm:justify-end gap-2 items-center">
+              <span className="font-semibold">Due Date:</span>
+              <EditableField
+                type="date"
+                value={dueDate}
+                onChange={setDueDate}
+                placeholder="Due Date"
+              />
+            </div>
+          </div>
+        </section>
+        <section className="mt-10">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px] text-left border-collapse">
+              <thead>
+                <tr className="text-[0.9em] uppercase bg-slate-100">
+                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
+                    Item
+                  </th>
+                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
+                    Qty
+                  </th>
+                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Price
+                  </th>
+                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
+                    Total
+                  </th>
+                  <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, index) => (
+                  <tr key={item.id} className="border-b border-slate-300">
+                    <td className="py-3 pr-4 text-[1em]">
+                      <EditableField
+                        value={item.name}
+                        onChange={(v) => handleItemChange(index, "name", v)}
+                        placeholder="Item Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-center">
+                      <EditableField
+                        type="number"
+                        value={item.qty}
+                        onChange={(v) => handleItemChange(index, "qty", v)}
+                        placeholder="1"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-[1em] text-right">
+                      <EditableField
+                        type="number"
+                        value={item.price}
+                        onChange={(v) => handleItemChange(index, "price", v)}
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td className="py-3 pl-4 text-[1em] text-right">
+                      {formatCurrency(item.qty * item.price)}
+                    </td>
+                    <td
+                      className="py-3 pl-2 text-right"
+                      data-html2canvas-ignore="true"
+                    >
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                      >
+                        <RiDeleteBinLine />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button
+            onClick={addItem}
+            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
+            data-html2canvas-ignore="true"
+          >
+            <RiAddLine /> Add Item
+          </button>
+        </section>
+        <section className="mt-8 flex flex-col items-end">
+          <div className="w-full max-w-xs text-[0.9em] space-y-2">
+            <div className="flex justify-between">
+              <span className="opacity-70">Subtotal:</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Tax (%):</span>
+              <EditableField
+                type="number"
+                value={tax}
+                onChange={setTax}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70">Discount (%):</span>
+              <EditableField
+                type="number"
+                value={discount}
+                onChange={setDiscount}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
+              <span className="font-bold">Total:</span>
+              <span className="font-bold">{formatCurrency(total)}</span>
+            </div>
+          </div>
+        </section>
+        <section className="mt-10">
+          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+            Notes
+          </h2>
+          <div className="mt-2 text-[0.9em]">
+            <EditableField
+              value={notes}
+              onChange={setNotes}
+              area={true}
+              placeholder="Thank you for your business."
+            />
+          </div>
+        </section>
       </div>
     </div>
   );
 }
 
-// --- Template 4: Minimal ---
 function TemplateInvoiceMinimal({
   from,
   setFrom,
@@ -2056,7 +2033,6 @@ function TemplateInvoiceMinimal({
   );
 }
 
-// --- Template 5: Creative ---
 function TemplateInvoiceCreative({
   from,
   setFrom,
@@ -2094,7 +2070,11 @@ function TemplateInvoiceCreative({
         style={{ backgroundColor: "var(--accent-color)" }}
       >
         {logo ? (
-          <img src={logo} alt="Logo" className="max-h-20 object-contain " />
+          <img
+            src={logo}
+            alt="Logo"
+            className="max-h-20 object-contain filter brightness-0 invert"
+          />
         ) : (
           <div className="font-bold" style={{ fontSize: "2em" }}>
             <EditableField
@@ -2361,11 +2341,7 @@ function TemplateModal({
                         value={template.id}
                         className={({ active, checked }) =>
                           `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
-                          ${
-                            checked
-                              ? "border-blue-500 ring-2 ring-blue-500"
-                              : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
-                          }
+                          ${checked ? "border-blue-500 ring-2 ring-blue-500" : "border-slate-200 dark:border-slate-700 hover:border-blue-300"}
                           ${active ? "ring-2 ring-offset-2 ring-blue-400" : ""}`
                         }
                       >
@@ -2586,14 +2562,14 @@ function EmailCaptureModal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
-                <div className="flex items-center justify-center">
-                  <div className=" flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+                <div className="flex items-center">
+                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
                     <RiMailSendLine
                       className="h-6 w-6 text-blue-600 dark:text-blue-400"
                       aria-hidden="true"
                     />
                   </div>
-                  <div className="ml-4 ">
+                  <div className="ml-4 text-left">
                     <Dialog.Title
                       as="h3"
                       className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
@@ -2639,7 +2615,13 @@ function EmailCaptureModal({
                         "Subscribe & Download"
                       )}
                     </button>
-                   
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={onSkip}
+                    >
+                      No thanks, just download
+                    </button>
                   </div>
                 </form>
               </Dialog.Panel>
