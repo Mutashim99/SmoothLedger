@@ -1,4 +1,4 @@
-import { allBlogs } from '../blogdata'; // Check this import path!
+import { allBlogs } from '.././blogsdata'; // Check this import path!
 
 export default function sitemap() {
   // 1. Get all blog post URLs
