@@ -1,5 +1,3 @@
-/* File: app/invoice-generator/page.jsx */
-
 "use client";
 
 import React, { useState, useRef, Fragment, useMemo, useEffect } from "react";
@@ -24,12 +22,12 @@ import {
   RiInformationLine,
   RiMailSendLine,
   RiLoader4Line,
+  RiShipLine,
 } from "react-icons/ri";
 import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-
 
 // --- Helper: Editable Field Component ---
 function EditableField({
@@ -139,6 +137,9 @@ export default function InvoiceGeneratorClient() {
   const [discount, setDiscount] = useState(0);
   const [logo, setLogo] = useState(null);
   const [isPaid, setIsPaid] = useState(false);
+  const [paidWatermarkOpacity, setPaidWatermarkOpacity] = useState(0.05); // NEW
+  const [showShipping, setShowShipping] = useState(false); // NEW
+  const [shipping, setShipping] = useState(0); // NEW
 
   // 2. Styling & Template State
   const [accentColor, setAccentColor] = useState("#3B82F6");
@@ -147,9 +148,12 @@ export default function InvoiceGeneratorClient() {
   const [fontSize, setFontSize] = useState(14);
   const [currencyCode, setCurrencyCode] = useState("USD");
   const [watermark, setWatermark] = useState("");
+  const [watermarkOpacity, setWatermarkOpacity] = useState(0.1); // NEW: Added state
+  const [watermarkSize, setWatermarkSize] = useState(6); // NEW: Added state
   const [bgWatermark, setBgWatermark] = useState(null);
   const [bgWatermarkOpacity, setBgWatermarkOpacity] = useState(0.1);
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
+  const [bgWatermarkSize, setBgWatermarkSize] = useState(100); // NEW
 
   // 3. UI State
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
@@ -224,9 +228,10 @@ export default function InvoiceGeneratorClient() {
     () => (subtotal * discount) / 100,
     [subtotal, discount]
   );
+  // UPDATED: Added shipping to total calculation
   const total = useMemo(
-    () => subtotal + taxAmount - discountAmount,
-    [subtotal, taxAmount, discountAmount]
+    () => subtotal + taxAmount - discountAmount + Number(shipping),
+    [subtotal, taxAmount, discountAmount, shipping] // UPDATED: Added shipping dependency
   );
 
   const formatCurrency = (amount) => {
@@ -237,7 +242,7 @@ export default function InvoiceGeneratorClient() {
     }).format(amount);
   };
 
-  // Wrappers
+  // --- Wrapper functions to set isDirty ---
   const setFromWrapper = (value) => {
     setFrom(value);
     setIsDirty(true);
@@ -282,6 +287,18 @@ export default function InvoiceGeneratorClient() {
     setIsPaid(value);
     setIsDirty(true);
   };
+  const setPaidWatermarkOpacityWrapper = (value) => {
+    setPaidWatermarkOpacity(value);
+    setIsDirty(true);
+  }; // NEW
+  const setShowShippingWrapper = (value) => {
+    setShowShipping(value);
+    setIsDirty(true);
+  }; // NEW
+  const setShippingWrapper = (value) => {
+    setShipping(value);
+    setIsDirty(true);
+  }; // NEW
   const setAccentColorWrapper = (value) => {
     setAccentColor(value);
     setIsDirty(true);
@@ -306,12 +323,25 @@ export default function InvoiceGeneratorClient() {
     setWatermark(value);
     setIsDirty(true);
   };
+  // NEW: Added wrappers
+  const setWatermarkOpacityWrapper = (value) => {
+    setWatermarkOpacity(value);
+    setIsDirty(true);
+  };
+  const setWatermarkSizeWrapper = (value) => {
+    setWatermarkSize(value);
+    setIsDirty(true);
+  };
   const setBgWatermarkWrapper = (value) => {
     setBgWatermark(value);
     setIsDirty(true);
   };
+  const setBgWatermarkSizeWrapper = (value) => {
+    setBgWatermarkSize(value);
+    setIsDirty(true);
+  }; // NEW
 
-  // Handlers
+  // --- EVENT HANDLERS ---
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -415,6 +445,11 @@ export default function InvoiceGeneratorClient() {
       fontFamily,
       fontSize,
       currencyCode,
+      // NEW: Save new fields
+      shipping,
+      showShipping,
+      paidWatermarkOpacity,
+      bgWatermarkSize,
     };
 
     const newSavedInvoices = [...savedInvoices];
@@ -469,6 +504,11 @@ export default function InvoiceGeneratorClient() {
       setFontFamily(invoiceToLoad.fontFamily);
       setFontSize(invoiceToLoad.fontSize);
       setCurrencyCode(invoiceToLoad.currencyCode);
+      // NEW: Load new fields, with fallbacks for older saves
+      setShipping(invoiceToLoad.shipping || 0);
+      setShowShipping(invoiceToLoad.showShipping || false);
+      setPaidWatermarkOpacity(invoiceToLoad.paidWatermarkOpacity || 0.05);
+      setBgWatermarkSize(invoiceToLoad.bgWatermarkSize || 100);
     }
   };
 
@@ -509,18 +549,23 @@ export default function InvoiceGeneratorClient() {
     }
   };
 
-  // --- PDF Download Logic (FIXED FOR MOBILE) ---
+  // --- PDF Download Logic (UPDATED FOR MOBILE PRINT FIX) ---
   const startDownload = async () => {
     setIsDownloading(true);
     const element = invoicePrintRef.current;
-    if (!element) return;
+    if (!element) {
+      setIsDownloading(false);
+      return;
+    }
 
-    // 1. Store Original Width
+    // 1. Store Original styles
     const originalWidth = element.style.width;
+    const originalAspectRatio = element.style.aspectRatio;
 
     // 2. Force Desktop Width (A4 Size approx in px)
     // This ensures html2canvas sees a "Desktop" layout even on mobile
     element.style.width = "794px";
+    element.style.aspectRatio = "210/297"; // Force A4 ratio
 
     const scale = 2;
     const canvas = await html2canvas(element, {
@@ -530,8 +575,9 @@ export default function InvoiceGeneratorClient() {
       windowWidth: 1200, // Force 'lg' breakpoints to trigger
     });
 
-    // 3. Restore Original Width (So UI doesn't stay broken)
+    // 3. Restore Original styles
     element.style.width = originalWidth;
+    element.style.aspectRatio = originalAspectRatio;
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
@@ -635,6 +681,9 @@ export default function InvoiceGeneratorClient() {
       total,
       logo,
       formatCurrency,
+      shipping, // NEW
+      showShipping, // NEW
+      paidWatermarkOpacity, // NEW
     };
 
     switch (selectedTemplate) {
@@ -684,7 +733,304 @@ export default function InvoiceGeneratorClient() {
             <RiEyeLine className="h-5 w-5" /> Change Template
           </button>
 
+          {/* UPDATED: Re-ordered sections */}
           <div className="space-y-6">
+            {/* NEW: Document Details */}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiDraftLine className="inline mr-2" />
+                Document Details
+              </h3>
+              <div className="mt-4 space-y-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="currency"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Currency
+                  </label>
+                  <select
+                    id="currency"
+                    value={currencyCode}
+                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)}
+                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {currencyList.map((currency) => (
+                      <option key={currency.code} value={currency.code}>
+                        {currency.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Mark as Paid
+                  </span>
+                  <Switch
+                    checked={isPaid}
+                    onChange={setIsPaidWrapper}
+                    className={`${
+                      isPaid ? "bg-green-500" : "bg-slate-300 dark:bg-slate-700"
+                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                  >
+                    <span className="sr-only">Mark as Paid</span>
+                    <span
+                      className={`${
+                        isPaid ? "translate-x-6" : "translate-x-1"
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </Switch>
+                </div>
+                {isPaid && (
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="paidOpacity"
+                      className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      Paid Stamp Opacity:{" "}
+                      {Math.round(paidWatermarkOpacity * 100)}%
+                    </label>
+                    <input
+                      type="range"
+                      id="paidOpacity"
+                      min="0.05"
+                      max="0.5"
+                      step="0.01"
+                      value={paidWatermarkOpacity}
+                      onChange={(e) =>
+                        setPaidWatermarkOpacityWrapper(
+                          parseFloat(e.target.value)
+                        )
+                      }
+                      className="w-full"
+                    />
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Add Shipping
+                  </span>
+                  <Switch
+                    checked={showShipping}
+                    onChange={setShowShippingWrapper}
+                    className={`${
+                      showShipping
+                        ? "bg-blue-600"
+                        : "bg-slate-300 dark:bg-slate-700"
+                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                  >
+                    <span className="sr-only">Add Shipping</span>
+                    <span
+                      className={`${
+                        showShipping ? "translate-x-6" : "translate-x-1"
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </Switch>
+                </div>
+                {showShipping && (
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="shipping"
+                      className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      Shipping Cost
+                    </label>
+                    <input
+                      type="number"
+                      id="shipping"
+                      value={shipping}
+                      onChange={(e) =>
+                        setShippingWrapper(parseFloat(e.target.value) || 0)
+                      }
+                      className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Watermark
+                  </label>
+                  <input
+                    type="text"
+                    id="watermark"
+                    value={watermark}
+                    onChange={(e) => setWatermarkWrapper(e.target.value)}
+                    placeholder="e.g. DRAFT, CONFIDENTIAL"
+                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                {/* --- ADDED THIS BLOCK --- */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermarkSize"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Size: {watermarkSize}em
+                  </label>
+                  <input
+                    type="range"
+                    id="watermarkSize"
+                    min="2"
+                    max="12"
+                    step="0.5"
+                    value={watermarkSize}
+                    onChange={(e) =>
+                      setWatermarkSizeWrapper(parseFloat(e.target.value))
+                    }
+                    className="w-full"
+                    disabled={!watermark}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermarkOpacity"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Opacity: {Math.round(watermarkOpacity * 100)}%
+                  </label>
+                  <input
+                    type="range"
+                    id="watermarkOpacity"
+                    min="0.05"
+                    max="0.5"
+                    step="0.01"
+                    value={watermarkOpacity}
+                    onChange={(e) =>
+                      setWatermarkOpacityWrapper(parseFloat(e.target.value))
+                    }
+                    className="w-full"
+                    disabled={!watermark}
+                  />
+                </div>
+                {/* --- END OF ADDED BLOCK --- */}
+              </div>
+            </div>
+
+            {/* NEW: Branding Section */}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiImageAddLine className="inline mr-2" />
+                Branding
+              </h3>
+              <div className="mt-4 space-y-4">
+                {/* Logo Uploader */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Your Logo
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={logoUploadRef}
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => logoUploadRef.current.click()}
+                    className="mt-2 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+                  >
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt="Uploaded Logo"
+                        className="max-h-24 object-contain"
+                      />
+                    ) : (
+                      <>
+                        <RiImageAddLine className="h-8 w-8" />
+                        <span className="text-sm font-medium">
+                          Click to upload logo
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  {logo && (
+                    <button
+                      onClick={() => setLogoWrapper(null)}
+                      className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                    >
+                      Remove Logo
+                    </button>
+                  )}
+                </div>
+                {/* BG Watermark Uploader */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="bgWatermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Background Image Watermark
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={bgWatermarkUploadRef}
+                    onChange={handleBgWatermarkUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => bgWatermarkUploadRef.current.click()}
+                    className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+                  >
+                    <RiImageAddLine className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {bgWatermark ? "Change Image" : "Upload Image"}
+                    </span>
+                  </button>
+                  {bgWatermark && (
+                    <>
+                      <button
+                        onClick={() => setBgWatermarkWrapper(null)}
+                        className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                      >
+                        Remove Image
+                      </button>
+                      <label
+                        htmlFor="bgOpacity"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Opacity: {Math.round(bgWatermarkOpacity * 100)}%
+                      </label>
+                      <input
+                        type="range"
+                        id="bgOpacity"
+                        min="0.05"
+                        max="0.5"
+                        step="0.01"
+                        value={bgWatermarkOpacity}
+                        onChange={(e) => {
+                          setBgWatermarkOpacity(parseFloat(e.target.value));
+                          setIsDirty(true);
+                        }}
+                        className="w-full"
+                      />
+                      <label
+                        htmlFor="bgSize"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Size: {bgWatermarkSize}%
+                      </label>
+                      <input
+                        type="range"
+                        id="bgSize"
+                        min="20"
+                        max="150"
+                        step="5"
+                        value={bgWatermarkSize}
+                        onChange={(e) =>
+                          setBgWatermarkSizeWrapper(parseFloat(e.target.value))
+                        }
+                        className="w-full"
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Styling */}
             <div>
               <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
@@ -775,6 +1121,57 @@ export default function InvoiceGeneratorClient() {
                 Save & Load
               </h3>
               <div className="mt-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Save My Details
+                  </span>
+                  <Switch
+                    checked={saveMyDetails}
+                    onChange={handleSaveMyDetailsToggle}
+                    className={`${
+                      saveMyDetails
+                        ? "bg-blue-600"
+                        : "bg-slate-300 dark:bg-slate-700"
+                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                  >
+                    <span className="sr-only">Save My Details</span>
+                    <span
+                      className={`${
+                        saveMyDetails ? "translate-x-6" : "translate-x-1"
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </Switch>
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="clients"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Saved Clients
+                  </label>
+                  <div className="flex gap-2">
+                    <select
+                      id="clients"
+                      value={selectedClient}
+                      onChange={handleLoadClient}
+                      className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Load a client...</option>
+                      {savedClients.map((client, index) => (
+                        <option key={index} value={client.value}>
+                          {client.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={handleSaveClient}
+                      title="Save Current Client"
+                      className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"
+                    >
+                      <RiUserAddLine className="h-5 w-5 text-slate-700 dark:text-slate-200" />
+                    </button>
+                  </div>
+                </div>
                 <button
                   onClick={handleSaveInvoice}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors"
@@ -814,217 +1211,6 @@ export default function InvoiceGeneratorClient() {
                 </div>
               </div>
             </div>
-
-            {/* Auto-Save */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiSaveLine className="inline mr-2" />
-                Auto-Save
-              </h3>
-              <div className="mt-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Save My Details
-                  </span>
-                  <Switch
-                    checked={saveMyDetails}
-                    onChange={handleSaveMyDetailsToggle}
-                    className={`${saveMyDetails ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-700"} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-                  >
-                    <span className="sr-only">Save My Details</span>
-                    <span
-                      className={`${saveMyDetails ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                    />
-                  </Switch>
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="clients"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Saved Clients
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      id="clients"
-                      value={selectedClient}
-                      onChange={handleLoadClient}
-                      className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">Load a client...</option>
-                      {savedClients.map((client, index) => (
-                        <option key={index} value={client.value}>
-                          {client.name}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={handleSaveClient}
-                      title="Save Current Client"
-                      className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"
-                    >
-                      <RiUserAddLine className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Document */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiDraftLine className="inline mr-2" />
-                Document
-              </h3>
-              <div className="mt-4 space-y-4">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="currency"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Currency
-                  </label>
-                  <select
-                    id="currency"
-                    value={currencyCode}
-                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)}
-                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {currencyList.map((currency) => (
-                      <option key={currency.code} value={currency.code}>
-                        {currency.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="watermark"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Text Watermark
-                  </label>
-                  <input
-                    type="text"
-                    id="watermark"
-                    value={watermark}
-                    onChange={(e) => setWatermarkWrapper(e.target.value)}
-                    placeholder="e.g. DRAFT, CONFIDENTIAL"
-                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="bgWatermark"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Background Image Watermark
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={bgWatermarkUploadRef}
-                    onChange={handleBgWatermarkUpload}
-                    className="hidden"
-                  />
-                  <button
-                    onClick={() => bgWatermarkUploadRef.current.click()}
-                    className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
-                  >
-                    <RiImageAddLine className="h-5 w-5" />
-                    <span className="text-sm font-medium">
-                      {bgWatermark ? "Change Image" : "Upload Image"}
-                    </span>
-                  </button>
-                  {bgWatermark && (
-                    <>
-                      <button
-                        onClick={() => setBgWatermarkWrapper(null)}
-                        className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
-                      >
-                        Remove Image
-                      </button>
-                      <label
-                        htmlFor="bgOpacity"
-                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                      >
-                        Opacity: {Math.round(bgWatermarkOpacity * 100)}%
-                      </label>
-                      <input
-                        type="range"
-                        id="bgOpacity"
-                        min="0.05"
-                        max="0.5"
-                        step="0.05"
-                        value={bgWatermarkOpacity}
-                        onChange={(e) => {
-                          setBgWatermarkOpacity(parseFloat(e.target.value));
-                          setIsDirty(true);
-                        }}
-                        className="w-full"
-                      />
-                    </>
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Mark as Paid
-                  </span>
-                  <Switch
-                    checked={isPaid}
-                    onChange={setIsPaidWrapper}
-                    className={`${isPaid ? "bg-green-500" : "bg-slate-300 dark:bg-slate-700"} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-                  >
-                    <span className="sr-only">Mark as Paid</span>
-                    <span
-                      className={`${isPaid ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                    />
-                  </Switch>
-                </div>
-              </div>
-            </div>
-
-            {/* Logo Uploader */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiImageAddLine className="inline mr-2" />
-                Your Logo
-              </h3>
-              <input
-                type="file"
-                accept="image/*"
-                ref={logoUploadRef}
-                onChange={handleLogoUpload}
-                className="hidden"
-              />
-              <button
-                onClick={() => logoUploadRef.current.click()}
-                className="mt-4 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
-              >
-                {logo ? (
-                  <img
-                    src={logo}
-                    alt="Uploaded Logo"
-                    className="max-h-24 object-contain"
-                  />
-                ) : (
-                  <>
-                    <RiImageAddLine className="h-8 w-8" />
-                    <span className="text-sm font-medium">
-                      Click to upload logo
-                    </span>
-                  </>
-                )}
-              </button>
-              {logo && (
-                <button
-                  onClick={() => setLogoWrapper(null)}
-                  className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
-                >
-                  Remove Logo
-                </button>
-              )}
-            </div>
           </div>
         </aside>
 
@@ -1034,9 +1220,14 @@ export default function InvoiceGeneratorClient() {
           style={{ fontFamily: mainStyles.fontFamily }}
         >
           <div className="w-full max-w-4xl mx-auto">
+            {/* UPDATED: This div now controls the responsive aspect ratio */}
             <div
               ref={invoicePrintRef}
-              className={`bg-white shadow-2xl overflow-hidden relative ${selectedTemplate === "classic" ? "" : "lg:rounded-lg"} w-full ${selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"}`}
+              className={`bg-white shadow-2xl overflow-hidden relative ${
+                selectedTemplate === "classic" ? "" : "lg:rounded-lg"
+              } w-full ${
+                selectedTemplate === "classic" ? "" : "lg:aspect-[210/297]"
+              }`}
               style={{
                 "--accent-color": accentColor,
                 color: mainStyles.color,
@@ -1050,7 +1241,7 @@ export default function InvoiceGeneratorClient() {
                     backgroundImage: `url(${bgWatermark})`,
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "contain",
+                    backgroundSize: `${bgWatermarkSize}%`, // UPDATED
                     opacity: bgWatermarkOpacity,
                   }}
                 />
@@ -1059,19 +1250,30 @@ export default function InvoiceGeneratorClient() {
                 <div className="absolute inset-0 flex items-center justify-center z-0">
                   <span
                     className="text-[8vw] sm:text-[120px] font-bold rotate-[-30deg]"
-                    style={{ color: "rgba(0, 128, 0, 0.05)" }}
+                    style={{
+                      color: `rgba(0, 128, 0, ${paidWatermarkOpacity})`,
+                    }} // UPDATED
                   >
                     PAID
                   </span>
                 </div>
               )}
+              {/* --- UPDATED THIS BLOCK --- */}
               {watermark && !isPaid && (
-                <div className="absolute inset-0 flex items-center justify-center z-0">
-                  <span className="text-[6vw] sm:text-9xl font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10">
+                <div className="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
+                  <span
+                    className="font-bold rotate-[-30deg] uppercase whitespace-nowrap"
+                    style={{
+                      fontSize: `${watermarkSize}em`,
+                      opacity: watermarkOpacity,
+                      color: "currentColor",
+                    }}
+                  >
                     {watermark}
                   </span>
                 </div>
               )}
+              {/* --- END OF UPDATE --- */}
 
               {renderInvoiceTemplate()}
             </div>
@@ -1114,9 +1316,8 @@ export default function InvoiceGeneratorClient() {
 }
 
 // --- TEMPLATE COMPONENTS (Responsiveness Added) ---
-// ... (Template components: Modern, Bold, Classic, Minimal, Creative are same as previous) ...
-// I will re-add them here to ensure the file is complete and copy-pasteable.
 
+// --- Template 1: Modern ---
 function TemplateInvoiceModern({
   from,
   setFrom,
@@ -1142,6 +1343,8 @@ function TemplateInvoiceModern({
   total,
   logo,
   formatCurrency,
+  shipping,
+  showShipping, // NEW
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
@@ -1327,6 +1530,13 @@ function TemplateInvoiceModern({
                 placeholder="0"
               />
             </div>
+            {/* NEW: Added Shipping row */}
+            {showShipping && (
+              <div className="flex justify-between">
+                <span className="opacity-70">Shipping:</span>
+                <span className="font-medium">{formatCurrency(shipping)}</span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-slate-200 pt-2 text-[1.2em]">
               <span className="opacity-70">Total:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
@@ -1377,6 +1587,8 @@ function TemplateInvoiceBold({
   total,
   logo,
   formatCurrency,
+  shipping,
+  showShipping, // NEW
 }) {
   return (
     <div className="relative" style={{ fontSize: "1em" }}>
@@ -1391,7 +1603,7 @@ function TemplateInvoiceBold({
                 <img
                   src={logo}
                   alt="Logo"
-                  className="max-h-20 max-w-40 object-contain filter brightness-0 invert"
+                  className="max-h-20 max-w-40 object-contain"
                 />
               </div>
             ) : (
@@ -1564,6 +1776,13 @@ function TemplateInvoiceBold({
                 placeholder="0"
               />
             </div>
+            {/* NEW: Added Shipping row */}
+            {showShipping && (
+              <div className="flex justify-between p-4 items-center">
+                <span className="opacity-70">Shipping:</span>
+                <span className="font-medium">{formatCurrency(shipping)}</span>
+              </div>
+            )}
             <div
               className="flex justify-between p-4 rounded-lg text-white"
               style={{ backgroundColor: "var(--accent-color)" }}
@@ -1605,200 +1824,213 @@ function TemplateInvoiceClassic({
   total,
   logo,
   formatCurrency,
+  shipping,
+  showShipping, // NEW
 }) {
   return (
-    <div
-      className="relative border-2 border-black h-full"
-      style={{ fontSize: "1em" }}
-    >
-      <div className="p-8 sm:p-10 md:p-12 relative z-10">
-        <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
-          <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
-            <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
-              INVOICE
-            </h1>
-            <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
-              <EditableField
-                value={from}
-                onChange={setFrom}
-                area={true}
-                placeholder="Your Company Info"
-              />
-            </div>
-          </div>
-          <div className="text-left sm:text-right w-full sm:w-auto">
-            {logo ? (
-              <img
-                src={logo}
-                alt="Logo"
-                className="max-h-24 max-w-48 object-contain sm:ml-auto"
-              />
-            ) : (
-              <div className="text-[1.2em] font-bold opacity-70">
-                [Your Logo]
+    <div className="relative p-2 h-full" style={{ fontSize: "1em" }}>
+      <div className="border-2 border-black">
+        <div className="p-8 sm:p-10 md:p-12 relative z-10">
+          <header className="flex flex-col sm:flex-row justify-between items-start pb-8">
+            <div className="text-left w-full sm:w-auto mb-6 sm:mb-0">
+              <h1 className="font-bold uppercase" style={{ fontSize: "2.8em" }}>
+                INVOICE
+              </h1>
+              <div className="mt-4 text-[0.9em] whitespace-pre-wrap">
+                <EditableField
+                  value={from}
+                  onChange={setFrom}
+                  area={true}
+                  placeholder="Your Company Info"
+                />
               </div>
-            )}
-          </div>
-        </header>
-        <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
-          <div>
-            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
-              BILL TO
-            </h2>
-            <div className="mt-2 text-[1em] whitespace-pre-wrap">
-              <EditableField
-                value={to}
-                onChange={setTo}
-                area={true}
-                placeholder="Client's Info"
-              />
             </div>
-          </div>
-          <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
-            <div className="flex justify-start sm:justify-end gap-2 items-center">
-              <span className="font-semibold">Invoice #:</span>
-              <EditableField
-                value={invoiceNumber}
-                onChange={setInvoiceNumber}
-                placeholder="INV-001"
-              />
+            <div className="text-left sm:text-right w-full sm:w-auto">
+              {logo ? (
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="max-h-24 max-w-48 object-contain sm:ml-auto"
+                />
+              ) : (
+                <div className="text-[1.2em] font-bold opacity-70">
+                  [Your Logo]
+                </div>
+              )}
             </div>
-            <div className="flex justify-start sm:justify-end gap-2 items-center">
-              <span className="font-semibold">Date:</span>
-              <EditableField
-                type="date"
-                value={date}
-                onChange={setDate}
-                placeholder="Date"
-              />
+          </header>
+          <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 border-b-2 border-black">
+            <div>
+              <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+                BILL TO
+              </h2>
+              <div className="mt-2 text-[1em] whitespace-pre-wrap">
+                <EditableField
+                  value={to}
+                  onChange={setTo}
+                  area={true}
+                  placeholder="Client's Info"
+                />
+              </div>
             </div>
-            <div className="flex justify-start sm:justify-end gap-2 items-center">
-              <span className="font-semibold">Due Date:</span>
-              <EditableField
-                type="date"
-                value={dueDate}
-                onChange={setDueDate}
-                placeholder="Due Date"
-              />
+            <div className="text-left sm:text-right text-[0.9em] space-y-1 mt-6 sm:mt-0">
+              <div className="flex justify-start sm:justify-end gap-2 items-center">
+                <span className="font-semibold">Invoice #:</span>
+                <EditableField
+                  value={invoiceNumber}
+                  onChange={setInvoiceNumber}
+                  placeholder="INV-001"
+                />
+              </div>
+              <div className="flex justify-start sm:justify-end gap-2 items-center">
+                <span className="font-semibold">Date:</span>
+                <EditableField
+                  type="date"
+                  value={date}
+                  onChange={setDate}
+                  placeholder="Date"
+                />
+              </div>
+              <div className="flex justify-start sm:justify-end gap-2 items-center">
+                <span className="font-semibold">Due Date:</span>
+                <EditableField
+                  type="date"
+                  value={dueDate}
+                  onChange={setDueDate}
+                  placeholder="Due Date"
+                />
+              </div>
             </div>
-          </div>
-        </section>
-        <section className="mt-10">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[600px] text-left border-collapse">
-              <thead>
-                <tr className="text-[0.9em] uppercase bg-slate-100">
-                  <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
-                    Item
-                  </th>
-                  <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
-                    Qty
-                  </th>
-                  <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
-                    Price
-                  </th>
-                  <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
-                    Total
-                  </th>
-                  <th className="py-3 pl-2" data-html2canvas-ignore="true"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item, index) => (
-                  <tr key={item.id} className="border-b border-slate-300">
-                    <td className="py-3 pr-4 text-[1em]">
-                      <EditableField
-                        value={item.name}
-                        onChange={(v) => handleItemChange(index, "name", v)}
-                        placeholder="Item Name"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-[1em] text-center">
-                      <EditableField
-                        type="number"
-                        value={item.qty}
-                        onChange={(v) => handleItemChange(index, "qty", v)}
-                        placeholder="1"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-[1em] text-right">
-                      <EditableField
-                        type="number"
-                        value={item.price}
-                        onChange={(v) => handleItemChange(index, "price", v)}
-                        placeholder="0.00"
-                      />
-                    </td>
-                    <td className="py-3 pl-4 text-[1em] text-right">
-                      {formatCurrency(item.qty * item.price)}
-                    </td>
-                    <td
-                      className="py-3 pl-2 text-right"
+          </section>
+          <section className="mt-10">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[600px] text-left border-collapse">
+                <thead>
+                  <tr className="text-[0.9em] uppercase bg-slate-100">
+                    <th className="py-3 px-4 w-1/2 font-bold border-b-2 border-black text-slate-900">
+                      Item
+                    </th>
+                    <th className="py-3 px-4 text-center font-bold border-b-2 border-black text-slate-900">
+                      Qty
+                    </th>
+                    <th className="py-3 px-4 text-right font-bold border-b-2 border-black text-slate-900">
+                      Price
+                    </th>
+                    <th className="py-3 pl-4 text-right font-bold border-b-2 border-black text-slate-900">
+                      Total
+                    </th>
+                    <th
+                      className="py-3 pl-2"
                       data-html2canvas-ignore="true"
-                    >
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
-                      >
-                        <RiDeleteBinLine />
-                      </button>
-                    </td>
+                    ></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            onClick={addItem}
-            className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
-            data-html2canvas-ignore="true"
-          >
-            <RiAddLine /> Add Item
-          </button>
-        </section>
-        <section className="mt-8 flex flex-col items-end">
-          <div className="w-full max-w-xs text-[0.9em] space-y-2">
-            <div className="flex justify-between">
-              <span className="opacity-70">Subtotal:</span>
-              <span className="font-medium">{formatCurrency(subtotal)}</span>
+                </thead>
+                <tbody>
+                  {items.map((item, index) => (
+                    <tr key={item.id} className="border-b border-slate-300">
+                      <td className="py-3 pr-4 text-[1em]">
+                        <EditableField
+                          value={item.name}
+                          onChange={(v) => handleItemChange(index, "name", v)}
+                          placeholder="Item Name"
+                        />
+                      </td>
+                      <td className="py-3 px-4 text-[1em] text-center">
+                        <EditableField
+                          type="number"
+                          value={item.qty}
+                          onChange={(v) => handleItemChange(index, "qty", v)}
+                          placeholder="1"
+                        />
+                      </td>
+                      <td className="py-3 px-4 text-[1em] text-right">
+                        <EditableField
+                          type="number"
+                          value={item.price}
+                          onChange={(v) => handleItemChange(index, "price", v)}
+                          placeholder="0.00"
+                        />
+                      </td>
+                      <td className="py-3 pl-4 text-[1em] text-right">
+                        {formatCurrency(item.qty * item.price)}
+                      </td>
+                      <td
+                        className="py-3 pl-2 text-right"
+                        data-html2canvas-ignore="true"
+                      >
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="p-1 text-red-500 hover:text-red-700 opacity-50 hover:opacity-100 transition-opacity"
+                        >
+                          <RiDeleteBinLine />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="opacity-70">Tax (%):</span>
+            <button
+              onClick={addItem}
+              className="mt-4 flex items-center gap-1 text-[0.9em] font-medium transition-colors text-blue-600 hover:text-blue-800"
+              data-html2canvas-ignore="true"
+            >
+              <RiAddLine /> Add Item
+            </button>
+          </section>
+          <section className="mt-8 flex flex-col items-end">
+            <div className="w-full max-w-xs text-[0.9em] space-y-2">
+              <div className="flex justify-between">
+                <span className="opacity-70">Subtotal:</span>
+                <span className="font-medium">{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Tax (%):</span>
+                <EditableField
+                  type="number"
+                  value={tax}
+                  onChange={setTax}
+                  placeholder="0"
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Discount (%):</span>
+                <EditableField
+                  type="number"
+                  value={discount}
+                  onChange={setDiscount}
+                  placeholder="0"
+                />
+              </div>
+              {/* NEW: Added Shipping row */}
+              {showShipping && (
+                <div className="flex justify-between">
+                  <span className="opacity-70">Shipping:</span>
+                  <span className="font-medium">
+                    {formatCurrency(shipping)}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
+                <span className="font-bold">Total:</span>
+                <span className="font-bold">{formatCurrency(total)}</span>
+              </div>
+            </div>
+          </section>
+          <section className="mt-10">
+            <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
+              Notes
+            </h2>
+            <div className="mt-2 text-[0.9em]">
               <EditableField
-                type="number"
-                value={tax}
-                onChange={setTax}
-                placeholder="0"
+                value={notes}
+                onChange={setNotes}
+                area={true}
+                placeholder="Thank you for your business."
               />
             </div>
-            <div className="flex justify-between items-center">
-              <span className="opacity-70">Discount (%):</span>
-              <EditableField
-                type="number"
-                value={discount}
-                onChange={setDiscount}
-                placeholder="0"
-              />
-            </div>
-            <div className="flex justify-between border-t-2 border-b-4 border-black my-2 py-2 text-[1.2em]">
-              <span className="font-bold">Total:</span>
-              <span className="font-bold">{formatCurrency(total)}</span>
-            </div>
-          </div>
-        </section>
-        <section className="mt-10">
-          <h2 className="text-[0.9em] font-semibold uppercase opacity-70">
-            Notes
-          </h2>
-          <div className="mt-2 text-[0.9em]">
-            <EditableField
-              value={notes}
-              onChange={setNotes}
-              area={true}
-              placeholder="Thank you for your business."
-            />
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -1829,6 +2061,8 @@ function TemplateInvoiceMinimal({
   total,
   logo,
   formatCurrency,
+  shipping,
+  showShipping, // NEW
 }) {
   return (
     <div className="p-8 sm:p-10 md:p-12 relative" style={{ fontSize: "1em" }}>
@@ -2018,6 +2252,13 @@ function TemplateInvoiceMinimal({
                 placeholder="0"
               />
             </div>
+            {/* NEW: Added Shipping row */}
+            {showShipping && (
+              <div className="flex justify-between">
+                <span className="opacity-70">Shipping:</span>
+                <span className="font-medium">{formatCurrency(shipping)}</span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-slate-300 pt-2 mt-2 text-[1.2em]">
               <span className="font-semibold">Total:</span>
               <span
@@ -2059,6 +2300,8 @@ function TemplateInvoiceCreative({
   total,
   logo,
   formatCurrency,
+  shipping,
+  showShipping, // NEW
 }) {
   return (
     <div
@@ -2074,7 +2317,7 @@ function TemplateInvoiceCreative({
           <img
             src={logo}
             alt="Logo"
-            className="max-h-20 object-contain filter brightness-0 invert"
+            className="max-h-20 object-contain "
           />
         ) : (
           <div className="font-bold" style={{ fontSize: "2em" }}>
@@ -2261,6 +2504,13 @@ function TemplateInvoiceCreative({
                 placeholder="0"
               />
             </div>
+            {/* NEW: Added Shipping row */}
+            {showShipping && (
+              <div className="flex justify-between">
+                <span className="opacity-70">Shipping:</span>
+                <span className="font-medium">{formatCurrency(shipping)}</span>
+              </div>
+            )}
             <div className="flex justify-between mt-4 pt-4 border-t-2 border-black text-[1.5em]">
               <span className="font-bold">Total:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
@@ -2342,7 +2592,11 @@ function TemplateModal({
                         value={template.id}
                         className={({ active, checked }) =>
                           `group relative flex cursor-pointer rounded-lg border-2 p-2 focus:outline-none transition-all
-                          ${checked ? "border-blue-500 ring-2 ring-blue-500" : "border-slate-200 dark:border-slate-700 hover:border-blue-300"}
+                          ${
+                            checked
+                              ? "border-blue-500 ring-2 ring-blue-500"
+                              : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                          }
                           ${active ? "ring-2 ring-offset-2 ring-blue-400" : ""}`
                         }
                       >
@@ -2563,8 +2817,10 @@ function EmailCaptureModal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
-                <div className="flex items-center">
-                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+                <div className="flex items-center justify-center">
+                  {" "}
+                  {/* Centered layout */}
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
                     <RiMailSendLine
                       className="h-6 w-6 text-blue-600 dark:text-blue-400"
                       aria-hidden="true"
@@ -2616,13 +2872,13 @@ function EmailCaptureModal({
                         "Subscribe & Download"
                       )}
                     </button>
-                    <button
+                    {/* <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={onSkip}
                     >
                       No thanks, just download
-                    </button>
+                    </button> */}
                   </div>
                 </form>
               </Dialog.Panel>

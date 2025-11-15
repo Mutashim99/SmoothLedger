@@ -30,9 +30,6 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Image from "next/image";
 
-
-
-
 // --- Helper: Editable Field Component ---
 function EditableField({
   value,
@@ -161,8 +158,11 @@ export default function PayslipGeneratorClient() {
   const [fontSize, setFontSize] = useState(14);
   const [currencyCode, setCurrencyCode] = useState("USD");
   const [watermark, setWatermark] = useState("");
+  const [watermarkOpacity, setWatermarkOpacity] = useState(0.1);
+  const [watermarkSize, setWatermarkSize] = useState(6);
   const [bgWatermark, setBgWatermark] = useState(null);
   const [bgWatermarkOpacity, setBgWatermarkOpacity] = useState(0.1);
+  const [bgWatermarkSize, setBgWatermarkSize] = useState(100); // NEW: Added state for bg image size
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
 
   // 3. UI State
@@ -173,9 +173,9 @@ export default function PayslipGeneratorClient() {
     show: false,
     message: "",
   });
-  const [isDirty, setIsDirty] = useState(false); // NEW: Tracks if user has edited
-  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // NEW: Email modal state
-  const [isSubscribing, setIsSubscribing] = useState(false); // NEW: Loading state for email form
+  const [isDirty, setIsDirty] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // 4. Local Storage State
   const [saveMyDetails, setSaveMyDetails] = useState(false);
@@ -231,7 +231,7 @@ export default function PayslipGeneratorClient() {
     }
   }, [companyName, companyAddress, saveMyDetails]);
 
-  // NEW: Check if user has already subscribed
+  // Check if user has already subscribed
   useEffect(() => {
     if (localStorage.getItem("smoothledger-subscribed") === "true") {
       setIsDirty(false);
@@ -261,7 +261,6 @@ export default function PayslipGeneratorClient() {
   };
 
   // --- Wrapper functions to set isDirty ---
-  // NEW: We wrap all state setters to also set isDirty to true.
   const setCompanyNameWrapper = (value) => {
     setCompanyName(value);
     setIsDirty(true);
@@ -330,8 +329,25 @@ export default function PayslipGeneratorClient() {
     setWatermark(value);
     setIsDirty(true);
   };
+  const setWatermarkOpacityWrapper = (value) => {
+    setWatermarkOpacity(value);
+    setIsDirty(true);
+  };
+  const setWatermarkSizeWrapper = (value) => {
+    setWatermarkSize(value);
+    setIsDirty(true);
+  };
   const setBgWatermarkWrapper = (value) => {
     setBgWatermark(value);
+    setIsDirty(true);
+  };
+  const setBgWatermarkOpacityWrapper = (value) => {
+    setBgWatermarkOpacity(value);
+    setIsDirty(true);
+  };
+  // NEW: Wrapper for bg image size
+  const setBgWatermarkSizeWrapper = (value) => {
+    setBgWatermarkSize(value);
     setIsDirty(true);
   };
 
@@ -339,13 +355,13 @@ export default function PayslipGeneratorClient() {
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLogoWrapper(URL.createObjectURL(file)); // UPDATED
+      setLogoWrapper(URL.createObjectURL(file));
     }
   };
   const handleBgWatermarkUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setBgWatermarkWrapper(URL.createObjectURL(file)); // UPDATED
+      setBgWatermarkWrapper(URL.createObjectURL(file));
     }
   };
 
@@ -354,7 +370,7 @@ export default function PayslipGeneratorClient() {
     const newEarnings = [...earnings];
     newEarnings[index][field] =
       field === "amount" ? parseFloat(value) || 0 : value;
-    setEarningsWrapper(newEarnings); // UPDATED
+    setEarningsWrapper(newEarnings);
   };
   const addEarning = () => {
     if (earnings.length + deductions.length >= 16) {
@@ -362,13 +378,12 @@ export default function PayslipGeneratorClient() {
       return;
     }
     setEarningsWrapper([
-      // UPDATED
       ...earnings,
       { id: Date.now(), name: "New Earning", amount: 0 },
     ]);
   };
   const removeEarning = (id) => {
-    setEarningsWrapper(earnings.filter((item) => item.id !== id)); // UPDATED
+    setEarningsWrapper(earnings.filter((item) => item.id !== id));
   };
 
   // Deductions Handlers
@@ -376,7 +391,7 @@ export default function PayslipGeneratorClient() {
     const newDeductions = [...deductions];
     newDeductions[index][field] =
       field === "amount" ? parseFloat(value) || 0 : value;
-    setDeductionsWrapper(newDeductions); // UPDATED
+    setDeductionsWrapper(newDeductions);
   };
   const addDeduction = () => {
     if (earnings.length + deductions.length >= 16) {
@@ -384,13 +399,12 @@ export default function PayslipGeneratorClient() {
       return;
     }
     setDeductionsWrapper([
-      // UPDATED
       ...deductions,
       { id: Date.now(), name: "New Deduction", amount: 0 },
     ]);
   };
   const removeDeduction = (id) => {
-    setDeductionsWrapper(deductions.filter((item) => item.id !== id)); // UPDATED
+    setDeductionsWrapper(deductions.filter((item) => item.id !== id));
   };
 
   // --- Local Storage Handlers ---
@@ -454,9 +468,9 @@ export default function PayslipGeneratorClient() {
     if (empId) {
       const empToLoad = savedEmployees.find((emp) => emp.id === empId);
       if (empToLoad) {
-        setEmployeeNameWrapper(empToLoad.name); // UPDATED
-        setEmployeeIdWrapper(empToLoad.id); // UPDATED
-        setEmployeePositionWrapper(empToLoad.position); // UPDATED
+        setEmployeeNameWrapper(empToLoad.name);
+        setEmployeeIdWrapper(empToLoad.id);
+        setEmployeePositionWrapper(empToLoad.position);
       }
     }
   };
@@ -575,17 +589,13 @@ export default function PayslipGeneratorClient() {
     }
   };
 
-  // PDF Download (UPDATED LOGIC)
+  // PDF Download
   const startDownload = async () => {
     setIsDownloading(true);
     const element = payslipPrintRef.current;
     if (!element) return;
 
-    // 1. Store Original Width
     const originalWidth = element.style.width;
-
-    // 2. Force Desktop Width (A4 Size approx in px)
-    // This ensures html2canvas sees a "Desktop" layout even on mobile
     element.style.width = "794px";
 
     const scale = 2;
@@ -593,10 +603,9 @@ export default function PayslipGeneratorClient() {
       scale: scale,
       useCORS: true,
       backgroundColor: "#ffffff",
-      windowWidth: 1200, // Force 'lg' breakpoints to trigger
+      windowWidth: 1200,
     });
 
-    // 3. Restore Original Width (So UI doesn't stay broken)
     element.style.width = originalWidth;
 
     const imgData = canvas.toDataURL("image/png");
@@ -627,18 +636,14 @@ export default function PayslipGeneratorClient() {
     setIsDownloading(false);
   };
 
-  // NEW: This is the new click handler for the download button
   const handleDownloadClick = () => {
     if (isDirty) {
-      // User has edited, show email modal
       setIsEmailModalOpen(true);
     } else {
-      // User has not edited, download immediately
       startDownload();
     }
   };
 
-  // NEW: This function handles the email submission
   const handleEmailSubmit = async (email) => {
     setIsSubscribing(true);
     try {
@@ -649,18 +654,13 @@ export default function PayslipGeneratorClient() {
       });
 
       if (!response.ok) {
-        // Handle HTTP errors
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to subscribe");
       }
-
-      // Success! Set a flag in local storage so we don't ask again.
       localStorage.setItem("smoothledger-subscribed", "true");
     } catch (error) {
       console.error("Subscription error:", error.message);
-      // We still let them download, just show a silent error in console
     } finally {
-      // ALWAYS close modal, reset state, and start download
       setIsSubscribing(false);
       setIsEmailModalOpen(false);
       startDownload();
@@ -684,7 +684,7 @@ export default function PayslipGeneratorClient() {
     },
     {
       id: "compact",
-      name: "Creative", // Note: you had "Creative" here, I kept it.
+      name: "Creative",
       preview: "/previews/creative.png",
     },
     { id: "bold", name: "Bold", preview: "/previews/bold.png" },
@@ -698,30 +698,30 @@ export default function PayslipGeneratorClient() {
   const renderPayslipTemplate = () => {
     const commonProps = {
       companyName,
-      setCompanyName: setCompanyNameWrapper, // UPDATED
+      setCompanyName: setCompanyNameWrapper,
       companyAddress,
-      setCompanyAddress: setCompanyAddressWrapper, // UPDATED
+      setCompanyAddress: setCompanyAddressWrapper,
       logo,
       employeeName,
-      setEmployeeName: setEmployeeNameWrapper, // UPDATED
+      setEmployeeName: setEmployeeNameWrapper,
       employeeId,
-      setEmployeeId: setEmployeeIdWrapper, // UPDATED
+      setEmployeeId: setEmployeeIdWrapper,
       employeePosition,
-      setEmployeePosition: setEmployeePositionWrapper, // UPDATED
+      setEmployeePosition: setEmployeePositionWrapper,
       payPeriodStart,
-      setPayPeriodStart: setPayPeriodStartWrapper, // UPDATED
+      setPayPeriodStart: setPayPeriodStartWrapper,
       payPeriodEnd,
-      setPayPeriodEnd: setPayPeriodEndWrapper, // UPDATED
+      setPayPeriodEnd: setPayPeriodEndWrapper,
       payDate,
-      setPayDate: setPayDateWrapper, // UPDATED
+      setPayDate: setPayDateWrapper,
       earnings,
-      handleEarningChange, // Already uses wrapper
-      addEarning, // Already uses wrapper
-      removeEarning, // Already uses wrapper
+      handleEarningChange,
+      addEarning,
+      removeEarning,
       deductions,
-      handleDeductionChange, // Already uses wrapper
-      addDeduction, // Already uses wrapper
-      removeDeduction, // Already uses wrapper
+      handleDeductionChange,
+      addDeduction,
+      removeDeduction,
       grossEarnings,
       totalDeductions,
       netPay,
@@ -755,7 +755,7 @@ export default function PayslipGeneratorClient() {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={handleDownloadClick} // UPDATED
+            onClick={handleDownloadClick}
             disabled={isDownloading}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition-all disabled:bg-slate-400"
           >
@@ -775,8 +775,225 @@ export default function PayslipGeneratorClient() {
             <RiEyeLine className="h-5 w-5" /> Change Template
           </button>
 
+          {/* --- SIDEBAR ORDER UPDATED TO MATCH INVOICE --- */}
           <div className="space-y-6">
-            {/* Styling */}
+            {/* 1. Document Details */}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiDraftLine className="inline mr-2" />
+                Document Details
+              </h3>
+              <div className="mt-4 space-y-4">
+                {/* Currency */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="currency"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Currency
+                  </label>
+                  <select
+                    id="currency"
+                    value={currencyCode}
+                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)}
+                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {currencyList.map((currency) => (
+                      <option key={currency.code} value={currency.code}>
+                        {currency.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Text Watermark */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Text Watermark
+                  </label>
+                  <input
+                    type="text"
+                    id="watermark"
+                    value={watermark}
+                    onChange={(e) => setWatermarkWrapper(e.target.value)}
+                    placeholder="e.g. DRAFT, CONFIDENTIAL"
+                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                {/* Text Size */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermarkSize"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Watermark Text Size: {watermarkSize}em
+                  </label>
+                  <input
+                    type="range"
+                    id="watermarkSize"
+                    min="2"
+                    max="12"
+                    step="0.5"
+                    value={watermarkSize}
+                    onChange={(e) =>
+                      setWatermarkSizeWrapper(parseFloat(e.target.value))
+                    }
+                    className="w-full"
+                    disabled={!watermark}
+                  />
+                </div>
+                {/* Text Opacity */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="watermarkOpacity"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Watermark Text Opacity: {Math.round(watermarkOpacity * 100)}%
+                  </label>
+                  <input
+                    type="range"
+                    id="watermarkOpacity"
+                    min="0.05"
+                    max="0.5"
+                    step="0.01" // Changed step
+                    value={watermarkOpacity}
+                    onChange={(e) =>
+                      setWatermarkOpacityWrapper(parseFloat(e.target.value))
+                    }
+                    className="w-full"
+                    disabled={!watermark}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Branding */}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                <RiImageAddLine className="inline mr-2" />
+                Branding
+              </h3>
+              <div className="mt-4 space-y-4">
+                {/* Company Logo */}
+                <div>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Company Logo
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={logoUploadRef}
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => logoUploadRef.current.click()}
+                    className="mt-2 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+                  >
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt="Uploaded Logo"
+                        className="max-h-24 object-contain"
+                      />
+                    ) : (
+                      <>
+                        <RiImageAddLine className="h-8 w-8" />
+                        <span className="text-sm font-medium">
+                          Click to upload logo
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  {logo && (
+                    <button
+                      onClick={() => setLogoWrapper(null)}
+                      className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                    >
+                      Remove Logo
+                    </button>
+                  )}
+                </div>
+                {/* BG Image Watermark */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="bgWatermark"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Background Image Watermark
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={bgWatermarkUploadRef}
+                    onChange={handleBgWatermarkUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => bgWatermarkUploadRef.current.click()}
+                    className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
+                  >
+                    <RiImageAddLine className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {bgWatermark ? "Change Image" : "Upload Image"}
+                    </span>
+                  </button>
+                  {bgWatermark && (
+                    <>
+                      <button
+                        onClick={() => setBgWatermarkWrapper(null)}
+                        className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
+                      >
+                        Remove Image
+                      </button>
+                      <label
+                        htmlFor="bgOpacity"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Watermark Image Opacity: {Math.round(bgWatermarkOpacity * 100)}%
+                      </label>
+                      <input
+                        type="range"
+                        id="bgOpacity"
+                        min="0.05"
+                        max="0.5"
+                        step="0.01" // Changed step
+                        value={bgWatermarkOpacity}
+                        onChange={(e) =>
+                          setBgWatermarkOpacityWrapper(
+                            parseFloat(e.target.value)
+                          )
+                        }
+                        className="w-full"
+                      />
+                      {/* --- NEW: Added Image Size Slider --- */}
+                      <label
+                        htmlFor="bgSize"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Watermark Image Size: {bgWatermarkSize}%
+                      </label>
+                      <input
+                        type="range"
+                        id="bgSize"
+                        min="20"
+                        max="150"
+                        step="5"
+                        value={bgWatermarkSize}
+                        onChange={(e) =>
+                          setBgWatermarkSizeWrapper(parseFloat(e.target.value))
+                        }
+                        className="w-full"
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Styling */}
             <div>
               <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                 <RiPaintFill className="inline mr-2" />
@@ -794,7 +1011,7 @@ export default function PayslipGeneratorClient() {
                     type="color"
                     id="accentColor"
                     value={accentColor}
-                    onChange={(e) => setAccentColorWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setAccentColorWrapper(e.target.value)}
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: accentColor }}
                   />
@@ -810,7 +1027,7 @@ export default function PayslipGeneratorClient() {
                     type="color"
                     id="textColor"
                     value={textColor}
-                    onChange={(e) => setTextColorWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setTextColorWrapper(e.target.value)}
                     className="w-8 h-8 rounded-full border-none cursor-pointer"
                     style={{ backgroundColor: textColor }}
                   />
@@ -825,7 +1042,7 @@ export default function PayslipGeneratorClient() {
                   <select
                     id="fontFamily"
                     value={fontFamily}
-                    onChange={(e) => setFontFamilyWrapper(e.target.value)} // UPDATED
+                    onChange={(e) => setFontFamilyWrapper(e.target.value)}
                     className="p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="Inter, sans-serif">Inter (Modern)</option>
@@ -852,26 +1069,84 @@ export default function PayslipGeneratorClient() {
                     value={fontSize}
                     onChange={(e) =>
                       setFontSizeWrapper(parseInt(e.target.value, 10))
-                    } // UPDATED
+                    }
                     className="w-full"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Save & Load */}
+            {/* 4. Save & Load */}
             <div>
               <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                 <RiSave3Line className="inline mr-2" />
                 Save & Load
               </h3>
               <div className="mt-4 space-y-4">
+                {/* Auto-Save My Details */}
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Auto-Save My Details
+                    <span className="block text-xs opacity-70">
+                      (Company Name & Address)
+                    </span>
+                  </span>
+                  <Switch
+                    checked={saveMyDetails}
+                    onChange={handleSaveMyDetailsToggle}
+                    className={`${
+                      saveMyDetails
+                        ? "bg-blue-600"
+                        : "bg-slate-300 dark:bg-slate-700"
+                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                  >
+                    <span className="sr-only">Save My Details</span>
+                    <span
+                      className={`${
+                        saveMyDetails ? "translate-x-6" : "translate-x-1"
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </Switch>
+                </div>
+                {/* Load/Save Employee */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="employees"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Saved Employees
+                  </label>
+                  <div className="flex gap-2">
+                    <select
+                      id="employees"
+                      value={selectedEmployeeId}
+                      onChange={handleLoadEmployee}
+                      className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Load an employee...</option>
+                      {savedEmployees.map((emp) => (
+                        <option key={emp.id} value={emp.id}>
+                          {emp.name} ({emp.id})
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={handleSaveEmployee}
+                      title="Save Current Employee"
+                      className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"
+                    >
+                      <RiUserAddLine className="h-5 w-5 text-slate-700 dark:text-slate-200" />
+                    </button>
+                  </div>
+                </div>
+                {/* Save Payslip */}
                 <button
                   onClick={handleSavePayslip}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors"
                 >
                   <RiSave3Line className="h-5 w-5" /> Save Current Payslip
                 </button>
+                {/* Load Payslip */}
                 <div className="space-y-2">
                   <label
                     htmlFor="load-payslip"
@@ -905,210 +1180,6 @@ export default function PayslipGeneratorClient() {
                 </div>
               </div>
             </div>
-
-            {/* Auto-Save */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiSaveLine className="inline mr-2" />
-                Auto-Save
-              </h3>
-              <div className="mt-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Save My Details
-                  </span>
-                  <Switch
-                    checked={saveMyDetails}
-                    onChange={handleSaveMyDetailsToggle}
-                    className={`${
-                      saveMyDetails
-                        ? "bg-blue-600"
-                        : "bg-slate-300 dark:bg-slate-700"
-                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-                  >
-                    <span className="sr-only">Save My Details</span>
-                    <span
-                      className={`${
-                        saveMyDetails ? "translate-x-6" : "translate-x-1"
-                      } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                    />
-                  </Switch>
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="employees"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Saved Employees
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      id="employees"
-                      value={selectedEmployeeId}
-                      onChange={handleLoadEmployee}
-                      className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">Load an employee...</option>
-                      {savedEmployees.map((emp) => (
-                        <option key={emp.id} value={emp.id}>
-                          {emp.name} ({emp.id})
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={handleSaveEmployee}
-                      title="Save Current Employee"
-                      className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"
-                    >
-                      <RiUserAddLine className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Document */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiDraftLine className="inline mr-2" />
-                Document
-              </h3>
-              <div className="mt-4 space-y-4">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="currency"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Currency
-                  </label>
-                  <select
-                    id="currency"
-                    value={currencyCode}
-                    onChange={(e) => setCurrencyCodeWrapper(e.target.value)} // UPDATED
-                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {currencyList.map((currency) => (
-                      <option key={currency.code} value={currency.code}>
-                        {currency.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="watermark"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Text Watermark
-                  </label>
-                  <input
-                    type="text"
-                    id="watermark"
-                    value={watermark}
-                    onChange={(e) => setWatermarkWrapper(e.target.value)} // UPDATED
-                    placeholder="e.g. DRAFT, CONFIDENTIAL"
-                    className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="bgWatermark"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Background Image Watermark
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={bgWatermarkUploadRef}
-                    onChange={handleBgWatermarkUpload}
-                    className="hidden"
-                  />
-                  <button
-                    onClick={() => bgWatermarkUploadRef.current.click()}
-                    className="mt-2 w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
-                  >
-                    <RiImageAddLine className="h-5 w-5" />
-                    <span className="text-sm font-medium">
-                      {bgWatermark ? "Change Image" : "Upload Image"}
-                    </span>
-                  </button>
-                  {bgWatermark && (
-                    <>
-                      <button
-                        onClick={() => setBgWatermarkWrapper(null)} // UPDATED
-                        className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
-                      >
-                        Remove Image
-                      </button>
-                      <label
-                        htmlFor="bgOpacity"
-                        className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                      >
-                        Opacity: {Math.round(bgWatermarkOpacity * 100)}%
-                      </label>
-                      <input
-                        type="range"
-                        id="bgOpacity"
-                        min="0.05"
-                        max="0.5"
-                        step="0.05"
-                        value={bgWatermarkOpacity}
-                        onChange={(e) => {
-                          // UPDATED
-                          setBgWatermarkOpacity(parseFloat(e.target.value));
-                          setIsDirty(true);
-                        }}
-                        className="w-full"
-                      />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Logo Uploader */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                <RiImageAddLine className="inline mr-2" />
-                Company Logo
-              </h3>
-              <input
-                type="file"
-                accept="image/*"
-                ref={logoUploadRef}
-                onChange={handleLogoUpload}
-                className="hidden"
-              />
-              <button
-                onClick={() => logoUploadRef.current.click()}
-                className="mt-4 w-full flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-blue-500 transition-colors"
-              >
-                {logo ? (
-                  <img
-                    src={logo}
-                    alt="Uploaded Logo"
-                    className="max-h-24 object-contain"
-                  />
-                ) : (
-                  <>
-                    <RiImageAddLine className="h-8 w-8" />
-                    <span className="text-sm font-medium">
-                      Click to upload logo
-                    </span>
-                  </>
-                )}
-              </button>
-              {logo && (
-                <button
-                  onClick={() => setLogoWrapper(null)} // UPDATED
-                  className="mt-2 w-full text-sm text-red-500 hover:text-red-700"
-                >
-                  Remove Logo
-                </button>
-              )}
-            </div>
           </div>
         </aside>
 
@@ -1136,14 +1207,21 @@ export default function PayslipGeneratorClient() {
                     backgroundImage: `url(${bgWatermark})`,
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "contain",
+                    backgroundSize: `${bgWatermarkSize}%`, // UPDATED
                     opacity: bgWatermarkOpacity,
                   }}
                 />
               )}
               {watermark && (
-                <div className="absolute inset-0 flex items-center justify-center z-0">
-                  <span className="text-[6vw] sm:text-[6em] font-bold rotate-[-30deg] uppercase whitespace-nowrap opacity-10">
+                <div className="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
+                  <span
+                    className="font-bold rotate-[-30deg] uppercase whitespace-nowrap"
+                    style={{
+                      fontSize: `${watermarkSize}em`,
+                      opacity: watermarkOpacity,
+                      color: "currentColor",
+                    }}
+                  >
                     {watermark}
                   </span>
                 </div>
@@ -2645,12 +2723,12 @@ function EmailCaptureModal({
                       )}
                     </button>
                     {/* <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={onSkip}
-                    >
-                      No thanks, just download
-                    </button> */}
+                        type="button"
+                        className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={onSkip}
+                      >
+                        No thanks, just download
+                      </button> */}
                   </div>
                 </form>
               </Dialog.Panel>

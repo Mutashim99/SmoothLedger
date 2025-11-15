@@ -4,7 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { ModernNavbar } from "@/app/components/ModernNavbar";
 import { ModernFooter } from "@/app/components/ModernFooter"; // <-- NEW IMPORT
-
+import { Analytics } from '@vercel/analytics/next';
 // DELETED: Removed Ri... icons, they are now in ModernFooter.jsx
 
 const inter = Inter({ subsets: ["latin"] });
@@ -113,7 +113,7 @@ export default function RootLayout({ children }) {
     "logo": `${siteConfig.url}/SLlogo1.png`, // Assumes you have an app/icon.png
     "sameAs": [
       // "https://twitter.com/YOUR_TWITTER",
-      // "https://github.com/YOUR_GITHUB"
+       "https://github.com/Mutashim99"
     ]
   };
 
@@ -145,6 +145,7 @@ export default function RootLayout({ children }) {
         >
           <ModernNavbar /> 
           <main className="flex-grow">{children}</main>
+          <Analytics />
           <ModernFooter /> {/* <-- UPDATED: Now using the imported Client Component */}
         </ThemeProvider>
       </body>
