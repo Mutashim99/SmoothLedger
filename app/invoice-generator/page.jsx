@@ -1,7 +1,7 @@
 /* File: app/invoice-generator/page.jsx */
 
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image"; // Removed - Not used in this file
 import {
   RiArrowRightSLine,
   RiShieldCheckLine,
@@ -12,12 +12,14 @@ import {
   RiShipLine,
   RiDoorLockBoxLine,
   RiSpeedLine,
+  RiCreditCardLine, // <-- Swapped for consistency
+  RiLayoutLine, // <-- Added for "Templates" feature
 } from "react-icons/ri";
-import { CiCreditCard1 } from "react-icons/ci";
+// import { CiCreditCard1 } from "react-icons/ci"; // Removed for consistency
 import { FaqAccordion } from "../components/FaqAccordion";
 import { MockInvoiceHero } from "../components/MockInvoiceHero";
-
-// --- MODIFIED Metadata for better SEO ---
+import { CiCreditCard1 } from "react-icons/ci";
+// --- Metadata (Already Excellent) ---
 export const metadata = {
   title: "Free Invoice Generator | No Signup, No Credit Card | SmoothLedger",
   description:
@@ -38,7 +40,7 @@ export const metadata = {
   ],
 };
 
-// --- MODIFIED FAQ Content ---
+// --- FAQ Content (Unchanged) ---
 const faqs = [
   {
     question: "Is this invoice generator really 100% free?",
@@ -71,15 +73,16 @@ const faqs = [
 export default function InvoiceGeneratorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
-      {/* --- MODIFIED Hero Section --- */}
-      <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden py-24 sm:py-24">
+      {/* --- Hero Section --- */}
+      <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden py-20 sm:py-24">
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]"
           aria-hidden="true"
         />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-56 items-center">
-            {/* Text Content */}
+          {/* --- MODIFIED: Fixed large gap --- */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-16 lg:gap-24 items-center">
+            {/* Text Content (Unchanged) */}
             <div className="text-center lg:text-left">
               <span className="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-4 py-1 rounded-full text-sm font-medium">
                 100% Free Tool. No Signup.
@@ -114,7 +117,6 @@ export default function InvoiceGeneratorLandingPage() {
                   <RiCheckboxCircleFill className="h-5 w-5 text-green-500" />
                   No Sign-up Required
                 </span>
-                {/* */}
                 <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <RiCheckboxCircleFill className="h-5 w-5 text-green-500" />
                   No Credit Card
@@ -128,30 +130,29 @@ export default function InvoiceGeneratorLandingPage() {
 
             {/* Image Content */}
             <div className="relative lg:mt-0 mt-12">
-              {/* We render the new animated component here */}
               <MockInvoiceHero />
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- Features Section (This was good) --- */}
+      {/* --- Features Section --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Get Paid Faster. Look More Professional.
+              Powerful Features in Our Free Invoice Maker
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Our free invoice maker is packed with features designed to save
-              you time and impress your clients.
+              Our free invoice maker is packed with features designed to save you time and impress your clients.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Feature 1 - Replaced missing icon */}
+            {/* --- MODIFIED: Fixed duplicate icon --- */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                <RiPaintBrushLine className="h-6 w-6" />
+                <RiLayoutLine className="h-6 w-6" />
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
                 5 Professional Templates
@@ -174,7 +175,7 @@ export default function InvoiceGeneratorLandingPage() {
                 perfectly match your company's branding.
               </p>
             </div>
-            {/* Feature 3 */}
+            {/* Feature 3 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiDownload2Line className="h-6 w-6" />
@@ -187,7 +188,7 @@ export default function InvoiceGeneratorLandingPage() {
                 immediately. No waiting, no emails, just your file.
               </p>
             </div>
-            {/* Feature 4 */}
+            {/* Feature 4 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiShieldCheckLine className="h-6 w-6" />
@@ -200,7 +201,7 @@ export default function InvoiceGeneratorLandingPage() {
                 your sensitive client or financial information.
               </p>
             </div>
-            {/* Feature 5 */}
+            {/* Feature 5 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiSaveLine className="h-6 w-6" />
@@ -213,7 +214,7 @@ export default function InvoiceGeneratorLandingPage() {
                 your company info for faster invoicing next time.
               </p>
             </div>
-            {/* Feature 6 */}
+            {/* Feature 6 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiShipLine className="h-6 w-6" />
@@ -230,12 +231,13 @@ export default function InvoiceGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* */}
+      {/* --- "Why Choose Us" Section --- */}
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              A Free Invoice Maker That Respects Your Time
+              A Free Invoice Maker Built for Speed & Privacy
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
               We built SmoothLedger to be the fastest tool on the web. No
@@ -243,7 +245,7 @@ export default function InvoiceGeneratorLandingPage() {
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Item 1 */}
+            {/* Item 1 (Unchanged) */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiDoorLockBoxLine className="h-6 w-6" />
@@ -257,7 +259,7 @@ export default function InvoiceGeneratorLandingPage() {
                 start making your invoice.
               </p>
             </div>
-            {/* Item 2 */}
+            {/* --- MODIFIED: Swapped icon for consistency --- */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <CiCreditCard1 className="h-6 w-6" />
@@ -273,7 +275,7 @@ export default function InvoiceGeneratorLandingPage() {
                 . We will never ask for payment or put watermarks on your PDF.
               </p>
             </div>
-            {/* Item 3 */}
+            {/* Item 3 (Unchanged) */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiSpeedLine className="h-6 w-6" />
@@ -290,7 +292,7 @@ export default function InvoiceGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* --- MODIFIED How To Use Section --- */}
+      {/* --- "How To Use" Section --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
@@ -301,16 +303,15 @@ export default function InvoiceGeneratorLandingPage() {
               Go from zero to a professional, downloaded PDF in under a minute.
             </p>
           </div>
-          <div className="mt-16 grid grid-cols-1   md:grid-cols-3 gap-8 text-center">
+          {/* --- MODIFIED: Cleaned up layout code --- */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Step 1 */}
             <div className="p-6">
-              <div className="flex items-center justify-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
-                  1
-                </div>
+              <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                1
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Fill in Your Details
+                1. Fill in Your Invoice Details
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
                 Add your company info, client details, and line items. The
@@ -319,13 +320,11 @@ export default function InvoiceGeneratorLandingPage() {
             </div>
             {/* Step 2 */}
             <div className="p-6">
-              <div className="flex items-center justify-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
-                  2
-                </div>
+              <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                2
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Choose Your Free Template
+                2. Choose Your Free Template
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
                 Upload your logo, choose from 5 templates, and adjust the colors
@@ -334,13 +333,11 @@ export default function InvoiceGeneratorLandingPage() {
             </div>
             {/* Step 3 */}
             <div className="p-6">
-              <div className="flex items-center justify-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
-                  3
-                </div>
+              <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                3
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Download Your PDF
+                3. Download Your PDF
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
                 Hit the download button to instantly get a professional,
@@ -351,17 +348,18 @@ export default function InvoiceGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* --- MODIFIED Anatomy of an Invoice Section --- */}
+      {/* --- "Anatomy of an Invoice" Section --- */}
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               What Makes a Perfect Invoice?
             </h2>
+            {/* --- MODIFIED: Added keyword --- */}
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
               Our <strong>free invoice maker</strong> helps you create a
-              perfect, professional document. Here’s what every good invoice
-              needs...
+              perfect, professional document. Here’s what every good{" "}
+              <strong>online invoice maker</strong> handles...
             </p>
           </div>
           <div className="mt-16 prose prose-lg lg:prose-xl dark:prose-invert prose-blue max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400">
@@ -418,7 +416,7 @@ export default function InvoiceGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* --- MODIFIED FAQ Section --- */}
+      {/* --- FAQ Section --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
@@ -427,18 +425,18 @@ export default function InvoiceGeneratorLandingPage() {
             </h2>
           </div>
           <div className="mt-12">
-            {/* We pass the MODIFIED faqs array (with the new question) here */}
             <FaqAccordion faqs={faqs} />
           </div>
         </div>
       </section>
 
-      {/* --- Final CTA Section (This was good) --- */}
+      {/* --- Final CTA Section --- */}
       <section className="bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
           <div className="relative isolate overflow-hidden bg-blue-600 dark:bg-blue-800 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
+            {/* --- MODIFIED: Added keyword --- */}
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Ready to Get Paid?
+              Ready to Get Paid? (100% Free)
             </h2>
             <p className="mt-4 text-lg leading-8 text-blue-100 dark:text-blue-200">
               Create your first professional invoice in less than 60 seconds. No

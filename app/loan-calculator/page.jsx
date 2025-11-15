@@ -1,22 +1,23 @@
+/* File: app/loan-calculator/page.jsx */
+
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image"; // Removed - Not used
 import {
   RiArrowRightSLine,
   RiShieldCheckLine,
-  RiUserSearchLine,
+  // RiUserSearchLine, // Removed - Not used
   RiPieChart2Line,
   RiTableLine,
-  RiCalendar2Line,
+  // RiCalendar2Line, // Removed - Notused
   RiCheckboxCircleFill,
   RiBankLine,
   RiHome4Line,
   RiCarLine,
 } from "react-icons/ri";
-import { FaqAccordion } from "@/app/components/FaqAccordion"; // Ensure this path is correct
-import { MockLoanCalcHero } from "../components/MockLoanCalcHero";
+import { FaqAccordion } from "@/app/components/FaqAccordion";
+import { MockLoanCalcHero } from "@/app/components/MockLoanCalcHero"; // <-- MODIFIED: Consistent path
 
-// 1. This is your Server Component page.
-// It exports metadata and renders the page.
+// --- Metadata (Already Excellent) ---
 export const metadata = {
   title: "Free Loan Calculator | Calculate Monthly Payments & Amortization",
   description:
@@ -31,7 +32,7 @@ export const metadata = {
   ],
 };
 
-// --- FAQ Content ---
+// --- FAQ Content (Already Excellent) ---
 const faqs = [
   {
     question: "Is this loan calculator completely free?",
@@ -60,7 +61,8 @@ export default function LoanCalculatorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950 ">
       {/* --- Hero Section --- */}
-      <section className="relative overflow-hidden min-h-[calc(100vh-4rem)] py-24 sm:py-32">
+      {/* --- MODIFIED: Padding adjusted --- */}
+      <section className="relative overflow-hidden min-h-[calc(100vh-4rem)] py-20 sm:py-24">
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]"
           aria-hidden="true"
@@ -72,11 +74,12 @@ export default function LoanCalculatorLandingPage() {
               <span className="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-4 py-1 rounded-full text-sm font-medium">
                 Free Loan Calculator
               </span>
+              {/* --- MODIFIED: Minor H1 Tweak --- */}
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
-                See Your Monthly Payment & Total
+                See Your Monthly Payments &
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
-                  Interest Instantly.
+                  Total Interest Instantly.
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
@@ -111,7 +114,7 @@ export default function LoanCalculatorLandingPage() {
 
             {/* Image Content */}
             <div className="relative lg:mt-0 mt-12">
-              <MockLoanCalcHero /> {/* Use your new component here! */}
+              <MockLoanCalcHero />
             </div>
           </div>
         </div>
@@ -121,8 +124,9 @@ export default function LoanCalculatorLandingPage() {
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Understand Your Loan, Inside and Out
+              Key Features of Our Loan Payment Calculator
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
               Our calculator goes beyond just the monthly payment. We provide
@@ -178,8 +182,9 @@ export default function LoanCalculatorLandingPage() {
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Understanding Your Loan
+              How to Understand Your Loan: Principal, Interest, & Amortization
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
               Our calculator helps you understand the three key parts of any
@@ -206,8 +211,10 @@ export default function LoanCalculatorLandingPage() {
               regular, equal payments. In the beginning of your loan, a larger
               portion of your payment goes to interest. As you continue to pay,
               more and more of your payment goes towards the principal, reducing
-              your loan balance faster. Our calculator generates a schedule that
-              shows you this entire process.
+      
+              your loan balance faster. Our calculator generates an{" "}
+              <strong>amortization schedule</strong> that shows you this entire
+              process.
             </p>
           </div>
         </div>
@@ -217,8 +224,9 @@ export default function LoanCalculatorLandingPage() {
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              A Versatile Tool for All Your Needs
+              Your All-in-One Mortgage, Car, & Personal Loan Calculator
             </h2>
           </div>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">

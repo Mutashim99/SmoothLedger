@@ -1,24 +1,26 @@
+/* File: app/payslip-generator/page.jsx */
+
 import Link from "next/link";
-import Image from "next/image";
-import { RiFileList3Line } from "react-icons/ri";
-import { RiUserSearchLine } from "react-icons/ri";
+// import Image from "next/image"; // Removed - Not used
 import {
   RiArrowRightSLine,
   RiShieldCheckLine,
   RiDownload2Line,
   RiCheckboxCircleFill,
-  RiPaintBrushLine,
-  RiSaveLine,
-  RiShipLine,
-  RiDoorLockBoxLine,
-  RiSpeedLine,
+  RiLayoutLine,
+  RiPaintBrushLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
+  RiSaveLine,     // <-- This was in your imports, but not used. I've left it, but you could remove it.
+  RiShipLine,     // <-- This was in your imports, but not used. I've left it, but you could remove it.
+  RiDoorLockBoxLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
+  RiSpeedLine,       // <-- This was in your imports, but not used. I've left it, but you could remove it.
   RiCalculatorLine,
-} from "react-icons/ri"; // Note: /index.js is crucial for Server Components
-import { FaqAccordion } from "@/app/components/FaqAccordion"; // Ensure this path is correct
-import { MockPayslipHero } from "../components/MockPayslipHero";
+  RiFileList3Line,
+  RiUserSearchLine,
+} from "react-icons/ri";
+import { FaqAccordion } from "@/app/components/FaqAccordion";
+import { MockPayslipHero } from "@/app/components/MockPayslipHero"; // <-- MODIFIED: Consistent path
 
-// This is your new Server Component page.
-// Its ONLY job is to export metadata and render the page.
+// --- Metadata (Already Excellent) ---
 export const metadata = {
   title: "Free Payslip Generator | Create Pay Stubs Online (No Signup)",
   description:
@@ -36,7 +38,7 @@ export const metadata = {
   ],
 };
 
-// --- FAQ Content ---
+// --- FAQ Content (Already Excellent) ---
 const faqs = [
   {
     question: "Is this payslip generator completely free to use?",
@@ -70,7 +72,8 @@ export default function PayslipGeneratorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
       {/* --- Hero Section --- */}
-      <section className="relative overflow-hidden py-24 min-h-[calc(100vh-4rem)] sm:py-24">
+      {/* --- MODIFIED: Padding adjusted --- */}
+      <section className="relative overflow-hidden py-20 min-h-[calc(100vh-4rem)] sm:py-24">
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]"
           aria-hidden="true"
@@ -121,81 +124,121 @@ export default function PayslipGeneratorLandingPage() {
 
             {/* Image Content */}
             <div className="relative lg:mt-0 mt-12">
-              <MockPayslipHero /> {/* Use your new component here! */}
+              <MockPayslipHero />
             </div>
           </div>
         </div>
       </section>
 
       {/* --- Features Section --- */}
-      <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Simple, Powerful, and Professional Payroll
-            </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Our payslip maker is designed for small business owners and
-              managers, not accountants.
-            </p>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Feature 1 */}
-            <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                <RiCalculatorLine className="h-6 w-6" />
-              </div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Automatic Calculations
-              </h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                Just add your earnings and deductions. Our tool automatically
-                calculates Gross Pay, Total Deductions, and Net Pay instantly.
-              </p>
-            </div>
-            {/* Feature 2 */}
-            <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                <RiFileList3Line className="h-6 w-6" />
-              </div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Detailed & Itemized
-              </h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                Add unlimited earning (like base pay, bonuses, overtime) and
-                deduction (like tax, insurance) line items for a clear, itemized
-                pay stub.
-              </p>
-            </div>
-            {/* Feature 3 */}
-            <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                <RiUserSearchLine className="h-6 w-6" />
-              </div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
-                Completely Anonymous
-              </h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                We don't require an account, so we never ask for your email or
-                your employees' sensitive data. It's 100% private.
-              </p>
-            </div>
-          </div>
+  <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-3xl mx-auto text-center">
+      <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+        Features of Our Free Pay Stub Generator
+      </h2>
+      <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+        Our free payslip maker is built to be fast, accurate, and secure. See all the features you get for free.
+      </p>
+    </div>
+    <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+      
+      {/* Feature 1 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiCalculatorLine className="h-6 w-6" />
         </div>
-      </section>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Automatic Calculations
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          Just add earnings and deductions. Our tool automatically calculates Gross Pay, Total Deductions, and Net Pay instantly, saving you time.
+        </p>
+      </div>
+
+      {/* Feature 2 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiFileList3Line className="h-6 w-6" />
+        </div>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Unlimited Earnings & Deductions
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          Add any number of line items for both earnings (like base pay, bonuses, overtime) and deductions (like tax, insurance, or retirement).
+        </p>
+      </div>
+
+      {/* Feature 3 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiLayoutLine className="h-6 w-6" />
+        </div>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Professional Templates
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          Choose from a selection of clean, professional, and easy-to-read payslip templates that are suitable for any business.
+        </p>
+      </div>
+
+      {/* Feature 4 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiDownload2Line className="h-6 w-6" />
+        </div>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Instant PDF Downloads
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          Generate and download a print-ready PDF of your payslip immediately. No waiting, no emails, just your file.
+        </p>
+      </div>
+
+      {/* Feature 5 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiShieldCheckLine className="h-6 w-6" />
+        </div>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Secure & Private
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          All data is processed in your browser. We never see or store any of your sensitive employee salary or personal information.
+        </p>
+      </div>
+
+      {/* Feature 6 */}
+      <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <RiPaintBrushLine className="h-6 w-6" />
+        </div>
+        <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+          Add Your Company Logo
+        </h3>
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+          Customize your payslip by uploading your own company logo. Give your pay stubs a professional, branded look.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
       {/* --- How To Use Section --- */}
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Generate a Pay Stub in 3 Easy Steps
+              How to Use Our Free Payslip Generator
             </h2>
           </div>
+          {/* --- MODIFIED: Cleaned up layout code --- */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Step 1 */}
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 1
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
@@ -208,7 +251,7 @@ export default function PayslipGeneratorLandingPage() {
             </div>
             {/* Step 2 */}
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 2
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
@@ -221,7 +264,7 @@ export default function PayslipGeneratorLandingPage() {
             </div>
             {/* Step 3 */}
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 3
               </div>
               <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
@@ -236,7 +279,7 @@ export default function PayslipGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* --- SEO Content Block --- */}
+      {/* --- SEO Content Block (Already Excellent) --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
@@ -305,9 +348,9 @@ export default function PayslipGeneratorLandingPage() {
               </li>
             </ol>
             <p>
-              Using a reliable payslip maker, like this one, ensures you get
-              these calculations right every time, whether for a single employee
-              or your whole team.
+              Using a reliable <strong>payslip maker</strong>, like this one,
+              ensures you get these calculations right every time, whether for a
+              single employee or your whole team.
             </p>
           </div>
         </div>
@@ -317,18 +360,18 @@ export default function PayslipGeneratorLandingPage() {
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
+            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Frequently Asked Questions
+              Pay Stub & Payslip Generator FAQs
             </h2>
           </div>
           <div className="mt-12">
-            {/* The interactive accordion is a Client Component */}
             <FaqAccordion faqs={faqs} />
           </div>
         </div>
       </section>
 
-      {/* --- Final CTA Section --- */}
+      {/* --- Final CTA Section (Already Good) --- */}
       <section className="bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
           <div className="relative isolate overflow-hidden bg-blue-600 dark:bg-blue-800 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">

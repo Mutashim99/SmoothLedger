@@ -19,12 +19,14 @@ export function MockInvoiceHero() {
         {/* Header: Logo and "INVOICE" */}
         <div className="flex justify-between items-start pb-4 border-b dark:border-slate-700">
           {/* Mock Logo */}
-          <div className="flex items-center gap-3">
-            
-            <span className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-              SmoothLedger
-            </span>
-          </div>
+          <div>
+              <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                SmoothLedger Solutions
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                456 Tech Lane, Innovation City, 78901
+              </p>
+            </div>
           <div className="text-right">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
               INVOICE
@@ -145,6 +147,7 @@ export function MockInvoiceHero() {
           Thank you for your business.
         </div>
       </div>
+
     </motion.div>
   );
 }

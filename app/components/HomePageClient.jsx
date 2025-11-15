@@ -363,7 +363,7 @@ function HeroSection() {
               variants={itemVariants}
             >
               <Link
-                href="/invoice-generator"
+                href="/invoice-generator/create"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
               >
                 Create an Invoice

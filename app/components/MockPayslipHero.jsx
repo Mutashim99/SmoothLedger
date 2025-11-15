@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export function MockPayslipHero() {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      initial={{ opacity: 0.5 ,scale: 0.98, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
       className="relative w-full max-w-lg mx-auto"
@@ -17,9 +17,7 @@ export function MockPayslipHero() {
         {/* Header: Company Info and Payslip Title */}
         <div className="flex justify-between items-start pb-4 border-b dark:border-slate-700">
           <div className="flex items-center gap-3">
-            <span className="flex items-center justify-center h-10 w-10 bg-blue-600 dark:bg-blue-500 rounded-lg">
-              <span className="text-xl font-bold text-white">SL</span>
-            </span>
+            
             <div>
               <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                 SmoothLedger Corp
