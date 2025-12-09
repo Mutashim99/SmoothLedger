@@ -16,8 +16,8 @@ export const allBlogs = [
           An invoice is more than just a request for payment; it's a reflection
           of your brand's professionalism. A clear, accurate, and professional
           invoice builds trust with your clients and is a critical part of a
-          smooth cash flow. This guide will walk you through every component of a
-          perfect invoice.
+          smooth cash flow. This guide will walk you through every component of
+          a perfect invoice.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -40,8 +40,8 @@ export const allBlogs = [
             INV-002) or a date-based system (e.g., 2025-11-10-01).
           </li>
           <li>
-            <strong>Your Company Information:</strong> Your full name or business
-            name, address, and contact information (phone or email).
+            <strong>Your Company Information:</strong> Your full name or
+            business name, address, and contact information (phone or email).
           </li>
           <li>
             <strong>Client's Information:</strong> The full name and address of
@@ -53,7 +53,8 @@ export const allBlogs = [
           </li>
           <li>
             <strong>Itemized List of Services/Products:</strong> Don't just put
-            "Consulting work." Be specific. E.g., "Web Design - Homepage Mockup (10 hours @ $100/hr)".
+            "Consulting work." Be specific. E.g., "Web Design - Homepage Mockup
+            (10 hours @ $100/hr)".
           </li>
           <li>
             <strong>The Grand Total:</strong> Clearly display the final amount
@@ -139,12 +140,13 @@ export const allBlogs = [
             outline the scope of work and the estimated cost.
           </li>
           <li>
-            <strong>Key Features:</strong> It should include a "Valid Until" date
-            (e.g., "This price is valid for 30 days") and clear "Terms &
+            <strong>Key Features:</strong> It should include a "Valid Until"
+            date (e.g., "This price is valid for 30 days") and clear "Terms &
             Conditions" (e.g., "Includes two rounds of revisions").
           </li>
           <li>
-            <strong>The Goal:</strong> To get the client to say "Yes, let's start!"
+            <strong>The Goal:</strong> To get the client to say "Yes, let's
+            start!"
           </li>
         </ul>
         <p className="mt-4">
@@ -162,8 +164,8 @@ export const allBlogs = [
           2. The Invoice: The "During" or "End" Document
         </h2>
         <p>
-          An invoice is a formal request for payment *after* you have delivered a
-          product or service.
+          An invoice is a formal request for payment *after* you have delivered
+          a product or service.
         </p>
         <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-slate-600 dark:text-slate-300 italic">
           A quotation is a question ("Will you pay this?"). An invoice is a
@@ -171,8 +173,8 @@ export const allBlogs = [
         </blockquote>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
-            <strong>What it is:</strong> A bill. A formal record of a sale and
-            a request for the money owed.
+            <strong>What it is:</strong> A bill. A formal record of a sale and a
+            request for the money owed.
           </li>
           <li>
             <strong>When to use it:</strong> Send it after the work is complete,
@@ -191,8 +193,8 @@ export const allBlogs = [
           3. The Receipt: The "After" Document
         </h2>
         <p>
-          A receipt is a proof of payment. It's the document you send *after* the
-          client has paid your invoice.
+          A receipt is a proof of payment. It's the document you send *after*
+          the client has paid your invoice.
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -208,20 +210,21 @@ export const allBlogs = [
             balance due.
           </li>
           <li>
-            <strong>The Goal:</strong> To close the loop and provide both you and
-            your client with a final record.
+            <strong>The Goal:</strong> To close the loop and provide both you
+            and your client with a final record.
           </li>
         </ul>
         <p className="mt-4">
-          Understanding this simple workflow (Quote → Invoice → Receipt) makes you
-          look organized, professional, and trustworthy to your clients.
+          Understanding this simple workflow (Quote → Invoice → Receipt) makes
+          you look organized, professional, and trustworthy to your clients.
         </p>
       </>
     ),
   },
   {
     slug: "how-to-calculate-profit-margin",
-    title: "How to Calculate Profit Margin (And Why It's More Important Than Sales)",
+    title:
+      "How to Calculate Profit Margin (And Why It's More Important Than Sales)",
     date: "2025-11-08",
     tags: ["Calculators", "Business Tips", "Profit"],
     description:
@@ -242,9 +245,7 @@ export const allBlogs = [
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Step 1: Find Your Cost of Goods Sold (COGS)
         </h2>
-        <p>
-          First, you need to know what it costs you to make your product.
-        </p>
+        <p>First, you need to know what it costs you to make your product.</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>For products:</strong> This is your raw materials,
@@ -278,10 +279,10 @@ export const allBlogs = [
           Using our example: If you sell your product for **$100**, your
           equation is:
         </p>
-        <p className="font-mono text-lg mt-2">$100 (Selling Price) - $50 (Cost) = $50 (Gross Profit)</p>
-        <p className="mt-2">
-          You made $50. That's your Gross Profit.
+        <p className="font-mono text-lg mt-2">
+          $100 (Selling Price) - $50 (Cost) = $50 (Gross Profit)
         </p>
+        <p className="mt-2">You made $50. That's your Gross Profit.</p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Step 3: Calculate Profit Margin
@@ -296,9 +297,7 @@ export const allBlogs = [
             (Gross Profit / Selling Price) * 100 = Profit Margin %
           </p>
         </blockquote>
-        <p>
-          Using our example:
-        </p>
+        <p>Using our example:</p>
         <p className="font-mono text-lg mt-2">
           ($50 Gross Profit / $100 Selling Price) * 100 = 50%
         </p>
@@ -341,8 +340,9 @@ export const allBlogs = [
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
           Your payslip (or pay stub) is a critical document that details your
-          pay for a given period. It can be full of confusing codes and acronyms.
-          Let's demystify it by breaking it down into three simple parts.
+          pay for a given period. It can be full of confusing codes and
+          acronyms. Let's demystify it by breaking it down into three simple
+          parts.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -352,9 +352,7 @@ export const allBlogs = [
           This is the total amount of money you earned *before* any taxes or
           other deductions are taken out. It's the "top-line" number.
         </p>
-        <p className="mt-4">
-          Your Gross Pay is typically made up of:
-        </p>
+        <p className="mt-4">Your Gross Pay is typically made up of:</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>Base Pay / Salary:</strong> Your standard hourly wage or
@@ -384,13 +382,11 @@ export const allBlogs = [
         <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-6 mb-2">
           Statutory Deductions (Mandatory)
         </h3>
-        <p>
-          These are the ones required by law.
-        </p>
+        <p>These are the ones required by law.</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
-            <strong>Income Tax:</strong> Tax paid to the government based on your
-            earnings.
+            <strong>Income Tax:</strong> Tax paid to the government based on
+            your earnings.
           </li>
           <li>
             <strong>National Insurance / Social Security:</strong> Contributions
@@ -402,16 +398,15 @@ export const allBlogs = [
         <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-6 mb-2">
           Voluntary Deductions (Optional)
         </h3>
-        <p>
-          These are deductions you've agreed to, often for benefits.
-        </p>
+        <p>These are deductions you've agreed to, often for benefits.</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>Health Insurance:</strong> Your contribution to a workplace
             health plan.
           </li>
           <li>
-            <strong>Pension / 401(k):</strong> Money you're saving for retirement.
+            <strong>Pension / 401(k):</strong> Money you're saving for
+            retirement.
           </li>
           <li>
             <strong>Other:</strong> Could include things like union dues,
@@ -433,8 +428,8 @@ export const allBlogs = [
         </blockquote>
         <p className="mt-4">
           Always check this number against what you were expecting. Mistakes can
-          happen! Understanding these three parts makes your payslip much
-          less intimidating and empowers you to know exactly where your money is
+          happen! Understanding these three parts makes your payslip much less
+          intimidating and empowers you to know exactly where your money is
           going.
         </p>
       </>
@@ -452,8 +447,8 @@ export const allBlogs = [
         <p className="text-lg text-slate-600 dark:text-slate-300">
           A quotation is not just a price list; it's a sales document. It's
           often the final piece of communication a client reviews before
-          deciding whether to hire you or your competitor. A professional, clear,
-          and persuasive quote can be the difference-maker.
+          deciding whether to hire you or your competitor. A professional,
+          clear, and persuasive quote can be the difference-maker.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -551,9 +546,7 @@ export const allBlogs = [
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           The Two Parts of Every Payment
         </h2>
-        <p>
-          Your single monthly payment is split into two buckets:
-        </p>
+        <p>Your single monthly payment is split into two buckets:</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>1. Principal:</strong> This is the *real* money you
@@ -615,9 +608,9 @@ export const allBlogs = [
             (Interest) and only $360 (Principal).
           </li>
           <li>
-            <strong>Month 2:</strong> Your balance is now $299,640. Your interest
-            is $1,248 (slightly less), and your principal is $362 (slightly
-            more).
+            <strong>Month 2:</strong> Your balance is now $299,640. Your
+            interest is $1,248 (slightly less), and your principal is $362
+            (slightly more).
           </li>
         </ul>
         <p className="mt-4">
@@ -677,8 +670,8 @@ export const allBlogs = [
           - $5,000." This immediately creates suspicion and confusion. What
           services? When? How many hours? This is how disputes start.
           <br />
-          <strong>The Fix:</strong> Be specific. "Social Media Strategy (Phase 1)
-          - 20 hours @ $250/hr." This shows exactly what they paid for and
+          <strong>The Fix:</strong> Be specific. "Social Media Strategy (Phase
+          1) - 20 hours @ $250/hr." This shows exactly what they paid for and
           justifies the cost.
         </p>
 
@@ -695,7 +688,7 @@ export const allBlogs = [
           all necessary details (Bank name, account number, PayPal email, etc.)
           in the "Notes" section.
         </p>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           5. Using an Unprofessional Tool (or worse, Word)
         </h2>
@@ -787,14 +780,12 @@ export const allBlogs = [
         </p>
         <p className="mt-4">
           We believe in earning your trust. By providing a best-in-class, 100%
-          free tool, we're showing you our value upfront. We're betting that when
-          we *do* release our optional, paid "Dashboard" for cloud storage,
+          free tool, we're showing you our value upfront. We're betting that
+          when we *do* release our optional, paid "Dashboard" for cloud storage,
           you'll be happy to sign up—not because we forced you, but because
           you'll already trust the product.
         </p>
-        <p className="mt-4">
-          That's the future we're building.
-        </p>
+        <p className="mt-4">That's the future we're building.</p>
       </>
     ),
   },
@@ -845,10 +836,10 @@ export const allBlogs = [
         <p>
           When a client pays you $5,000, that is not $5,000. It's $5,000 *minus*
           taxes. A good rule of thumb is to take 25-30% of every single payment
-          and move it into a separate "Tax Savings" account *immediately*. Do not
-          touch this money. It is not yours; it belongs to the government. This
-          one habit will save you from a massive, terrifying tax bill at the
-          end of the year.
+          and move it into a separate "Tax Savings" account *immediately*. Do
+          not touch this money. It is not yours; it belongs to the government.
+          This one habit will save you from a massive, terrifying tax bill at
+          the end of the year.
         </p>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           4. Send Professional Invoices, Instantly
@@ -856,8 +847,7 @@ export const allBlogs = [
         <p>
           The sooner you send the invoice, the sooner you get paid. Don't wait
           until the end of the month. As soon as a project or milestone is
-          complete, send a clear, professional PDF invoice using a tool like
-          our{" "}
+          complete, send a clear, professional PDF invoice using a tool like our{" "}
           <Link
             href="/invoice-generator"
             className="text-blue-600 dark:text-blue-400"
@@ -880,8 +870,8 @@ export const allBlogs = [
             Profit Margin Calculator
           </Link>{" "}
           to understand the real profitability of each service you offer. This
-          is how you know which services to sell more of and which ones to
-          raise your prices on.
+          is how you know which services to sell more of and which ones to raise
+          your prices on.
         </p>
       </>
     ),
@@ -921,7 +911,7 @@ export const allBlogs = [
           debts? If you don't know these, a lender won't trust you with their
           money.
         </p>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           3. Understand Your Loan Payments
         </h2>
@@ -984,8 +974,8 @@ export const allBlogs = [
           9. Read the Fine Print
         </h2>
         <p>
-          Understand the interest rate (is it fixed or variable?), the term,
-          and any pre-payment penalties.
+          Understand the interest rate (is it fixed or variable?), the term, and
+          any pre-payment penalties.
         </p>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           10. Be Professional and Honest
@@ -1014,24 +1004,27 @@ export const allBlogs = [
           providing a clear, accurate, and legally compliant payslip. This can
           seem complicated, but a good payslip generator makes it simple.
         </p>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Why You Can't Just "Send Money"
         </h2>
         <p>
-          You might be tempted to just e-transfer your employee their pay.
-          **Do not do this.** A payslip is a legal document. It serves as:
+          You might be tempted to just e-transfer your employee their pay. **Do
+          not do this.** A payslip is a legal document. It serves as:
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>A record for your own business accounting.</li>
           <li>A legal record for the employee for tax purposes.</li>
-          <li>Proof of income for the employee (e.g., for renting an apartment or getting a loan).</li>
+          <li>
+            Proof of income for the employee (e.g., for renting an apartment or
+            getting a loan).
+          </li>
         </ul>
         <p className="mt-4">
-          Providing a payslip is a legal requirement in most countries, including
-          Pakistan, the US, and the UK.
+          Providing a payslip is a legal requirement in most countries,
+          including Pakistan, the US, and the UK.
         </p>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           What You Need *Before* You Start
         </h2>
@@ -1046,14 +1039,31 @@ export const allBlogs = [
           , you'll need a few key pieces of information. Gather these first:
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
-          <li><strong>Your Company Details:</strong> Your legal business name and address.</li>
-          <li><strong>Employee Details:</strong> Full legal name, Employee ID (if you use one), and their position or title.</li>
-          <li><strong>Pay Period:</strong> The start and end date for which you are paying them (e.g., Nov 1 - Nov 15).</li>
-          <li><strong>Pay Date:</strong> The date the money will be transferred.</li>
-          <li><strong>Gross Earnings:</strong> A full breakdown of what they earned (Base Salary, Bonus, Overtime, etc.).</li>
-          <li><strong>Deductions:</strong> A full breakdown of what you are subtracting (Income Tax, Insurance, Pension contributions, etc.).</li>
+          <li>
+            <strong>Your Company Details:</strong> Your legal business name and
+            address.
+          </li>
+          <li>
+            <strong>Employee Details:</strong> Full legal name, Employee ID (if
+            you use one), and their position or title.
+          </li>
+          <li>
+            <strong>Pay Period:</strong> The start and end date for which you
+            are paying them (e.g., Nov 1 - Nov 15).
+          </li>
+          <li>
+            <strong>Pay Date:</strong> The date the money will be transferred.
+          </li>
+          <li>
+            <strong>Gross Earnings:</strong> A full breakdown of what they
+            earned (Base Salary, Bonus, Overtime, etc.).
+          </li>
+          <li>
+            <strong>Deductions:</strong> A full breakdown of what you are
+            subtracting (Income Tax, Insurance, Pension contributions, etc.).
+          </li>
         </ul>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Using the Generator: Step-by-Step
         </h2>
@@ -1063,32 +1073,33 @@ export const allBlogs = [
         </p>
         <ol className="list-decimal list-inside space-y-2 mt-4 pl-4">
           <li>
-            <strong>Fill in Company & Employee Info:</strong> Enter your company details and the employee's details in the provided fields.
+            <strong>Fill in Company & Employee Info:</strong> Enter your company
+            details and the employee's details in the provided fields.
           </li>
           <li>
-            <strong>Add Earnings:</strong> Use the "Add Earning" button to list every
-            source of income. Be clear: "Base Salary" and "Sales Bonus" are
-            better than "Payment."
+            <strong>Add Earnings:</strong> Use the "Add Earning" button to list
+            every source of income. Be clear: "Base Salary" and "Sales Bonus"
+            are better than "Payment."
           </li>
           <li>
-            <strong>Add Deductions:</strong> Use the "Add Deduction" button to list
-            every item being subtracted.
+            <strong>Add Deductions:</strong> Use the "Add Deduction" button to
+            list every item being subtracted.
           </li>
           <li>
             <strong>Review the Totals:</strong> The tool will automatically
-            calculate Gross Earnings, Total Deductions, and Net Pay. Double-check
-            these against your own records.
+            calculate Gross Earnings, Total Deductions, and Net Pay.
+            Double-check these against your own records.
           </li>
           <li>
-            <strong>Download the PDF:</strong> Click "Download PDF." You now have a
-            professional, compliant document you can email to your employee
-            and save for your records.
+            <strong>Download the PDF:</strong> Click "Download PDF." You now
+            have a professional, compliant document you can email to your
+            employee and save for your records.
           </li>
         </ol>
-        
+
         <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-slate-600 dark:text-slate-300 italic">
-          <strong>Pro Tip:</strong> Use the "Save Employee" feature to save their
-          details in your browser, so you only have to type them in once.
+          <strong>Pro Tip:</strong> Use the "Save Employee" feature to save
+          their details in your browser, so you only have to type them in once.
         </blockquote>
       </>
     ),
@@ -1110,12 +1121,10 @@ export const allBlogs = [
           >
             profit margin calculator
           </Link>{" "}
-          and found your number. Maybe it's 10%, maybe it's 40%, maybe it's
-          70%. The next logical question is: "...is that good?"
+          and found your number. Maybe it's 10%, maybe it's 40%, maybe it's 70%.
+          The next logical question is: "...is that good?"
         </p>
-        <p className="mt-4">
-          The answer, frustratingly, is: **it depends.**
-        </p>
+        <p className="mt-4">The answer, frustratingly, is: **it depends.**</p>
         <p className="mt-4">
           A "good" profit margin is entirely dependent on your industry, your
           costs, and your business model. A 10% margin might be excellent for a
@@ -1129,11 +1138,13 @@ export const allBlogs = [
           First, let's be clear on what we're measuring. Our calculator
           determines **Gross Profit Margin**, which is:
         </p>
-        <p className="font-mono text-lg my-2">(Revenue - Cost of Goods Sold) / Revenue</p>
+        <p className="font-mono text-lg my-2">
+          (Revenue - Cost of Goods Sold) / Revenue
+        </p>
         <p>
           This is your profit *before* overhead like rent, marketing, salaries,
-          and utilities. **Net Profit Margin** is your profit *after* all
-          those other costs.
+          and utilities. **Net Profit Margin** is your profit *after* all those
+          other costs.
         </p>
         <p className="mt-4">
           A good *general* rule of thumb is that a **10% net profit margin** is
@@ -1153,9 +1164,9 @@ export const allBlogs = [
             one more copy of software is almost zero.
           </li>
           <li>
-            <strong>Freelance Services (Design, Writing):</strong> Often
-            70-90%. Your main "cost" is your time. Software subscriptions
-            (like Adobe) are usually counted as overhead, not COGS.
+            <strong>Freelance Services (Design, Writing):</strong> Often 70-90%.
+            Your main "cost" is your time. Software subscriptions (like Adobe)
+            are usually counted as overhead, not COGS.
           </li>
           <li>
             <strong>Restaurants:</strong> Often 30-40%. The cost of food and
@@ -1166,8 +1177,8 @@ export const allBlogs = [
             the clothing from the manufacturer is high.
           </li>
           <li>
-            <strong>Grocery Stores:</strong> Often 10-20%. This is a high-volume,
-            low-margin business.
+            <strong>Grocery Stores:</strong> Often 10-20%. This is a
+            high-volume, low-margin business.
           </li>
         </ul>
 
@@ -1214,7 +1225,7 @@ export const allBlogs = [
           experience that gives you the convenience of an account, with the
           privacy of a local-first app.
         </p>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           What is Local Storage?
         </h2>
@@ -1225,11 +1236,11 @@ export const allBlogs = [
           Local Storage, it's saving it in that locker.
         </p>
         <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-slate-600 dark:text-slate-300 italic">
-          Crucially: We (the SmoothLedger servers) **cannot** see what's in
-          your locker. Only you and the website, running on your computer, can
-          access it.
+          Crucially: We (the SmoothLedger servers) **cannot** see what's in your
+          locker. Only you and the website, running on your computer, can access
+          it.
         </blockquote>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           How to Use the Save Features
         </h2>
@@ -1247,40 +1258,34 @@ export const allBlogs = [
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>What it does:</strong> When this is ON, we automatically
-            save your "From" (Your Company) details every time you change
-            them.
+            save your "From" (Your Company) details every time you change them.
           </li>
           <li>
             <strong>The benefit:</strong> The next time you visit, your company
             name and address will be pre-filled, saving you time.
           </li>
         </ul>
-        
+
         <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-6 mb-2">
           2. Save & Load Clients
         </h3>
-        <p>
-          Tired of re-typing the same client info?
-        </p>
+        <p>Tired of re-typing the same client info?</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>To Save:</strong> Fill out the "Bill To" or "Prepared For"
-            box, then click the "Save Client" icon. We use the first line as
-            the client's name.
+            box, then click the "Save Client" icon. We use the first line as the
+            client's name.
           </li>
           <li>
             <strong>To Load:</strong> Simply select the client from the "Load a
-            client..." dropdown. Their details will instantly fill the "To"
-            box.
+            client..." dropdown. Their details will instantly fill the "To" box.
           </li>
         </ul>
-        
+
         <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-6 mb-2">
           3. Save & Load Full Documents
         </h3>
-        <p>
-          This is the most powerful feature.
-        </p>
+        <p>This is the most powerful feature.</p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
             <strong>To Save:</strong> Once your document is perfect, make sure
@@ -1294,16 +1299,983 @@ export const allBlogs = [
             colors and fonts).
           </li>
         </ul>
-        
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           The Future: The Cloud Dashboard
         </h2>
         <p>
           The only downside to Local Storage is that it's "local"—it's stuck on
-          one browser on one computer. This is why we're building the **SmoothLedger
-          Dashboard**, an optional, premium product for users who want to
-          securely save their data in the cloud and access it from any device.
-          Stay tuned!
+          one browser on one computer. This is why we're building the
+          **SmoothLedger Dashboard**, an optional, premium product for users who
+          want to securely save their data in the cloud and access it from any
+          device. Stay tuned!
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "markup-vs-margin-difference",
+    title: "Markup vs. Margin: The Difference That Could Bankrupt You",
+    date: "2025-11-20",
+    tags: ["Calculators", "Profit", "Business Tips"],
+    description:
+      "They sound the same, but confusing Markup with Margin can lead to pricing errors that destroy your profits. We explain the math simply.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In business pricing, there is a deadly trap: thinking that a 50%
+          markup results in a 50% profit margin. It doesn't. If you make this
+          mistake, you will consistently underprice your products and bleed
+          money.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Fundamental Difference
+        </h2>
+        <p>
+          The difference lies in the <strong>denominator</strong> (the bottom
+          number of the fraction).
+        </p>
+
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Markup</strong> is based on <em>Cost</em>. It answers: "How
+            much did I add to the cost?"
+          </li>
+          <li>
+            <strong>Margin</strong> is based on <em>Price</em>. It answers: "How
+            much of the final price is actually profit?"
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Math in Action
+        </h2>
+        <p>
+          Let's say a product costs you <strong>$100</strong> to make.
+        </p>
+        <p className="mt-4">
+          <strong>Scenario A: You want a 50% Markup.</strong>
+          <br />
+          You calculate 50% of $100 ($50) and add it.
+          <br />
+          Price: $150.
+          <br />
+          Profit: $50.
+        </p>
+        <p className="mt-4">
+          <strong>Scenario B: You want a 50% Margin.</strong>
+          <br />
+          You need the profit to be 50% of the <em>final price</em>.
+          <br />
+          Price: $200.
+          <br />
+          Profit: $100.
+        </p>
+
+        <p className="mt-4">
+          See the difference? A 50% markup resulted in a price of $150. A 50%
+          margin resulted in a price of $200. If you wanted a 50% margin but
+          used the markup formula, you just lost $50 per sale.
+        </p>
+
+        <p className="mt-4">
+          Use our{" "}
+          <Link
+            href="/profit-margin-calculator"
+            className="text-blue-600 dark:text-blue-400"
+          >
+            Profit Margin Calculator
+          </Link>{" "}
+          to toggle between these two modes and ensure your pricing strategy is
+          sound.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "what-is-a-proforma-invoice",
+    title: "What is a Proforma Invoice and When Should You Send One?",
+    date: "2025-11-19",
+    tags: ["Invoicing", "Business Tips", "Definitions"],
+    description:
+      "It looks like an invoice, but it isn't a demand for payment. Learn how to use Proforma Invoices for customs, international trade, and pre-payments.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In the world of invoicing, the "Proforma" is a unique document. It
+          sits somewhere between a Quotation and a Commercial Invoice. Using it
+          correctly can speed up customs clearance and secure upfront payments.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Proforma Invoice Definition
+        </h2>
+        <p>
+          A Proforma Invoice is a <strong>preliminary bill of sale</strong>. It
+          is sent to a buyer <em>before</em> the goods are shipped or delivered.
+        </p>
+
+        <p className="mt-4">
+          Unlike a standard invoice, a Proforma Invoice is <strong>not</strong>{" "}
+          a legal demand for payment (and therefore, you don't use it for
+          accounting/tax purposes yet). It creates a "good faith" agreement on
+          the price and quantity.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          When to Use It
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>International Trade (Customs):</strong> Customs agents often
+            require a Proforma Invoice to calculate duties and taxes before the
+            goods arrive.
+          </li>
+          <li>
+            <strong>Securing Financing:</strong> A buyer might need a Proforma
+            Invoice to show their bank to get a Letter of Credit to pay you.
+          </li>
+          <li>
+            <strong>Advance Payments:</strong> If you require a deposit before
+            starting work, you send a Proforma Invoice to request that payment.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    slug: "proof-of-income-self-employed",
+    title: "How to Generate Proof of Income When You're Self-Employed",
+    date: "2025-11-18",
+    tags: ["Payslips", "Freelance", "Loans"],
+    description:
+      "Trying to rent an apartment or buy a car? Without a W2 or standard pay stub, proving your income is hard. Here is how to generate the documents landlords want to see.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          The biggest downside to being your own boss? The paperwork. When you
+          apply for a loan, a mortgage, or an apartment rental, the first thing
+          they ask for is "Proof of Income" or "Pay Stubs."
+        </p>
+        <p className="mt-4">
+          If you don't have an HR department, you might panic. Handing over
+          messy bank statements often results in a rejection. You need to create
+          professional documentation.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Method 1: Generate Your Own Pay Stubs
+        </h2>
+        <p>
+          If you pay yourself a regular salary from your business account, you
+          are entitled to generate a pay stub for that transaction.
+        </p>
+        <p className="mt-4">
+          Using a tool like our{" "}
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 dark:text-blue-400"
+          >
+            Payslip Generator
+          </Link>
+          , you can create a document that shows:
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>Your Business Name (The Payer)</li>
+          <li>Your Name (The Payee)</li>
+          <li>The Pay Period</li>
+          <li>Gross Income and Net Income</li>
+        </ul>
+        <p className="mt-4">
+          This standardizes your income in a format that banks and landlords
+          recognize.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Method 2: Tax Returns (Form 1040 / Schedule C)
+        </h2>
+        <p>
+          The most authoritative proof is your tax return from the previous
+          year. However, this is historical data. Lenders often want to know
+          what you are making <em>right now</em>, which is why combining tax
+          returns with current, generated pay stubs is the winning strategy.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "invoice-email-templates",
+    title: "5 Copy-Paste Email Templates for Sending Invoices",
+    date: "2025-11-17",
+    tags: ["Invoicing", "Communication", "Freelance"],
+    description:
+      "Don't know what to write when sending an invoice? Here are 5 professional email templates for sending bills, following up, and demanding late payment.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          The invoice is attached, but the email body is blank. You stare at the
+          cursor. How friendly should you be? How direct? Here are 5 templates
+          you can steal right now.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1. The Standard Send (Friendly & Professional)
+        </h2>
+        <blockquote className="border-l-4 border-slate-300 pl-4 py-2 my-4 bg-slate-50 dark:bg-slate-900 font-mono text-sm">
+          Subject: Invoice [Number] for [Project Name]
+          <br />
+          <br />
+          Hi [Client Name],
+          <br />
+          <br />
+          I hope you're having a great week.
+          <br />
+          <br />
+          Please find attached Invoice #[Number] for [Project Name], totaling
+          [Amount]. The payment is due by [Date].
+          <br />
+          <br />
+          Let me know if you have any questions!
+          <br />
+          <br />
+          Best,
+          <br />
+          [Your Name]
+        </blockquote>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          2. The "Just Following Up" (1 Day Overdue)
+        </h2>
+        <blockquote className="border-l-4 border-yellow-300 pl-4 py-2 my-4 bg-slate-50 dark:bg-slate-900 font-mono text-sm">
+          Subject: Overdue: Invoice [Number] for [Project Name]
+          <br />
+          <br />
+          Hi [Client Name],
+          <br />
+          <br />
+          Just a quick friendly reminder that Invoice #[Number] was due
+          yesterday, [Date].
+          <br />
+          <br />
+          I'm sure it just slipped through the cracks. I've re-attached it here
+          for convenience. Please let me know when this has been processed.
+          <br />
+          <br />
+          Thanks!
+          <br />
+          [Your Name]
+        </blockquote>
+      </>
+    ),
+  },
+  {
+    slug: "estimate-vs-quote-difference",
+    title: "Estimate vs. Quote: Which One Should You Give?",
+    date: "2025-11-16",
+    tags: ["Quotes", "Construction", "Business Tips"],
+    description:
+      "Using the wrong word can cost you thousands. Learn the legal difference between an 'Estimate' (a guess) and a 'Quote' (a fixed price).",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In casual conversation, we use "estimate" and "quote" interchangeably.
+          In business and law, they are opposites. Using the wrong one can trap
+          you in a contract where you lose money, or scare away a client who
+          wants certainty.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Quote: Fixed & Binding
+        </h2>
+        <p>
+          A <strong>Quote</strong> is a fixed price offer. Once the client
+          accepts it, you cannot change the price, even if the work takes twice
+          as long as you thought.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Risk:</strong> High for the freelancer/contractor.
+          </li>
+          <li>
+            <strong>Best for:</strong> Standardized jobs (e.g., "Install 5
+            windows").
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Estimate: An Educated Guess
+        </h2>
+        <p>
+          An <strong>Estimate</strong> is a rough idea of the price based on
+          current information. It is generally <em>not</em> legally binding to
+          the exact cent, though it should be reasonably accurate (usually
+          within 10-15%).
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Risk:</strong> Shared between client and contractor.
+          </li>
+          <li>
+            <strong>Best for:</strong> Unpredictable jobs (e.g., "Repair water
+            damage in walls").
+          </li>
+        </ul>
+
+        <p className="mt-4">
+          When using our{" "}
+          <Link
+            href="/quotation-generator"
+            className="text-blue-600 dark:text-blue-400"
+          >
+            Quotation Generator
+          </Link>
+          , you can edit the title document. Be sure to choose the right one!
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "gross-vs-net-pay-calculator",
+    title: "Gross Pay vs. Net Pay: Where Does the Money Go?",
+    date: "2025-11-15",
+    tags: ["Payslips", "Finance", "Education"],
+    description:
+      "You were hired at $60,000, but your bank account tells a different story. We visualize the journey from Gross to Net pay and where the deductions go.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          The biggest shock for new employees is their first paycheck. They do
+          the math: "$20 an hour times 40 hours... I should get $800!" Then they
+          open the envelope and find $620. What happened?
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Deductions Stack
+        </h2>
+        <p>
+          Your money passes through several "filters" before it reaches you.
+        </p>
+        <ol className="list-decimal list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Gross Pay:</strong> The theoretical number you negotiated.
+          </li>
+          <li>
+            <strong>Pre-Tax Deductions:</strong> 401k, Health Insurance (This
+            lowers your taxable income).
+          </li>
+          <li>
+            <strong>Statutory Taxes:</strong> Federal Tax, State Tax, Social
+            Security/NI.
+          </li>
+          <li>
+            <strong>Post-Tax Deductions:</strong> Garnishments, Union Dues.
+          </li>
+          <li>
+            <strong>Net Pay:</strong> What actually hits your bank.
+          </li>
+        </ol>
+      </>
+    ),
+  },
+  {
+    slug: "debt-to-income-ratio-guide",
+    title: "What is Debt-to-Income Ratio (DTI) and How to Calculate It",
+    date: "2025-11-14",
+    tags: ["Loans", "Calculators", "Finance"],
+    description:
+      "Lenders look at one number more than any other before giving you a loan: Your DTI. Learn how to calculate it and what is considered a 'good' ratio.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          You might have a great credit score, but if your Debt-to-Income (DTI)
+          ratio is too high, you will still be rejected for that mortgage or
+          business loan. DTI measures your ability to manage monthly payments.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Formula
+        </h2>
+        <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 bg-slate-50 dark:bg-slate-900">
+          (Total Monthly Debt Payments / Gross Monthly Income) x 100 = DTI %
+        </blockquote>
+
+        <p className="mt-4">
+          <strong>Example:</strong>
+          <br />
+          Rent: $1,200
+          <br />
+          Car Loan: $400
+          <br />
+          Student Loan: $200
+          <br />
+          Credit Card Minimums: $100
+          <br />
+          <strong>Total Debt: $1,900</strong>
+        </p>
+        <p className="mt-2">
+          <strong>Gross Income: $5,000</strong>
+        </p>
+        <p className="mt-2">
+          1900 / 5000 = 0.38 = <strong>38% DTI</strong>.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          What is a Good DTI?
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Under 36%:</strong> Excellent. Lenders love this.
+          </li>
+          <li>
+            <strong>36% - 43%:</strong> Good. You will likely get approved,
+            perhaps with slightly higher rates.
+          </li>
+          <li>
+            <strong>Over 43%:</strong> Risky. Many mortgage lenders cannot lend
+            to you by law above this limit.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    slug: "hourly-vs-fixed-pricing-invoice",
+    title: "Hourly vs. Fixed Pricing: How to Invoice for Maximum Profit",
+    date: "2025-11-13",
+    tags: ["Invoicing", "Freelance", "Strategy"],
+    description:
+      "Should you bill by the hour or by the project? We analyze the pros and cons of each method and how to format your invoice for both.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          One of the biggest debates in the freelance world is pricing models.
+          Choosing the wrong one doesn't just hurt your wallet; it can make
+          invoicing a nightmare.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          When to Invoice Hourly
+        </h2>
+        <p>
+          Use hourly invoicing when the scope is undefined or likely to change.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Invoice Format:</strong> Requires a "Quantity" (Hours) and
+            "Unit Price" (Hourly Rate) column.
+          </li>
+          <li>
+            <strong>Pros:</strong> You get paid for every minute you work. Scope
+            creep isn't a financial risk.
+          </li>
+          <li>
+            <strong>Cons:</strong> It punishes efficiency. If you get faster,
+            you make less money.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          When to Invoice Fixed Price (Project Based)
+        </h2>
+        <p>
+          Use fixed pricing when you are an expert and can deliver results
+          quickly.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Invoice Format:</strong> "Quantity" is usually 1. The
+            description must be very detailed about deliverables.
+          </li>
+          <li>
+            <strong>Pros:</strong> High profit potential. If you finish a $1,000
+            job in 2 hours, you made $500/hr.
+          </li>
+          <li>
+            <strong>Cons:</strong> If the project drags on, your effective
+            hourly rate plummets.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    slug: "ytd-year-to-date-meaning",
+    title: "What Does YTD Mean on a Pay Stub?",
+    date: "2025-11-12",
+    tags: ["Payslips", "Definitions", "Finance"],
+    description:
+      "Seeing 'YTD' on your salary slip? It stands for Year-To-Date. Here is why this cumulative number is crucial for taxes and loan approvals.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          On almost every professional payslip, next to the "Current Amount,"
+          there is a column labeled <strong>YTD</strong>.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Cumulative Tracker
+        </h2>
+        <p>
+          YTD stands for <strong>Year-To-Date</strong>. It represents the total
+          amount for that category from January 1st of the current year up to
+          the current day.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Why You Must Check It
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Tax Brackets:</strong> If your YTD Gross Pay crosses a
+            certain threshold, your tax rate might jump in the next paycheck.
+          </li>
+          <li>
+            <strong>Loan Approvals:</strong> Lenders look at YTD income to
+            verify that your employment is stable and continuous, not just a
+            one-time payment.
+          </li>
+          <li>
+            <strong>Errors:</strong> If you verify your pay every week, the YTD
+            column is the best way to catch if payroll missed a week.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    slug: "1099-vs-w2-employee",
+    title: "1099 vs W2: Which One Are You? (And How to Invoice)",
+    date: "2025-11-11",
+    tags: ["Invoicing", "Taxes", "Freelance"],
+    description:
+      "The difference between an Independent Contractor (1099) and an Employee (W2) determines how you get paid, how you pay taxes, and if you need to send invoices.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In the US (and with similar parallels globally), workers fall into two
+          buckets. Knowing which one you are is critical for avoiding tax fraud.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          W2 (The Employee)
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Who:</strong> The company controls when/how you work.
+          </li>
+          <li>
+            <strong>Taxes:</strong> Withheld automatically from your paycheck.
+          </li>
+          <li>
+            <strong>Invoicing:</strong> You do NOT send invoices. You receive a
+            payslip.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1099 (The Contractor)
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Who:</strong> You control your own schedule and methods.
+          </li>
+          <li>
+            <strong>Taxes:</strong> You pay your own taxes later (nothing is
+            withheld).
+          </li>
+          <li>
+            <strong>Invoicing:</strong> You MUST send invoices to get paid.
+          </li>
+        </ul>
+        <p className="mt-4">
+          If you are a 1099 worker, you are a business owner. You need to use an{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 dark:text-blue-400"
+          >
+            Invoice Generator
+          </Link>
+          to bill your clients professionally.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "how-to-organize-business-receipts",
+    title: "How to Organize Business Receipts for Tax Season",
+    date: "2025-11-10",
+    tags: ["Business Tips", "Taxes", "Productivity"],
+    description:
+      "Stop stuffing receipts into a shoebox. A lost receipt is lost money (tax deductions). Here is a simple system to digitize and organize your expenses.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Every business expense you claim lowers your taxable income. If you
+          buy a $1,000 laptop, you don't pay tax on that $1,000 of income—but
+          only if you can prove you bought it.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The "Digital Shoebox" Method
+        </h2>
+        <p>
+          Paper fades. Thermal receipts turn white in hot cars. You must
+          digitize.
+        </p>
+        <ol className="list-decimal list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Snap Immediately:</strong> Do not put the receipt in your
+            pocket. Take a photo instantly.
+          </li>
+          <li>
+            <strong>Cloud Storage:</strong> Upload to a Google Drive or Dropbox
+            folder labeled "Expenses 2025".
+          </li>
+          <li>
+            <strong>Rename:</strong> Rename the file to `DATE - VENDOR -
+            AMOUNT`. (e.g., `2025-11-10 - Staples - 50.00`).
+          </li>
+        </ol>
+        <p className="mt-4">
+          This 10-second habit will save you days of stress when tax season
+          arrives.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "vat-invoice-requirements",
+    title: "What is a VAT Invoice and Do You Need to Issue One?",
+    date: "2025-11-09",
+    tags: ["Invoicing", "Taxes", "International"],
+    description:
+      "If you do business in the UK or Europe, Value Added Tax (VAT) is a strict requirement. Missing your VAT number on an invoice can invalidate it.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In the US, Sales Tax is simple. In the UK and Europe, VAT (Value Added
+          Tax) is complex and strictly regulated. A "VAT Invoice" requires
+          specific information beyond a standard invoice.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Required Fields for VAT Invoices
+        </h2>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Your VAT Number:</strong> Must be clearly visible.
+          </li>
+          <li>
+            <strong>The Tax Date:</strong> The date the service occurred (tax
+            point).
+          </li>
+          <li>
+            <strong>VAT Rate Per Item:</strong> You must list which items are
+            20%, 5%, or 0% VAT.
+          </li>
+          <li>
+            <strong>Total VAT Amount:</strong> The total amount of tax being
+            charged, separate from the subtotal.
+          </li>
+        </ul>
+        <p className="mt-4">
+          Our Invoice Generator includes a specific "Tax/VAT" column toggle to
+          handle these calculations automatically.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "roi-calculation-guide",
+    title: "How to Calculate ROI (Return on Investment) for Small Business",
+    date: "2025-11-08",
+    tags: ["Calculators", "Business Tips", "Finance"],
+    description:
+      "Should you buy that new equipment? Should you run that Facebook ad? Calculating ROI removes the guesswork from business decisions.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          ROI is the universal metric for "Is this worth it?" It measures the
+          efficiency of an investment.
+        </p>
+        [Image of ROI formula diagram]
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Simple Formula
+        </h2>
+        <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 bg-slate-50 dark:bg-slate-900">
+          ((Net Profit from Investment - Cost of Investment) / Cost of
+          Investment) x 100
+        </blockquote>
+        <p className="mt-4">
+          <strong>Example:</strong> You spend $1,000 on ads. Those ads generate
+          $1,500 in sales.
+          <br />
+          Profit: $500.
+          <br />
+          (500 / 1000) * 100 = <strong>50% ROI</strong>.
+        </p>
+        <p className="mt-4">
+          If your ROI is negative, you are losing money. If it's positive, you
+          are growing.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "digital-nomad-tax-guide",
+    title: "The Digital Nomad's Guide to Invoicing and Taxes",
+    date: "2025-11-07",
+    tags: ["Invoicing", "Freelance", "International"],
+    description:
+      "Working from a beach in Bali? You still need to invoice correctly. We cover currency issues, international payments, and tax residency basics.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Living the digital nomad life is a dream, but cross-border finances
+          can be a nightmare.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Currency Confusion
+        </h2>
+        <p>
+          Always invoice in the currency of your <strong>Client</strong> or a
+          standard reserve currency (USD/EUR). If you invoice in Thai Baht to a
+          US client, they likely cannot process it.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Tax Residency
+        </h2>
+        <p>
+          Just because you are traveling doesn't mean you are tax-free. You
+          generally owe taxes to your country of citizenship (US) or your
+          country of tax residence (where you spend 183+ days). Your invoices
+          serve as proof of income for these authorities, so keep them organized
+          in the cloud.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "construction-estimate-template-guide",
+    title: "How to Create a Bulletproof Construction Estimate",
+    date: "2025-11-06",
+    tags: ["Quotes", "Construction", "Guides"],
+    description:
+      "Construction projects are famous for going over budget. A vague estimate will destroy your profit margin. Learn how to itemize materials and labor.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          In construction, a "ballpark figure" is dangerous. If you forget to
+          account for waste materials or permit fees, that money comes out of
+          your pocket.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Itemize Everything
+        </h2>
+        <p>
+          Never give a single line item like "Bathroom Remodel - $10,000." Break
+          it down:
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Materials:</strong> Tiles (sq ft + 10% waste), Grout,
+            Fixtures.
+          </li>
+          <li>
+            <strong>Labor:</strong> Demolition hours, Installation hours,
+            Cleanup.
+          </li>
+          <li>
+            <strong>Overhead:</strong> Transport, Permits, Dumpster rental.
+          </li>
+        </ul>
+        <p className="mt-4">
+          Detailed estimates build trust with homeowners and protect you from
+          "scope creep."
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "salary-vs-dividends",
+    title: "Salary vs. Dividends: How Should You Pay Yourself?",
+    date: "2025-11-05",
+    tags: ["Payslips", "Business Tips", "Finance"],
+    description:
+      "If you own a limited company, you have two ways to extract money: Salary (PAYE) and Dividends. We explain the tax implications of each.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Business owners have a unique advantage: they can choose how they get
+          paid. The most tax-efficient structure is often a mix of both Salary
+          and Dividends.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Salary (The Safe Route)
+        </h2>
+        <p>
+          Paying yourself a small salary is usually smart to ensure you
+          contribute to Social Security/National Insurance (for state pension
+          entitlement). You need to generate a <strong>Payslip</strong> for this
+          every month.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Dividends (The Tax-Efficient Route)
+        </h2>
+        <p>
+          Dividends are paid out of profits <em>after</em> corporation tax. They
+          usually attract a lower personal tax rate than salary. However, you
+          cannot take dividends if the company is not making a profit.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "client-says-too-expensive",
+    title: "How to Handle 'You're Too Expensive' After Sending a Quote",
+    date: "2025-11-04",
+    tags: ["Quotes", "Sales", "Communication"],
+    description:
+      "Rejection hurts. But 'too expensive' is often just the start of a negotiation. Here is how to respond without lowering your value.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          You send a perfect quote. The client replies: "This is way over our
+          budget." Do you panic and drop the price? No.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Strategy 1: Remove Scope, Not Value
+        </h2>
+        <p>
+          Never just lower the price for the same work. It signals you were
+          overcharging initially. Instead, say: "I understand. To fit that
+          budget, we can remove [Feature X] and [Feature Y], and do those in a
+          later phase."
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Strategy 2: Reframe the ROI
+        </h2>
+        <p>
+          Remind them that cheap work is expensive in the long run. "While our
+          quote is higher, it includes [Premium Material] which lasts 10 years
+          longer than the standard."
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "small-business-cash-flow",
+    title: "Cash Flow vs. Profit: Why Profitable Businesses Go Broke",
+    date: "2025-11-03",
+    tags: ["Finance", "Business Tips", "Profit"],
+    description:
+      "You can have $100k in invoices sent out and still not be able to pay rent. This is the cash flow trap. Learn how to manage the timing of money.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Profit is "Sales minus Expenses." Cash Flow is "Money In minus Money
+          Out." They are not the same timing.
+        </p>
+        [Image of cash flow diagram]
+        <p className="mt-4">
+          If you spend $50,000 on materials in January, but your client doesn't
+          pay the $80,000 invoice until April, you have a $30,000 profit, but
+          you might go bankrupt in February because you have $0 cash.
+        </p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          The Fix: Invoice Terms
+        </h2>
+        <p>
+          Shorten your payment terms. Use "Net 15" instead of "Net 30." Ask for
+          50% upfront deposits on all large Quotes.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "unpaid-invoice-letter",
+    title: "The Escalation Ladder: How to Chase Unpaid Invoices",
+    date: "2025-11-02",
+    tags: ["Invoicing", "Communication", "Legal"],
+    description:
+      "Client ghosting you? Don't get angry immediately. Use this 4-step escalation ladder to recover your money professionally.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Chasing money is awkward. But you are a business, not a charity.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Step 1: The "Did you see this?" (Day 1 Overdue)
+        </h2>
+        <p>A polite nudge. Assume it was a mistake.</p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Step 2: The "Work Paused" (Day 7 Overdue)
+        </h2>
+        <p>
+          "To avoid further delays, please settle this invoice so we can
+          continue to Phase 2."
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Step 3: The "Late Fee" (Day 15 Overdue)
+        </h2>
+        <p>
+          Re-send the invoice with the late fee added (as per your original
+          terms).
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Step 4: The "Final Notice" (Day 30 Overdue)
+        </h2>
+        <p>
+          "If payment is not received by [Date], we will refer this matter to a
+          collections agency."
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: "invoice-design-tips",
+    title: "Invoice Design: Does Your Bill Look Professional?",
+    date: "2025-11-01",
+    tags: ["Invoicing", "Branding", "Design"],
+    description:
+      "A messy Excel sheet invoice makes clients question your quality. Learn the 3 design elements that make an invoice look corporate and trustworthy.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Your invoice is the last brand impression you leave. If you are a
+          graphic designer sending a Times New Roman invoice made in Word, you
+          are hurting your brand.
+        </p>
+
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Alignment:</strong> Amounts should align to the right
+            (decimals lined up). Text should align left.
+          </li>
+          <li>
+            <strong>Logo:</strong> A high-quality logo in the top corner creates
+            instant authority.
+          </li>
+          <li>
+            <strong>Colors:</strong> Use your brand's primary color for headers
+            or total lines, but keep the rest black/grey for readability.
+          </li>
+        </ul>
+        <p className="mt-4">
+          Our generators handle this alignment automatically, ensuring you
+          always look pixel-perfect.
         </p>
       </>
     ),
