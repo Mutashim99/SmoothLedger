@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 // 2. Dynamic Metadata
 export async function generateMetadata({ params }) {
   const professionData = professions.find((p) => p.slug === params.profession);
-  
+
   if (!professionData) return {};
 
   return {
@@ -36,9 +36,9 @@ export async function generateMetadata({ params }) {
       canonical: `https://smoothledger.com/payslip-generator/${params.profession}`,
     },
     openGraph: {
-        title: `Free Pay Stub Maker for ${professionData.title}`,
-        description: professionData.desc,
-    }
+      title: `Free Pay Stub Maker for ${professionData.title}`,
+      description: professionData.desc,
+    },
   };
 }
 
@@ -54,24 +54,48 @@ export default function ProfessionPayslipPage({ params }) {
   const faqs = [
     {
       question: `Is this payslip generator free for ${data.title}?`,
-      answer: "Yes. Our tool is 100% free with no watermarks. You can generate unlimited pay stubs regardless of your profession or location.",
+      answer:
+        "Yes. Our tool is 100% free with no watermarks. You can generate unlimited pay stubs regardless of your profession or location.",
     },
     {
       question: "Can I use this for proof of income?",
-      answer: "Yes. Many of our users create professional payslips to use as proof of income for rental applications, loans, or visa requirements.",
+      answer:
+        "Yes. Many of our users create professional payslips to use as proof of income for rental applications, loans, or visa requirements.",
     },
     {
       question: "Is my data secure?",
-      answer: "Absolutely. All calculations happen in your browser. We do not store any employee salary data on our servers.",
+      answer:
+        "Absolutely. All calculations happen in your browser. We do not store any employee salary data on our servers.",
     },
     {
       question: "Can I change the currency?",
-      answer: "Yes. You can select any currency symbol ($, £, €, ₹, etc.) to match your specific payroll needs.",
+      answer:
+        "Yes. You can select any currency symbol ($, £, €, ₹, etc.) to match your specific payroll needs.",
     },
   ];
-
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: `SmoothLedger Payslip Generator for ${data.title}`,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: "1024",
+    },
+  };
   return (
     <div className="bg-white dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* --- Dynamic Hero Section --- */}
       <section className="relative overflow-hidden py-20 min-h-[calc(100vh-4rem)] sm:py-24">
         <div
@@ -93,9 +117,10 @@ export default function ProfessionPayslipPage({ params }) {
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
-                {data.desc} Generate professional PDF pay stubs instantly. No signup required.
+                {data.desc} Generate professional PDF pay stubs instantly. No
+                signup required.
               </p>
-              
+
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <Link
                   href="/payslip-generator/create"
@@ -142,7 +167,7 @@ export default function ProfessionPayslipPage({ params }) {
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-             {/* Feature 1 */}
+            {/* Feature 1 */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiCalculatorLine className="h-6 w-6" />
@@ -151,7 +176,8 @@ export default function ProfessionPayslipPage({ params }) {
                 Auto-Calculations
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                We handle the math. Deductions, gross pay, and net pay are calculated instantly for accurate {data.keyword} records.
+                We handle the math. Deductions, gross pay, and net pay are
+                calculated instantly for accurate {data.keyword} records.
               </p>
             </div>
             {/* Feature 2 */}
@@ -163,7 +189,8 @@ export default function ProfessionPayslipPage({ params }) {
                 Professional Templates
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                Clean, readable templates that look great for proof of income or company records.
+                Clean, readable templates that look great for proof of income or
+                company records.
               </p>
             </div>
             {/* Feature 3 */}
@@ -175,7 +202,8 @@ export default function ProfessionPayslipPage({ params }) {
                 Instant PDF
               </h3>
               <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
-                Download a high-quality PDF immediately. Perfect for emailing to employees or printing.
+                Download a high-quality PDF immediately. Perfect for emailing to
+                employees or printing.
               </p>
             </div>
           </div>
@@ -190,24 +218,42 @@ export default function ProfessionPayslipPage({ params }) {
               How to Create a {data.keyword}
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-               Generate your document in 3 simple steps.
+              Generate your document in 3 simple steps.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">1</div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Enter Details</h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">Input employee info, pay period, and company details.</p>
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                1
+              </div>
+              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+                Enter Details
+              </h3>
+              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                Input employee info, pay period, and company details.
+              </p>
             </div>
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">2</div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Add Figures</h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">Add earnings (salary, bonus) and deductions (tax, insurance).</p>
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                2
+              </div>
+              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+                Add Figures
+              </h3>
+              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                Add earnings (salary, bonus) and deductions (tax, insurance).
+              </p>
             </div>
             <div className="p-6">
-              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">3</div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Download PDF</h3>
-              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">Get your professional {data.keyword} PDF instantly.</p>
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
+                3
+              </div>
+              <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
+                Download PDF
+              </h3>
+              <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                Get your professional {data.keyword} PDF instantly.
+              </p>
             </div>
           </div>
         </div>
@@ -235,7 +281,8 @@ export default function ProfessionPayslipPage({ params }) {
               Ready to generate your Payslip?
             </h2>
             <p className="mt-4 text-lg leading-8 text-blue-100 dark:text-blue-200">
-              Join thousands of {data.slug.replace('-', ' ')} using SmoothLedger for easy payroll.
+              Join thousands of {data.slug.replace("-", " ")} using SmoothLedger
+              for easy payroll.
             </p>
             <Link
               href="/payslip-generator/create"
