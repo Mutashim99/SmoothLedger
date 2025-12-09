@@ -84,6 +84,11 @@ export default function ProfessionLandingPage({ params }) {
       price: "0",
       priceCurrency: "USD",
     },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: "1024",
+    },
     featureList: "PDF Export, No Signup, Customizable Branding",
   };
 

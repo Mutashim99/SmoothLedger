@@ -74,10 +74,11 @@ export default function ProfessionQuotationPage({ params }) {
         "Yes, 100% free. You can create and download unlimited PDFs without any watermarks or hidden fees.",
     },
   ];
-  const jsonLd = {
+   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: `SmoothLedger Quotation Generator for ${data.title}`,
+    name: `Free ${data.title} Quotation Generator`,
+    headline: `Create professional ${data.keyword} Quotations in seconds`,
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     offers: {
@@ -90,6 +91,7 @@ export default function ProfessionQuotationPage({ params }) {
       ratingValue: "4.8",
       ratingCount: "1024",
     },
+    featureList: "PDF Export, No Signup, Customizable Branding",
   };
   return (
     <div className="bg-white dark:bg-slate-950">

@@ -73,10 +73,14 @@ export default function ProfessionPayslipPage({ params }) {
         "Yes. You can select any currency symbol ($, £, €, ₹, etc.) to match your specific payroll needs.",
     },
   ];
+
+  
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: `SmoothLedger Payslip Generator for ${data.title}`,
+    name: `Free ${data.title} Payslip Generator`,
+    headline: `Create professional ${data.keyword} Payslips in seconds`,
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     offers: {
@@ -89,6 +93,7 @@ export default function ProfessionPayslipPage({ params }) {
       ratingValue: "4.8",
       ratingCount: "1024",
     },
+    featureList: "PDF Export, No Signup, Customizable Branding",
   };
   return (
     <div className="bg-white dark:bg-slate-950">
