@@ -126,7 +126,7 @@ export default function ProfessionQuotationPage({ params }) {
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <Link
-                  href="/quotation-generator/create"
+                  href={`/quotation-generator/create?template=${data.slug}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                 >
                   Create {data.keyword}

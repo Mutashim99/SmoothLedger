@@ -28,7 +28,853 @@ import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { useSearchParams } from "next/navigation";
 
+const TEMPLATE_DEFAULTS = {
+  // --- 1. FREELANCE, DIGITAL & CREATIVE ---
+  freelancers: {
+    items: [
+      { name: "Hourly Consultation", qty: 5, price: 60 },
+      { name: "Project Milestone 1", qty: 1, price: 500 },
+    ],
+    note: "Thank you for your business!",
+  },
+  "upwork-freelancers": {
+    items: [{ name: "Upwork Contract: Weekly Hours", qty: 40, price: 45 }],
+    note: "Service invoice for off-platform agreement.",
+  },
+  "fiverr-sellers": {
+    items: [
+      { name: "Gig: Premium Package", qty: 1, price: 150 },
+      { name: "Extra Fast Delivery", qty: 1, price: 30 },
+    ],
+    note: "Order completed successfully.",
+  },
+  "virtual-assistants": {
+    items: [
+      { name: "Admin Support (Hours)", qty: 20, price: 25 },
+      { name: "Email Management", qty: 5, price: 25 },
+    ],
+    note: "Weekly VA services.",
+  },
+  "social-media-managers": {
+    items: [
+      { name: "Content Calendar Creation", qty: 1, price: 300 },
+      { name: "Community Management", qty: 1, price: 500 },
+    ],
+    note: "Monthly Social Media Retainer.",
+  },
+  influencers: {
+    items: [
+      { name: "Sponsored Instagram Reel", qty: 1, price: 750 },
+      { name: "Story Mention (24h)", qty: 3, price: 150 },
+    ],
+    note: "Brand partnership agreement.",
+  },
+  "ugc-creators": {
+    items: [
+      { name: "UGC Video (30s)", qty: 1, price: 250 },
+      { name: "Raw Footage Rights", qty: 1, price: 100 },
+    ],
+    note: "Content usage rights included.",
+  },
+  copywriters: {
+    items: [
+      { name: "Blog Post (1500 words)", qty: 2, price: 250 },
+      { name: "Email Sequence (5 Emails)", qty: 1, price: 400 },
+    ],
+    note: "Includes 2 rounds of revisions.",
+  },
+  ghostwriters: {
+    items: [
+      { name: "E-book Chapter 1-3", qty: 1, price: 1200 },
+      { name: "Research Fee", qty: 1, price: 300 },
+    ],
+    note: "Confidentiality agreement applies.",
+  },
+  bloggers: {
+    items: [
+      { name: "Sponsored Blog Feature", qty: 1, price: 400 },
+      { name: "Social Media share", qty: 1, price: 100 },
+    ],
+    note: "Post is live at [Link].",
+  },
+  youtubers: {
+    items: [
+      { name: "Dedicated Video Sponsorship", qty: 1, price: 2500 },
+      { name: "Pre-roll Ad Read", qty: 1, price: 800 },
+    ],
+    note: "Net 30 payment terms.",
+  },
+  streamers: {
+    items: [
+      { name: "Stream Overlay Sponsorship", qty: 1, price: 600 },
+      { name: "Chatbot Integration", qty: 1, price: 200 },
+    ],
+    note: "Twitch/Kick partnership.",
+  },
+  "voice-actors": {
+    items: [
+      { name: "Commercial Voice Over (30s)", qty: 1, price: 350 },
+      { name: "Studio Fee", qty: 1, price: 100 },
+    ],
+    note: "Buyout rights included.",
+  },
+  translators: {
+    items: [
+      { name: "Translation (Per Word)", qty: 2500, price: 0.12 },
+      { name: "Proofreading", qty: 2, price: 50 },
+    ],
+    note: "Certified translation service.",
+  },
+  illustrators: {
+    items: [
+      { name: "Custom Illustration", qty: 1, price: 450 },
+      { name: "Vector Source File", qty: 1, price: 100 },
+    ],
+    note: "Artwork usage license attached.",
+  },
+  "fashion-designers": {
+    items: [
+      { name: "Custom Pattern Design", qty: 1, price: 300 },
+      { name: "Sample Creation", qty: 1, price: 150 },
+    ],
+    note: "50% deposit paid.",
+  },
+
+  // --- 2. TECH, IT & DEVELOPMENT ---
+  "web-developers": {
+    items: [
+      { name: "Frontend Development (Hours)", qty: 20, price: 75 },
+      { name: "Hosting Setup", qty: 1, price: 100 },
+    ],
+    note: "Milestone: Beta Launch.",
+  },
+  "software-engineers": {
+    items: [
+      { name: "System Architecture Design", qty: 10, price: 120 },
+      { name: "Code Review", qty: 5, price: 120 },
+    ],
+    note: "Consulting services.",
+  },
+  "mobile-app-developers": {
+    items: [
+      { name: "iOS App UI Implementation", qty: 40, price: 85 },
+      { name: "App Store Deployment", qty: 1, price: 200 },
+    ],
+    note: "Sprint 3 Completion.",
+  },
+  "game-developers": {
+    items: [
+      { name: "Unity Asset Integration", qty: 15, price: 65 },
+      { name: "Level Design", qty: 1, price: 500 },
+    ],
+    note: "Game prototype development.",
+  },
+  "devops-engineers": {
+    items: [
+      { name: "AWS Infrastructure Setup", qty: 1, price: 800 },
+      { name: "CI/CD Pipeline Config", qty: 10, price: 95 },
+    ],
+    note: "Cloud infrastructure services.",
+  },
+  "qa-testers": {
+    items: [
+      { name: "Manual Testing (Hours)", qty: 10, price: 40 },
+      { name: "Bug Report Generation", qty: 1, price: 100 },
+    ],
+    note: "QA cycle complete.",
+  },
+  "cybersecurity-consultants": {
+    items: [
+      { name: "Penetration Testing", qty: 1, price: 1500 },
+      { name: "Security Audit Report", qty: 1, price: 500 },
+    ],
+    note: "Confidential security assessment.",
+  },
+  "data-analysts": {
+    items: [
+      { name: "Data Cleaning & Prep", qty: 5, price: 70 },
+      { name: "PowerBI Dashboard Setup", qty: 1, price: 600 },
+    ],
+    note: "Data services rendered.",
+  },
+  "it-support": {
+    items: [
+      { name: "On-site Hardware Repair", qty: 2, price: 90 },
+      { name: "Network Configuration", qty: 1, price: 150 },
+    ],
+    note: "Ticket #4092 closed.",
+  },
+  "seo-specialists": {
+    items: [
+      { name: "Technical SEO Audit", qty: 1, price: 500 },
+      { name: "Keyword Research", qty: 1, price: 300 },
+    ],
+    note: "Monthly SEO Retainer.",
+  },
+  "ux-ui-designers": {
+    items: [
+      { name: "Figma Prototyping", qty: 15, price: 80 },
+      { name: "User Research Session", qty: 2, price: 150 },
+    ],
+    note: "Design sprint deliverables.",
+  },
+  "graphic-designers": {
+    items: [
+      { name: "Brand Identity Pack", qty: 1, price: 1200 },
+      { name: "Social Media Assets", qty: 5, price: 50 },
+    ],
+    note: "Includes 3 revision rounds.",
+  },
+  "video-editors": {
+    items: [
+      { name: "Video Editing (Day Rate)", qty: 2, price: 400 },
+      { name: "Motion Graphics", qty: 1, price: 250 },
+    ],
+    note: "Project files delivery via cloud.",
+  },
+  animators: {
+    items: [
+      { name: "3D Character Rigging", qty: 1, price: 600 },
+      { name: "Animation Seconds", qty: 15, price: 50 },
+    ],
+    note: "Animation draft v1.",
+  },
+
+  // --- 3. TRADES & HOME SERVICES ---
+  contractors: {
+    items: [
+      { name: "Labor (Hours)", qty: 40, price: 55 },
+      { name: "Construction Materials", qty: 1, price: 2500 },
+    ],
+    note: "Payment due upon phase completion.",
+  },
+  handyman: {
+    items: [
+      { name: "General Repairs (Hours)", qty: 2, price: 65 },
+      { name: "Materials/Parts", qty: 1, price: 45 },
+    ],
+    note: "Payment due upon receipt.",
+  },
+  plumbers: {
+    items: [
+      { name: "Service Call", qty: 1, price: 95 },
+      { name: "Pipe Repair Materials", qty: 1, price: 50 },
+    ],
+    note: "Thank you for choosing us.",
+  },
+  electricians: {
+    items: [
+      { name: "Outlet Installation", qty: 4, price: 45 },
+      { name: "Service Panel Inspection", qty: 1, price: 150 },
+    ],
+    note: "Licensed electrical work.",
+  },
+  "hvac-technicians": {
+    items: [
+      { name: "AC Maintenance Tune-up", qty: 1, price: 129 },
+      { name: "Filter Replacement", qty: 1, price: 30 },
+    ],
+    note: "Seasonal maintenance check.",
+  },
+  roofers: {
+    items: [
+      { name: "Roof Inspection", qty: 1, price: 150 },
+      { name: "Shingle Repair", qty: 10, price: 25 },
+    ],
+    note: "Weatherproofing guarantee included.",
+  },
+  painters: {
+    items: [
+      { name: "Interior Painting (Sq Ft)", qty: 500, price: 2.5 },
+      { name: "Paint & Supplies", qty: 1, price: 300 },
+    ],
+    note: "Includes primer and two coats.",
+  },
+  carpenters: {
+    items: [
+      { name: "Custom Cabinet Build", qty: 1, price: 1500 },
+      { name: "Installation Labor", qty: 8, price: 60 },
+    ],
+    note: "Woodwork services.",
+  },
+  landscapers: {
+    items: [
+      { name: "Lawn Mowing & Edging", qty: 1, price: 65 },
+      { name: "Mulch Installation (Yards)", qty: 3, price: 85 },
+    ],
+    note: "Weekly lawn maintenance.",
+  },
+  "tree-service": {
+    items: [
+      { name: "Tree Trimming", qty: 1, price: 350 },
+      { name: "Debris Removal", qty: 1, price: 100 },
+    ],
+    note: "Safety inspection included.",
+  },
+  cleaners: {
+    items: [
+      { name: "Standard Home Clean", qty: 1, price: 140 },
+      { name: "Deep Clean Add-on", qty: 1, price: 60 },
+    ],
+    note: "Thank you for letting us clean your home!",
+  },
+  "carpet-cleaners": {
+    items: [
+      { name: "3 Room Steam Clean", qty: 1, price: 150 },
+      { name: "Stain Treatment", qty: 2, price: 25 },
+    ],
+    note: "Carpets will be dry in 4-6 hours.",
+  },
+  "pool-cleaners": {
+    items: [
+      { name: "Weekly Pool Service", qty: 1, price: 75 },
+      { name: "Chemicals", qty: 1, price: 25 },
+    ],
+    note: "Ph balance checked and adjusted.",
+  },
+  "pest-control": {
+    items: [
+      { name: "Quarterly Pest Treatment", qty: 1, price: 125 },
+      { name: "Termite Inspection", qty: 1, price: 95 },
+    ],
+    note: "Safe for pets and children.",
+  },
+  locksmiths: {
+    items: [
+      { name: "Emergency Lockout Service", qty: 1, price: 120 },
+      { name: "New Lock Installation", qty: 1, price: 85 },
+    ],
+    note: "24/7 Emergency Service.",
+  },
+  movers: {
+    items: [
+      { name: "Moving Team (3 Men/Hour)", qty: 4, price: 150 },
+      { name: "Truck Fee", qty: 1, price: 100 },
+    ],
+    note: "Travel time included.",
+  },
+  "window-washers": {
+    items: [
+      { name: "Exterior Window Cleaning", qty: 1, price: 150 },
+      { name: "Screen Cleaning", qty: 10, price: 5 },
+    ],
+    note: "Streak-free guarantee.",
+  },
+  "flooring-installers": {
+    items: [
+      { name: "Hardwood Install (Sq Ft)", qty: 300, price: 4 },
+      { name: "Baseboard Install", qty: 50, price: 2 },
+    ],
+    note: "Materials not included.",
+  },
+  drywallers: {
+    items: [
+      { name: "Drywall Installation (Sheets)", qty: 20, price: 40 },
+      { name: "Taping & Mudding", qty: 1, price: 500 },
+    ],
+    note: "Ready for paint.",
+  },
+  masons: {
+    items: [
+      { name: "Brick Repair (Hours)", qty: 5, price: 80 },
+      { name: "Mortar & Materials", qty: 1, price: 100 },
+    ],
+    note: "Masonry services.",
+  },
+  "solar-installers": {
+    items: [
+      { name: "Solar Panel System", qty: 1, price: 12000 },
+      { name: "Installation Labor", qty: 1, price: 2500 },
+    ],
+    note: "Warranty documentation attached.",
+  },
+
+  // --- 4. AUTOMOTIVE & TRANSPORT ---
+  mechanics: {
+    items: [
+      { name: "Brake Pad Replacement", qty: 1, price: 200 },
+      { name: "Labor (Hours)", qty: 2, price: 90 },
+    ],
+    note: "Vehicle mileage: 45,000",
+  },
+  "auto-detailers": {
+    items: [
+      { name: "Full Detail Package", qty: 1, price: 180 },
+      { name: "Ceramic Coating", qty: 1, price: 500 },
+    ],
+    note: "Vehicle ready for pickup.",
+  },
+  "truck-drivers": {
+    items: [
+      { name: "Freight Hauling (Miles)", qty: 600, price: 2.25 },
+      { name: "Fuel Surcharge", qty: 1, price: 150 },
+    ],
+    note: "BOL #998877",
+  },
+  "towing-services": {
+    items: [
+      { name: "Hook-up Fee", qty: 1, price: 85 },
+      { name: "Towing Miles", qty: 10, price: 5 },
+    ],
+    note: "Roadside assistance.",
+  },
+  "taxi-drivers": {
+    items: [
+      { name: "Taxi Fare", qty: 1, price: 45 },
+      { name: "Airport Surcharge", qty: 1, price: 5 },
+    ],
+    note: "Passenger receipt.",
+  },
+  couriers: {
+    items: [
+      { name: "Express Delivery", qty: 1, price: 35 },
+      { name: "Distance Fee", qty: 1, price: 15 },
+    ],
+    note: "Package delivered signed.",
+  },
+  "uber-drivers": {
+    items: [
+      { name: "Private Ride", qty: 1, price: 50 },
+      { name: "Wait Time", qty: 1, price: 10 },
+    ],
+    note: "Private hire receipt.",
+  },
+  "boat-mechanics": {
+    items: [
+      { name: "Engine Winterization", qty: 1, price: 300 },
+      { name: "Oil Change", qty: 1, price: 150 },
+    ],
+    note: "Marine service.",
+  },
+
+  // --- 5. RENTAL & LEASING ---
+  landlords: {
+    items: [
+      { name: "Monthly Rent", qty: 1, price: 1500 },
+      { name: "Utility Contribution", qty: 1, price: 75 },
+    ],
+    note: "Rent due on the 1st.",
+  },
+  "airbnb-hosts": {
+    items: [
+      { name: "Accommodation (Nights)", qty: 3, price: 120 },
+      { name: "Cleaning Fee", qty: 1, price: 85 },
+    ],
+    note: "Enjoy your stay!",
+  },
+  "equipment-rental": {
+    items: [
+      { name: "Excavator Rental (Day)", qty: 2, price: 400 },
+      { name: "Delivery/Pickup", qty: 1, price: 150 },
+    ],
+    note: "Damage waiver included.",
+  },
+  "car-rental": {
+    items: [
+      { name: "Vehicle Rental (Days)", qty: 5, price: 45 },
+      { name: "Insurance Daily", qty: 5, price: 15 },
+    ],
+    note: "Full tank return required.",
+  },
+  "party-rental": {
+    items: [
+      { name: "Chair Rental", qty: 50, price: 3 },
+      { name: "Tent Setup", qty: 1, price: 300 },
+    ],
+    note: "Event date: [Date]",
+  },
+  "venue-rental": {
+    items: [
+      { name: "Venue Booking Fee", qty: 1, price: 2000 },
+      { name: "Security Deposit", qty: 1, price: 500 },
+    ],
+    note: "Balance due 30 days prior.",
+  },
+  "storage-units": {
+    items: [
+      { name: "Unit 104 Rent", qty: 1, price: 120 },
+      { name: "Insurance", qty: 1, price: 10 },
+    ],
+    note: "Monthly storage fee.",
+  },
+
+  // --- 6. PROFESSIONAL & LEGAL ---
+  consultants: {
+    items: [
+      { name: "Consulting Retainer", qty: 1, price: 2000 },
+      { name: "Strategy Session", qty: 2, price: 250 },
+    ],
+    note: "Services for [Month].",
+  },
+  lawyers: {
+    items: [
+      { name: "Legal Services (Hours)", qty: 5, price: 350 },
+      { name: "Filing Fees", qty: 1, price: 100 },
+    ],
+    note: "Matter: [Case Name]",
+  },
+  notaries: {
+    items: [
+      { name: "Notarization Fee", qty: 1, price: 15 },
+      { name: "Travel Fee", qty: 1, price: 30 },
+    ],
+    note: "Official Notary Service.",
+  },
+  accountants: {
+    items: [
+      { name: "Tax Preparation", qty: 1, price: 400 },
+      { name: "Bookkeeping (Month)", qty: 1, price: 250 },
+    ],
+    note: "FY 2025 Services.",
+  },
+  bookkeepers: {
+    items: [
+      { name: "Monthly Reconciliation", qty: 1, price: 300 },
+      { name: "Payroll Processing", qty: 1, price: 150 },
+    ],
+    note: "Financial services.",
+  },
+  architects: {
+    items: [
+      { name: "Design Development Phase", qty: 1, price: 3500 },
+      { name: "Blueprint Printing", qty: 1, price: 150 },
+    ],
+    note: "Project #8291.",
+  },
+  "interior-designers": {
+    items: [
+      { name: "Design Concept Fee", qty: 1, price: 1500 },
+      { name: "Furniture Sourcing", qty: 10, price: 75 },
+    ],
+    note: "Decor services.",
+  },
+  recruiters: {
+    items: [{ name: "Placement Fee", qty: 1, price: 5000 }],
+    note: "Candidate: [Name]. Net 15.",
+  },
+  "real-estate-agents": {
+    items: [
+      { name: "Marketing Fee", qty: 1, price: 500 },
+      { name: "Staging Consultation", qty: 1, price: 200 },
+    ],
+    note: "Property listing services.",
+  },
+
+  // --- 7. HEALTH, PETS & PERSONAL CARE ---
+  "personal-trainers": {
+    items: [
+      { name: "Personal Training Session", qty: 5, price: 60 },
+      { name: "Nutrition Plan", qty: 1, price: 100 },
+    ],
+    note: "Get fit package.",
+  },
+  therapists: {
+    items: [{ name: "Therapy Session (50m)", qty: 1, price: 120 }],
+    note: "Confidential healthcare service.",
+  },
+  "yoga-instructors": {
+    items: [
+      { name: "Private Yoga Class", qty: 1, price: 80 },
+      { name: "Mat Rental", qty: 1, price: 5 },
+    ],
+    note: "Namaste.",
+  },
+  nutritionists: {
+    items: [
+      { name: "Initial Consultation", qty: 1, price: 150 },
+      { name: "Meal Plan", qty: 1, price: 75 },
+    ],
+    note: "Dietary services.",
+  },
+  "makeup-artists": {
+    items: [
+      { name: "Bridal Makeup", qty: 1, price: 250 },
+      { name: "Trial Session", qty: 1, price: 100 },
+    ],
+    note: "Wedding services.",
+  },
+  "hair-stylists": {
+    items: [
+      { name: "Cut & Color", qty: 1, price: 180 },
+      { name: "Styling Product", qty: 1, price: 25 },
+    ],
+    note: "Salon services.",
+  },
+  "massage-therapists": {
+    items: [{ name: "Deep Tissue Massage (60m)", qty: 1, price: 90 }],
+    note: "Therapeutic bodywork.",
+  },
+  doctors: {
+    items: [
+      { name: "Medical Consultation", qty: 1, price: 200 },
+      { name: "Procedure Fee", qty: 1, price: 150 },
+    ],
+    note: "Payment due at time of service.",
+  },
+  dentists: {
+    items: [
+      { name: "Dental Cleaning", qty: 1, price: 120 },
+      { name: "X-Rays", qty: 1, price: 80 },
+    ],
+    note: "Dental services.",
+  },
+  chiropractors: {
+    items: [{ name: "Spinal Adjustment", qty: 1, price: 65 }],
+    note: "Wellness visit.",
+  },
+  veterinarians: {
+    items: [
+      { name: "Pet Exam", qty: 1, price: 75 },
+      { name: "Vaccinations", qty: 1, price: 120 },
+    ],
+    note: "Patient: [Pet Name]",
+  },
+  "dog-walkers": {
+    items: [{ name: "Dog Walking (30m)", qty: 5, price: 25 }],
+    note: "Weekly package.",
+  },
+  "pet-sitters": {
+    items: [{ name: "Overnight Pet Sitting", qty: 3, price: 60 }],
+    note: "House sitting services.",
+  },
+  "pet-groomers": {
+    items: [
+      { name: "Full Groom", qty: 1, price: 85 },
+      { name: "Nail Trim", qty: 1, price: 15 },
+    ],
+    note: "Spa day for your pet.",
+  },
+  childcare: {
+    items: [{ name: "Babysitting (Hours)", qty: 5, price: 20 }],
+    note: "Childcare services.",
+  },
+
+  // --- 8. EVENTS & FOOD ---
+  "event-planners": {
+    items: [
+      { name: "Coordination Fee", qty: 1, price: 1200 },
+      { name: "Day-of Management", qty: 1, price: 800 },
+    ],
+    note: "Event deposit.",
+  },
+  photographers: {
+    items: [
+      { name: "Wedding Photography Pkg", qty: 1, price: 2500 },
+      { name: "Engagement Shoot", qty: 1, price: 300 },
+    ],
+    note: "Digital delivery.",
+  },
+  videographers: {
+    items: [
+      { name: "Event Filming (Hours)", qty: 8, price: 150 },
+      { name: "Highlight Reel Edit", qty: 1, price: 500 },
+    ],
+    note: "Video production.",
+  },
+  caterers: {
+    items: [
+      { name: "Buffet per person", qty: 50, price: 35 },
+      { name: "Service Staff", qty: 4, price: 150 },
+    ],
+    note: "Food & Beverage.",
+  },
+  "private-chefs": {
+    items: [
+      { name: "Dinner Party Service", qty: 1, price: 400 },
+      { name: "Grocery Reimbursement", qty: 1, price: 150 },
+    ],
+    note: "Private dining.",
+  },
+  bakers: {
+    items: [
+      { name: "Custom Wedding Cake", qty: 1, price: 450 },
+      { name: "Delivery & Setup", qty: 1, price: 50 },
+    ],
+    note: "Bakery order.",
+  },
+  djs: {
+    items: [
+      { name: "Wedding DJ Package", qty: 1, price: 1200 },
+      { name: "Lighting Add-on", qty: 1, price: 200 },
+    ],
+    note: "Music services.",
+  },
+  musicians: {
+    items: [{ name: "Live Performance (Hours)", qty: 3, price: 200 }],
+    note: "Live music.",
+  },
+  florists: {
+    items: [
+      { name: "Bridal Bouquet", qty: 1, price: 150 },
+      { name: "Table Centerpieces", qty: 10, price: 65 },
+    ],
+    note: "Floral arrangements.",
+  },
+  "wedding-officiants": {
+    items: [
+      { name: "Ceremony Officiating", qty: 1, price: 300 },
+      { name: "Rehearsal", qty: 1, price: 100 },
+    ],
+    note: "Wedding services.",
+  },
+
+  // --- 9. EDUCATION ---
+  tutors: {
+    items: [{ name: "Math Tutoring (Hour)", qty: 4, price: 50 }],
+    note: "Academic support.",
+  },
+  "music-teachers": {
+    items: [{ name: "Piano Lesson (45m)", qty: 4, price: 45 }],
+    note: "Monthly lessons.",
+  },
+  "driving-instructors": {
+    items: [{ name: "Driving Lesson", qty: 5, price: 60 }],
+    note: "Road test prep.",
+  },
+  "language-teachers": {
+    items: [{ name: "Spanish Conversation", qty: 4, price: 40 }],
+    note: "Language learning.",
+  },
+  "life-coaches": {
+    items: [{ name: "Coaching Session", qty: 2, price: 150 }],
+    note: "Mentorship.",
+  },
+  "sports-coaches": {
+    items: [{ name: "Private Training", qty: 4, price: 75 }],
+    note: "Athletic coaching.",
+  },
+
+  // --- 10. NICHE ---
+  farmers: {
+    items: [
+      { name: "Organic Produce (Crate)", qty: 10, price: 25 },
+      { name: "Delivery", qty: 1, price: 20 },
+    ],
+    note: "Farm fresh.",
+  },
+  fishermen: {
+    items: [{ name: "Fresh Catch (lbs)", qty: 50, price: 12 }],
+    note: "Seafood delivery.",
+  },
+  welders: {
+    items: [
+      { name: "Custom Fabrication", qty: 1, price: 400 },
+      { name: "Materials", qty: 1, price: 120 },
+    ],
+    note: "Metalwork.",
+  },
+  machinists: {
+    items: [
+      { name: "CNC Machining (Hours)", qty: 5, price: 95 },
+      { name: "Material Stock", qty: 1, price: 200 },
+    ],
+    note: "Precision parts.",
+  },
+
+  // --- 11. DOC TYPES (Generic) ---
+  "invoice-template": {
+    items: [{ name: "Service", qty: 1, price: 100 }],
+    note: "Thank you.",
+  },
+  "proforma-invoice": {
+    items: [{ name: "Export Goods", qty: 100, price: 10 }],
+    note: "Proforma Invoice for Customs.",
+  },
+  "commercial-invoice": {
+    items: [{ name: "Product X", qty: 500, price: 5 }],
+    note: "Commercial Value for Customs.",
+  },
+  "vat-invoice": {
+    items: [{ name: "Consulting", qty: 1, price: 1000 }],
+    note: "VAT Inclusive.",
+  },
+  "receipt-maker": {
+    items: [{ name: "Payment Received", qty: 1, price: 50 }],
+    note: "Receipt.",
+  },
+  "rent-receipt": {
+    items: [{ name: "Rent Payment", qty: 1, price: 1200 }],
+    note: "Received with thanks.",
+  },
+  "quote-generator": {
+    items: [{ name: "Estimated Project Cost", qty: 1, price: 2000 }],
+    note: "Quote valid for 30 days.",
+  },
+  "credit-note": {
+    items: [{ name: "Refund for returned goods", qty: 1, price: -50 }],
+    note: "Credit applied to account.",
+  },
+  "retainer-invoice": {
+    items: [{ name: "Monthly Retainer", qty: 1, price: 1000 }],
+    note: "Pre-payment for services.",
+  },
+
+  // --- 12. INTERNATIONAL (Currency Defaults) ---
+  uk: { currency: "GBP", note: "VAT Reg: GB 123 456 789" },
+  usa: { currency: "USD", note: "Thank you for your business." },
+  canada: { currency: "CAD", note: "GST/HST Registration: 12345 RT0001" },
+  australia: { currency: "AUD", note: "Tax Invoice (ABN: 12 345 678 901)" },
+  india: { currency: "INR", note: "GSTIN: 27ABCDE1234F1Z5" },
+  uae: { currency: "AED", note: "Tax Invoice (TRN: 100200300)" },
+  pakistan: { currency: "PKR", note: "NTN: 1234567-8" },
+  germany: { currency: "EUR", note: "Steuernummer: 123/456/7890" },
+  france: { currency: "EUR", note: "TVA: FR 12 3456 7890" },
+  "south-africa": { currency: "ZAR", note: "Tax Invoice (VAT: 4012345678)" },
+  nigeria: { currency: "NGN", note: "TIN: 12345678-0001" },
+  brazil: { currency: "BRL", note: "Nota Fiscal de Serviços" },
+  mexico: { currency: "MXN", note: "Factura Electrónica" },
+  japan: { currency: "JPY", note: "Registration No. T1234567890123" },
+  china: { currency: "CNY", note: "Fapiao / Invoice" },
+  singapore: { currency: "SGD", note: "UEN: 200112345Z" },
+  // --- MISSING DOC TYPES ---
+  "blank-invoice": {
+    items: [{ name: "Description", qty: 1, price: 0 }],
+    note: "Add your details here.",
+  },
+  "gst-invoice": {
+    items: [{ name: "Service (GST Applicable)", qty: 1, price: 1000 }],
+    note: "GST Registration No: ________________",
+  },
+  "estimate-maker": {
+    items: [
+      { name: "Labor Estimate", qty: 10, price: 50 },
+      { name: "Material Estimate", qty: 1, price: 200 },
+    ],
+    note: "This is an estimate, not a final invoice.",
+  },
+  "timesheet-invoice": {
+    items: [
+      { name: "Monday Hours", qty: 8, price: 40 },
+      { name: "Tuesday Hours", qty: 8, price: 40 },
+    ],
+    note: "Weekly timesheet submission.",
+  },
+  "service-invoice": {
+    items: [{ name: "Professional Service Fee", qty: 1, price: 150 }],
+    note: "Payment due upon receipt of services.",
+  },
+  "sales-invoice": {
+    items: [{ name: "Item SKU #12345", qty: 1, price: 99.99 }],
+    note: "Thank you for your purchase.",
+  },
+  "simple-invoice": {
+    items: [{ name: "Service Rendered", qty: 1, price: 100 }],
+    note: "Thank you.",
+  },
+  "printable-invoice": {
+    items: [{ name: "Service", qty: 1, price: 0 }],
+    note: "Print-ready format.",
+  },
+
+  // --- FIX SAUDI ARABIA KEY ---
+  // Change "saudiarabia" to:
+  "saudi-arabia": {
+    currency: "SAR",
+    note: "VAT Registration: 300012345600003",
+  },
+};
 // --- Helper: Editable Field Component ---
 function EditableField({
   value,
@@ -173,12 +1019,40 @@ export default function InvoiceGeneratorClient() {
   const [selectedClient, setSelectedClient] = useState("");
   const [savedInvoices, setSavedInvoices] = useState([]);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState("");
+  const searchParams = useSearchParams();
+  const templateParam = searchParams.get("template");
 
   // --- REFS ---
   const invoicePrintRef = useRef(null);
   const logoUploadRef = useRef(null);
   const bgWatermarkUploadRef = useRef(null);
 
+  // --- 3. NEW: TEMPLATE INJECTION EFFECT ---
+  // This runs when the URL changes (e.g. user arrives from /invoice-generator/uk)
+  useEffect(() => {
+    if (templateParam && TEMPLATE_DEFAULTS[templateParam]) {
+      const defaults = TEMPLATE_DEFAULTS[templateParam];
+
+      // Update Items (with unique IDs to avoid key errors)
+      if (defaults.items) {
+        const newItems = defaults.items.map((item) => ({
+          ...item,
+          id: Date.now() + Math.random(), // Unique ID
+        }));
+        setItems(newItems);
+      }
+
+      // Update Notes
+      if (defaults.note) {
+        setNotes(defaults.note);
+      }
+
+      // Update Currency (NEW)
+      if (defaults.currency) {
+        setCurrencyCode(defaults.currency);
+      }
+    }
+  }, [templateParam]);
   // Load data from Local Storage on mount
   useEffect(() => {
     setIsTemplateModalOpen(true);
@@ -2314,11 +3188,7 @@ function TemplateInvoiceCreative({
         style={{ backgroundColor: "var(--accent-color)" }}
       >
         {logo ? (
-          <img
-            src={logo}
-            alt="Logo"
-            className="max-h-20 object-contain "
-          />
+          <img src={logo} alt="Logo" className="max-h-20 object-contain " />
         ) : (
           <div className="font-bold" style={{ fontSize: "2em" }}>
             <EditableField

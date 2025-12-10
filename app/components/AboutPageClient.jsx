@@ -16,12 +16,10 @@ import {
   RiErrorWarningLine,
   RiEyeOffLine, // New icon
   RiMoneyDollarCircleLine,
-  RiFileTextLine  // New icon
+  RiFileTextLine, // New icon
 } from "react-icons/ri";
 import Link from "next/link";
 import Image from "next/image";
-
-
 
 export default function AboutPageClient() {
   // --- Animation Variants ---
@@ -78,10 +76,10 @@ export default function AboutPageClient() {
           className="mt-6 text-lg sm:text-xl max-w-3xl mx-auto text-slate-600 dark:text-slate-300"
           variants={itemVariants}
         >
-          We are building the financial tools we always wished we had. We believe
-          professional, beautiful financial tools should be simple, intuitive,
-          and accessible to everyone—not locked behind paywalls or cluttered
-          with ads.
+          We are building the financial tools we always wished we had. We
+          believe professional, beautiful financial tools should be simple,
+          intuitive, and accessible to everyone—not locked behind paywalls or
+          cluttered with ads.
         </motion.p>
       </motion.section>
 
@@ -158,7 +156,13 @@ export default function AboutPageClient() {
             <div className="relative h-64 sm:h-96 rounded-2xl shadow-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
               {/* Placeholder - replace with an image */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <RiErrorWarningLine className="h-32 w-32 text-slate-300 dark:text-slate-700" />
+                <Image
+                  src={"/about/1.png"}
+                  alt={"about  image"}
+                  layout="fill"
+                  objectFit="cover"
+                  className="group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
             </div>
           </motion.div>
@@ -174,7 +178,13 @@ export default function AboutPageClient() {
             <div className="relative h-64 sm:h-96 rounded-2xl shadow-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 lg:order-first">
               {/* Placeholder - replace with an image */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <RiFileTextLine className="h-32 w-32 text-slate-300 dark:text-slate-700" />
+                <Image
+                  src={"/about/2.png"}
+                  alt={"about  image"}
+                  layout="fill"
+                  objectFit="cover"
+                  className="group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
             </div>
             <div>

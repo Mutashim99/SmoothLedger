@@ -128,7 +128,7 @@ export default function ProfessionPayslipPage({ params }) {
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <Link
-                  href="/payslip-generator/create"
+                  href={`/payslip-generator/create?template=${data.slug}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                 >
                   Create {data.keyword} Slip

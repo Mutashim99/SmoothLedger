@@ -29,6 +29,1223 @@ import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+
+const TEMPLATE_DEFAULTS = {
+  // --- 1. GIG APPS, PLATFORMS & SIDE HUSTLES ---
+  "amazon-flex": {
+    employeePosition: "Delivery Partner",
+    earnings: [
+      { name: "Delivery Blocks (25 hrs)", amount: 550 },
+      { name: "Tips & Incentives", amount: 150 },
+    ],
+    deductions: [{ name: "Est. Tax Withholding", amount: 140 }],
+  },
+  "instacart-shoppers": {
+    employeePosition: "Full-Service Shopper",
+    earnings: [
+      { name: "Batch Payments", amount: 540 },
+      { name: "Customer Tips", amount: 200 },
+    ],
+    deductions: [{ name: "Platform Fees", amount: 15 }],
+  },
+  "doordash-drivers": {
+    employeePosition: "Dasher",
+    earnings: [
+      { name: "Dash Time Earnings", amount: 300 },
+      { name: "Tips/Gratuity", amount: 180 },
+    ],
+    deductions: [{ name: "Est. Tax", amount: 96 }],
+  },
+  "uber-drivers": {
+    employeePosition: "Driver Partner",
+    earnings: [
+      { name: "Trip Earnings", amount: 850 },
+      { name: "Promotions/Quests", amount: 120 },
+    ],
+    deductions: [
+      { name: "Service Fee", amount: 150 },
+      { name: "Vehicle Expenses", amount: 80 },
+    ],
+  },
+  "lyft-drivers": {
+    employeePosition: "Lyft Driver",
+    earnings: [
+      { name: "Ride Payments", amount: 700 },
+      { name: "Power Zone Bonuses", amount: 100 },
+    ],
+    deductions: [{ name: "Service Fee", amount: 120 }],
+  },
+  "grubhub-drivers": {
+    employeePosition: "Delivery Driver",
+    earnings: [
+      { name: "Delivery Pay", amount: 400 },
+      { name: "Tips", amount: 150 },
+    ],
+    deductions: [{ name: "Tax Hold", amount: 110 }],
+  },
+  "shipt-shoppers": {
+    employeePosition: "Shipt Shopper",
+    earnings: [
+      { name: "Order Pay", amount: 300 },
+      { name: "Promo Pay", amount: 50 },
+    ],
+    deductions: [{ name: "Est. Taxes", amount: 70 }],
+  },
+  taskrabbit: {
+    employeePosition: "Tasker",
+    earnings: [
+      { name: "Task Earnings", amount: 450 },
+      { name: "Reimbursements", amount: 30 },
+    ],
+    deductions: [{ name: "Service Fee (15%)", amount: 67.5 }],
+  },
+  "rover-sitters": {
+    employeePosition: "Pet Care Provider",
+    earnings: [
+      { name: "Pet Sitting (4 Nights)", amount: 200 },
+      { name: "Dog Walking (5 Walks)", amount: 125 },
+    ],
+    deductions: [{ name: "Rover Service Fees", amount: 65 }],
+  },
+  "upwork-freelancers": {
+    employeePosition: "Freelance Contractor",
+    earnings: [
+      { name: "Hourly Contract (20h)", amount: 800 },
+      { name: "Fixed Price Milestone", amount: 300 },
+    ],
+    deductions: [{ name: "Service Fee (10%)", amount: 110 }],
+  },
+  "fiverr-sellers": {
+    employeePosition: "Seller Level 2",
+    earnings: [
+      { name: "Completed Orders", amount: 500 },
+      { name: "Tips", amount: 40 },
+    ],
+    deductions: [{ name: "Fiverr Service Fee", amount: 100 }],
+  },
+  "etsy-sellers": {
+    employeePosition: "Shop Owner",
+    earnings: [
+      { name: "Product Sales", amount: 1200 },
+      { name: "Shipping Credit", amount: 150 },
+    ],
+    deductions: [
+      { name: "Listing Fees", amount: 45 },
+      { name: "Transaction Fees", amount: 78 },
+    ],
+  },
+  "airbnb-hosts": {
+    employeePosition: "Host",
+    earnings: [
+      { name: "Reservation Income", amount: 1800 },
+      { name: "Cleaning Fees", amount: 240 },
+    ],
+    deductions: [
+      { name: "Host Service Fee", amount: 60 },
+      { name: "Occupancy Taxes", amount: 150 },
+    ],
+  },
+  "onlyfans-creators": {
+    employeePosition: "Content Creator",
+    earnings: [
+      { name: "Subscription Revenue", amount: 2500 },
+      { name: "Tips/PPV", amount: 800 },
+    ],
+    deductions: [{ name: "Platform Fee (20%)", amount: 660 }],
+  },
+  "twitch-streamers": {
+    employeePosition: "Twitch Partner",
+    earnings: [
+      { name: "Sub Revenue", amount: 600 },
+      { name: "Bit Donations", amount: 200 },
+    ],
+    deductions: [{ name: "Withholding Tax", amount: 160 }],
+  },
+  "youtube-creators": {
+    employeePosition: "YouTuber",
+    earnings: [
+      { name: "AdSense Revenue", amount: 1500 },
+      { name: "Channel Memberships", amount: 300 },
+    ],
+    deductions: [{ name: "US Tax Withholding", amount: 0 }],
+  },
+  "thumbtack-pros": {
+    employeePosition: "Pro Service Provider",
+    earnings: [{ name: "Service Earnings", amount: 600 }],
+    deductions: [{ name: "Lead Credits Cost", amount: 50 }],
+  },
+  "handy-pros": {
+    employeePosition: "Cleaning Professional",
+    earnings: [
+      { name: "Cleaning Jobs (15h)", amount: 330 },
+      { name: "Bonuses", amount: 50 },
+    ],
+    deductions: [{ name: "Platform Fees", amount: 20 }],
+  },
+
+  // --- 2. TRADES, LABOR & BLUE COLLAR ---
+  "construction-workers": {
+    employeePosition: "Construction Worker",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1120 },
+      { name: "Overtime (5h)", amount: 210 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 180 },
+      { name: "Social Security", amount: 82 },
+    ],
+  },
+  plumbers: {
+    employeePosition: "Licensed Plumber",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1400 },
+      { name: "Emergency Call-out", amount: 105 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 220 },
+      { name: "Union Dues", amount: 45 },
+    ],
+  },
+  electricians: {
+    employeePosition: "Journeyman Electrician",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1520 },
+      { name: "Overtime (2h)", amount: 114 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 240 },
+      { name: "Health Ins.", amount: 80 },
+    ],
+  },
+  "hvac-technicians": {
+    employeePosition: "HVAC Tech",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1280 },
+      { name: "On-Call Stipend", amount: 100 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 190 },
+      { name: "Medicare", amount: 20 },
+    ],
+  },
+  "truck-drivers": {
+    employeePosition: "CDL Class A Driver",
+    earnings: [
+      { name: "Mileage Pay (2500m)", amount: 1375 },
+      { name: "Per Diem", amount: 300 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 210 },
+      { name: "Occupational Ins.", amount: 40 },
+    ],
+  },
+  welders: {
+    employeePosition: "Certified Welder",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1200 },
+      { name: "Hazard Pay", amount: 50 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 180 },
+      { name: "Union Dues", amount: 35 },
+    ],
+  },
+  carpenters: {
+    employeePosition: "Carpenter",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1120 },
+      { name: "Tool Allowance", amount: 50 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 160 },
+      { name: "FICA", amount: 70 },
+    ],
+  },
+  mechanics: {
+    employeePosition: "Auto Mechanic",
+    earnings: [
+      { name: "Flat Rate (45h)", amount: 1440 },
+      { name: "Parts Commission", amount: 75 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 215 },
+      { name: "Uniform Fee", amount: 15 },
+    ],
+  },
+  painters: {
+    employeePosition: "Painter",
+    earnings: [{ name: "Labor Hours (40h)", amount: 1000 }],
+    deductions: [
+      { name: "Federal Tax", amount: 140 },
+      { name: "Social Security", amount: 62 },
+    ],
+  },
+  roofers: {
+    employeePosition: "Roofer",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1040 },
+      { name: "Production Bonus", amount: 150 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 160 },
+      { name: "Medicare", amount: 17 },
+    ],
+  },
+  landscapers: {
+    employeePosition: "Landscaper",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 800 },
+      { name: "Overtime (5h)", amount: 150 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 110 },
+      { name: "FICA", amount: 58 },
+    ],
+  },
+  movers: {
+    employeePosition: "Mover",
+    earnings: [
+      { name: "Regular Pay (35h)", amount: 770 },
+      { name: "Reported Tips", amount: 120 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 105 }],
+  },
+  "warehouse-associates": {
+    employeePosition: "Warehouse Associate",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 760 },
+      { name: "Night Shift Diff", amount: 60 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 95 },
+      { name: "Health Ins.", amount: 40 },
+    ],
+  },
+  "factory-workers": {
+    employeePosition: "Factory Worker",
+    earnings: [
+      { name: "Shift Hours (40h)", amount: 840 },
+      { name: "Overtime (8h)", amount: 252 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 145 },
+      { name: "Union Dues", amount: 25 },
+    ],
+  },
+  janitors: {
+    employeePosition: "Custodian",
+    earnings: [{ name: "Regular Hours (40h)", amount: 720 }],
+    deductions: [
+      { name: "Federal Tax", amount: 85 },
+      { name: "FICA", amount: 44 },
+    ],
+  },
+  "solar-installers": {
+    employeePosition: "Solar Installer",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 1160 },
+      { name: "Install Bonus", amount: 100 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 170 },
+      { name: "Medicare", amount: 18 },
+    ],
+  },
+  "flooring-installers": {
+    employeePosition: "Flooring Tech",
+    earnings: [
+      { name: "Labor Hours (38h)", amount: 1026 },
+      { name: "Travel Stipend", amount: 50 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 145 }],
+  },
+  drywallers: {
+    employeePosition: "Drywall Installer",
+    earnings: [
+      { name: "Piece Work (100 bds)", amount: 1500 },
+      { name: "Hourly Prep", amount: 250 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 260 }],
+  },
+  masons: {
+    employeePosition: "Mason",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1280 }],
+    deductions: [
+      { name: "Federal Tax", amount: 190 },
+      { name: "Union Dues", amount: 40 },
+    ],
+  },
+  "pest-control": {
+    employeePosition: "Pest Control Tech",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 960 },
+      { name: "Sales Commission", amount: 200 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 160 }],
+  },
+  "security-guards": {
+    employeePosition: "Security Officer",
+    earnings: [
+      { name: "Regular Pay (40h)", amount: 680 },
+      { name: "Holiday Pay", amount: 204 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 110 },
+      { name: "Uniform", amount: 10 },
+    ],
+  },
+
+  // --- 3. HEALTHCARE & MEDICAL ---
+  nurses: {
+    employeePosition: "Registered Nurse (RN)",
+    earnings: [
+      { name: "Regular Hours (36h)", amount: 1512 },
+      { name: "Shift Differential", amount: 48 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 240 },
+      { name: "Health Insurance", amount: 120 },
+    ],
+  },
+  "travel-nurses": {
+    employeePosition: "Travel Nurse",
+    earnings: [
+      { name: "Base Pay (36h)", amount: 2160 },
+      { name: "Housing Stipend", amount: 1000 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 450 },
+      { name: "State Tax", amount: 150 },
+    ],
+  },
+  doctors: {
+    employeePosition: "Physician",
+    earnings: [
+      { name: "Bi-Weekly Salary", amount: 8500 },
+      { name: "Call Pay", amount: 500 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 2200 },
+      { name: "401k Contribution", amount: 800 },
+    ],
+  },
+  "medical-assistants": {
+    employeePosition: "Medical Assistant",
+    earnings: [{ name: "Regular Hours (40h)", amount: 880 }],
+    deductions: [
+      { name: "Federal Tax", amount: 110 },
+      { name: "Medical", amount: 50 },
+    ],
+  },
+  caregivers: {
+    employeePosition: "Caregiver",
+    earnings: [
+      { name: "Care Hours (40h)", amount: 720 },
+      { name: "Overnight Stipend", amount: 100 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 95 },
+      { name: "FICA", amount: 50 },
+    ],
+  },
+  "dental-hygienists": {
+    employeePosition: "Dental Hygienist",
+    earnings: [{ name: "Regular Hours (32h)", amount: 1216 }],
+    deductions: [
+      { name: "Federal Tax", amount: 180 },
+      { name: "Social Security", amount: 75 },
+    ],
+  },
+  pharmacists: {
+    employeePosition: "Pharmacist",
+    earnings: [{ name: "Regular Hours (40h)", amount: 2480 }],
+    deductions: [
+      { name: "Federal Tax", amount: 520 },
+      { name: "Health Insurance", amount: 120 },
+    ],
+  },
+  phlebotomists: {
+    employeePosition: "Phlebotomist",
+    earnings: [{ name: "Regular Hours (40h)", amount: 840 }],
+    deductions: [{ name: "Federal Tax", amount: 105 }],
+  },
+  paramedics: {
+    employeePosition: "Paramedic",
+    earnings: [
+      { name: "Regular Hours (48h)", amount: 1248 },
+      { name: "Overtime (8h)", amount: 312 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 230 },
+      { name: "Pension", amount: 80 },
+    ],
+  },
+  "veterinary-technicians": {
+    employeePosition: "Vet Tech",
+    earnings: [{ name: "Regular Hours (40h)", amount: 800 }],
+    deductions: [{ name: "Federal Tax", amount: 95 }],
+  },
+  "physical-therapists": {
+    employeePosition: "Physical Therapist",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1800 }],
+    deductions: [
+      { name: "Federal Tax", amount: 350 },
+      { name: "State Tax", amount: 90 },
+    ],
+  },
+  "lab-technicians": {
+    employeePosition: "Lab Technician",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1120 }],
+    deductions: [{ name: "Federal Tax", amount: 155 }],
+  },
+
+  // --- 4. CORPORATE, OFFICE & ADMIN ---
+  employees: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Earnings", amount: 2000 }],
+    deductions: [
+      { name: "Federal Tax", amount: 300 },
+      { name: "Social Security", amount: 124 },
+      { name: "Medicare", amount: 29 },
+    ],
+  },
+  managers: {
+    employeePosition: "Manager",
+    earnings: [
+      { name: "Base Salary", amount: 3200 },
+      { name: "Performance Bonus", amount: 500 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 750 },
+      { name: "401k", amount: 200 },
+    ],
+  },
+  "sales-representatives": {
+    employeePosition: "Sales Representative",
+    earnings: [
+      { name: "Base Salary", amount: 1500 },
+      { name: "Commission", amount: 2500 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 800 },
+      { name: "Medicare", amount: 58 },
+    ],
+  },
+  "office-administrators": {
+    employeePosition: "Office Admin",
+    earnings: [{ name: "Regular Salary", amount: 1920 }],
+    deductions: [
+      { name: "Federal Tax", amount: 280 },
+      { name: "Health Ins.", amount: 85 },
+    ],
+  },
+  executives: {
+    employeePosition: "Executive",
+    earnings: [{ name: "Monthly Salary", amount: 15000 }],
+    deductions: [
+      { name: "Federal Tax", amount: 4200 },
+      { name: "Max 401k", amount: 1900 },
+    ],
+  },
+  "hr-managers": {
+    employeePosition: "HR Manager",
+    earnings: [{ name: "Base Salary", amount: 3500 }],
+    deductions: [
+      { name: "Federal Tax", amount: 650 },
+      { name: "Benefits", amount: 150 },
+    ],
+  },
+  accountants: {
+    employeePosition: "Accountant",
+    earnings: [{ name: "Base Salary", amount: 3100 }],
+    deductions: [
+      { name: "Federal Tax", amount: 580 },
+      { name: "CPA Dues", amount: 50 },
+    ],
+  },
+  receptionists: {
+    employeePosition: "Receptionist",
+    earnings: [{ name: "Regular Pay (80h)", amount: 1520 }],
+    deductions: [{ name: "Federal Tax", amount: 190 }],
+  },
+  assistants: {
+    employeePosition: "Executive Assistant",
+    earnings: [{ name: "Regular Pay (80h)", amount: 2080 }],
+    deductions: [{ name: "Federal Tax", amount: 310 }],
+  },
+  "data-entry": {
+    employeePosition: "Data Entry Clerk",
+    earnings: [{ name: "Regular Pay (40h)", amount: 720 }],
+    deductions: [{ name: "Federal Tax", amount: 80 }],
+  },
+  "customer-support": {
+    employeePosition: "Support Agent",
+    earnings: [{ name: "Regular Pay (40h)", amount: 800 }],
+    deductions: [{ name: "Federal Tax", amount: 95 }],
+  },
+  paralegals: {
+    employeePosition: "Paralegal",
+    earnings: [{ name: "Regular Pay (40h)", amount: 1160 }],
+    deductions: [{ name: "Federal Tax", amount: 175 }],
+  },
+  recruiters: {
+    employeePosition: "Recruiter",
+    earnings: [
+      { name: "Base Salary", amount: 2000 },
+      { name: "Placement Fees", amount: 1500 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 700 }],
+  },
+
+  // --- 5. SERVICE, HOSPITALITY & BEAUTY ---
+  servers: {
+    employeePosition: "Server",
+    earnings: [
+      { name: "Hourly Wage", amount: 255 },
+      { name: "Reported Tips", amount: 450 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 80 },
+      { name: "Medicare", amount: 10 },
+    ],
+  },
+  bartenders: {
+    employeePosition: "Bartender",
+    earnings: [
+      { name: "Hourly Wage", amount: 350 },
+      { name: "Reported Tips", amount: 800 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 160 },
+      { name: "Social Security", amount: 71 },
+    ],
+  },
+  chefs: {
+    employeePosition: "Head Chef",
+    earnings: [{ name: "Salary", amount: 2400 }],
+    deductions: [
+      { name: "Federal Tax", amount: 400 },
+      { name: "Health Ins.", amount: 100 },
+    ],
+  },
+  "hotel-staff": {
+    employeePosition: "Hotel Staff",
+    earnings: [{ name: "Regular Hours", amount: 720 }],
+    deductions: [{ name: "Federal Tax", amount: 85 }],
+  },
+  "hair-stylists": {
+    employeePosition: "Hair Stylist",
+    earnings: [
+      { name: "Service Commission", amount: 800 },
+      { name: "Product Sales", amount: 100 },
+    ],
+    deductions: [
+      { name: "Booth Rent", amount: 200 },
+      { name: "Federal Tax", amount: 100 },
+    ],
+  },
+  barbers: {
+    employeePosition: "Barber",
+    earnings: [{ name: "Weekly Earnings", amount: 900 }],
+    deductions: [{ name: "Shop Rent", amount: 250 }],
+  },
+  "makeup-artists": {
+    employeePosition: "Makeup Artist",
+    earnings: [{ name: "Event Fees", amount: 600 }],
+    deductions: [{ name: "Supplies", amount: 50 }],
+  },
+  "nail-technicians": {
+    employeePosition: "Nail Tech",
+    earnings: [
+      { name: "Hourly Wage", amount: 560 },
+      { name: "Tips", amount: 200 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 90 }],
+  },
+  "massage-therapists": {
+    employeePosition: "Massage Therapist",
+    earnings: [
+      { name: "Therapy Hours", amount: 900 },
+      { name: "Tips", amount: 150 },
+    ],
+    deductions: [{ name: "Federal Tax", amount: 160 }],
+  },
+  "personal-trainers": {
+    employeePosition: "Personal Trainer",
+    earnings: [
+      { name: "Training Sessions", amount: 1000 },
+      { name: "Class Instruction", amount: 250 },
+    ],
+    deductions: [
+      { name: "Gym Fee", amount: 200 },
+      { name: "Federal Tax", amount: 150 },
+    ],
+  },
+  "retail-staff": {
+    employeePosition: "Retail Associate",
+    earnings: [{ name: "Regular Pay (30h)", amount: 480 }],
+    deductions: [{ name: "Federal Tax", amount: 50 }],
+  },
+
+  // --- 6. EDUCATION, ARTS & CREATIVE ---
+  teachers: {
+    employeePosition: "Teacher",
+    earnings: [{ name: "Monthly Salary", amount: 4200 }],
+    deductions: [
+      { name: "Federal Tax", amount: 600 },
+      { name: "Pension / STRS", amount: 350 },
+    ],
+  },
+  tutors: {
+    employeePosition: "Private Tutor",
+    earnings: [{ name: "Tutoring Hours", amount: 675 }],
+    deductions: [{ name: "Platform Fee", amount: 60 }],
+  },
+  nannies: {
+    employeePosition: "Nanny",
+    earnings: [
+      { name: "Regular Hours", amount: 880 },
+      { name: "Overtime", amount: 165 },
+    ],
+    deductions: [
+      { name: "Federal Tax", amount: 120 },
+      { name: "Social Security", amount: 64 },
+    ],
+  },
+  "software-developers": {
+    employeePosition: "Software Engineer",
+    earnings: [{ name: "Salary", amount: 4500 }],
+    deductions: [
+      { name: "Federal Tax", amount: 950 },
+      { name: "401k", amount: 400 },
+    ],
+  },
+  "graphic-designers": {
+    employeePosition: "Graphic Designer",
+    earnings: [{ name: "Salary", amount: 2300 }],
+    deductions: [
+      { name: "Federal Tax", amount: 380 },
+      { name: "Health Ins.", amount: 90 },
+    ],
+  },
+  photographers: {
+    employeePosition: "Photographer",
+    earnings: [{ name: "Shoot & Edit Fee", amount: 1200 }],
+    deductions: [{ name: "Equipment Ins.", amount: 50 }],
+  },
+  copywriters: {
+    employeePosition: "Copywriter",
+    earnings: [{ name: "Retainer", amount: 3000 }],
+    deductions: [{ name: "Federal Tax", amount: 600 }],
+  },
+  musicians: {
+    employeePosition: "Musician",
+    earnings: [{ name: "Performance Fee", amount: 500 }],
+    deductions: [{ name: "Agent Fee (10%)", amount: 50 }],
+  },
+
+  // --- 7. FINANCIAL & LEGAL USE CASES ---
+  "proof-of-income": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Earnings", amount: 1000 }],
+    deductions: [{ name: "Total Deductions", amount: 200 }],
+  },
+  "car-loans": {
+    employeePosition: "Applicant",
+    earnings: [{ name: "Gross Pay", amount: 2000 }],
+    deductions: [
+      { name: "Tax Withheld", amount: 400 },
+      { name: "Net Pay", amount: 1600 },
+    ],
+  },
+  "apartment-rental": {
+    employeePosition: "Tenant Applicant",
+    earnings: [{ name: "Monthly Gross", amount: 4000 }],
+    deductions: [{ name: "Taxes", amount: 900 }],
+  },
+  "mortgage-application": {
+    employeePosition: "Borrower",
+    earnings: [{ name: "Base Salary", amount: 5500 }],
+    deductions: [{ name: "FICA/Tax", amount: 1200 }],
+  },
+  "credit-card-application": {
+    employeePosition: "Applicant",
+    earnings: [{ name: "Regular Income", amount: 2500 }],
+    deductions: [{ name: "Taxes", amount: 500 }],
+  },
+  "personal-loans": {
+    employeePosition: "Borrower",
+    earnings: [{ name: "Gross Earnings", amount: 1800 }],
+    deductions: [{ name: "Tax", amount: 350 }],
+  },
+  "visa-application": {
+    employeePosition: "Sponsor/Applicant",
+    earnings: [{ name: "Monthly Salary", amount: 3500 }],
+    deductions: [{ name: "Tax", amount: 700 }],
+  },
+  "medicaid-application": {
+    employeePosition: "Applicant",
+    earnings: [{ name: "Gross Income", amount: 1200 }],
+    deductions: [{ name: "Deductions", amount: 0 }],
+  },
+  "child-support": {
+    employeePosition: "Parent",
+    earnings: [{ name: "Net Income", amount: 2200 }],
+    deductions: [{ name: "Garnishments", amount: 0 }],
+  },
+  "divorce-proceedings": {
+    employeePosition: "Party",
+    earnings: [{ name: "Salary", amount: 4000 }],
+    deductions: [{ name: "Taxes", amount: 900 }],
+  },
+  "lost-documents": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Pay", amount: 800 }],
+    deductions: [{ name: "Tax", amount: 150 }],
+  },
+  "self-employed-verification": {
+    employeePosition: "Proprietor",
+    earnings: [{ name: "Owner Draw", amount: 4500 }],
+    deductions: [{ name: "Est. Tax", amount: 1000 }],
+  },
+
+  // --- 8. DOCUMENT TYPES & TIMEFRAMES ---
+  "weekly-pay-stub": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Weekly Wages", amount: 880 }],
+    deductions: [{ name: "Taxes", amount: 180 }],
+  },
+  "biweekly-pay-stub": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Pay", amount: 1760 }],
+    deductions: [{ name: "Taxes", amount: 350 }],
+  },
+  "monthly-pay-stub": {
+    employeePosition: "Salaried Employee",
+    earnings: [{ name: "Monthly Salary", amount: 4000 }],
+    deductions: [{ name: "Taxes", amount: 800 }],
+  },
+  "semi-monthly-pay-stub": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Salary", amount: 2083.33 }],
+    deductions: [{ name: "Taxes", amount: 410 }],
+  },
+  "year-to-date": {
+    employeePosition: "Employee",
+    earnings: [{ name: "YTD Gross Pay", amount: 45000 }],
+    deductions: [{ name: "YTD Tax", amount: 9000 }],
+  },
+  "earnings-statement": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Gross Pay", amount: 1500 }],
+    deductions: [{ name: "Deductions", amount: 300 }],
+  },
+  "w2-form-equivalent": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Annual Wages", amount: 52000 }],
+    deductions: [
+      { name: "Fed Tax Withheld", amount: 6000 },
+      { name: "Social Security", amount: 3224 },
+    ],
+  },
+  "1099-form-equivalent": {
+    employeePosition: "Contractor",
+    earnings: [{ name: "Nonemployee Comp", amount: 48000 }],
+    deductions: [{ name: "Fed Tax", amount: 0 }],
+  },
+  "bonus-pay-stub": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Annual Bonus", amount: 2500 }],
+    deductions: [{ name: "Bonus Tax (22%)", amount: 550 }],
+  },
+
+  // --- 9. US STATES (Standardized 40h @ $25 = $1000/week) ---
+  // Using generic tax estimates
+  california: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1120 }],
+    deductions: [
+      { name: "Fed Tax", amount: 140 },
+      { name: "CA State Tax", amount: 45 },
+      { name: "CA CASDI", amount: 12 },
+    ],
+  },
+  texas: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1000 }],
+    deductions: [
+      { name: "Fed Tax", amount: 120 },
+      { name: "Social Security", amount: 62 },
+    ],
+  },
+  florida: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 960 }],
+    deductions: [
+      { name: "Fed Tax", amount: 115 },
+      { name: "Medicare", amount: 14 },
+    ],
+  },
+  "new-york": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1200 }],
+    deductions: [
+      { name: "Fed Tax", amount: 150 },
+      { name: "NY State Tax", amount: 55 },
+      { name: "NYC Tax", amount: 35 },
+    ],
+  },
+  illinois: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1040 }],
+    deductions: [
+      { name: "Fed Tax", amount: 125 },
+      { name: "IL State Tax", amount: 51 },
+    ],
+  },
+  pennsylvania: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 960 }],
+    deductions: [
+      { name: "Fed Tax", amount: 115 },
+      { name: "PA State Tax", amount: 30 },
+      { name: "Local Tax", amount: 10 },
+    ],
+  },
+  ohio: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 920 }],
+    deductions: [
+      { name: "Fed Tax", amount: 110 },
+      { name: "OH State Tax", amount: 28 },
+    ],
+  },
+  georgia: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 880 }],
+    deductions: [
+      { name: "Fed Tax", amount: 105 },
+      { name: "GA State Tax", amount: 45 },
+    ],
+  },
+  "north-carolina": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 880 }],
+    deductions: [
+      { name: "Fed Tax", amount: 105 },
+      { name: "NC State Tax", amount: 42 },
+    ],
+  },
+  michigan: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 920 }],
+    deductions: [
+      { name: "Fed Tax", amount: 110 },
+      { name: "MI State Tax", amount: 39 },
+    ],
+  },
+  "new-jersey": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1160 }],
+    deductions: [
+      { name: "Fed Tax", amount: 145 },
+      { name: "NJ GI Tax", amount: 35 },
+      { name: "NJ FLI/SDI", amount: 10 },
+    ],
+  },
+  virginia: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1000 }],
+    deductions: [
+      { name: "Fed Tax", amount: 120 },
+      { name: "VA State Tax", amount: 50 },
+    ],
+  },
+  washington: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1280 }],
+    deductions: [
+      { name: "Fed Tax", amount: 160 },
+      { name: "WA Cares Fund", amount: 7 },
+    ],
+  },
+  arizona: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 960 }],
+    deductions: [
+      { name: "Fed Tax", amount: 115 },
+      { name: "AZ State Tax", amount: 25 },
+    ],
+  },
+  massachusetts: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1200 }],
+    deductions: [
+      { name: "Fed Tax", amount: 150 },
+      { name: "MA State Tax", amount: 60 },
+    ],
+  },
+  tennessee: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 880 }],
+    deductions: [{ name: "Fed Tax", amount: 105 }],
+  },
+  indiana: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 840 }],
+    deductions: [
+      { name: "Fed Tax", amount: 100 },
+      { name: "IN State Tax", amount: 27 },
+      { name: "County Tax", amount: 12 },
+    ],
+  },
+  missouri: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 840 }],
+    deductions: [
+      { name: "Fed Tax", amount: 100 },
+      { name: "MO State Tax", amount: 35 },
+    ],
+  },
+  maryland: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1120 }],
+    deductions: [
+      { name: "Fed Tax", amount: 140 },
+      { name: "MD State Tax", amount: 50 },
+      { name: "Local Tax", amount: 28 },
+    ],
+  },
+  wisconsin: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 920 }],
+    deductions: [
+      { name: "Fed Tax", amount: 110 },
+      { name: "WI State Tax", amount: 45 },
+    ],
+  },
+  colorado: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1040 }],
+    deductions: [
+      { name: "Fed Tax", amount: 130 },
+      { name: "CO State Tax", amount: 46 },
+      { name: "FAMLI Tax", amount: 5 },
+    ],
+  },
+  minnesota: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1040 }],
+    deductions: [
+      { name: "Fed Tax", amount: 130 },
+      { name: "MN State Tax", amount: 60 },
+    ],
+  },
+  "south-carolina": {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 840 }],
+    deductions: [
+      { name: "Fed Tax", amount: 100 },
+      { name: "SC State Tax", amount: 55 },
+    ],
+  },
+  alabama: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 800 }],
+    deductions: [
+      { name: "Fed Tax", amount: 95 },
+      { name: "AL State Tax", amount: 35 },
+    ],
+  },
+  louisiana: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 800 }],
+    deductions: [
+      { name: "Fed Tax", amount: 95 },
+      { name: "LA State Tax", amount: 35 },
+    ],
+  },
+  kentucky: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 800 }],
+    deductions: [
+      { name: "Fed Tax", amount: 95 },
+      { name: "KY State Tax", amount: 40 },
+    ],
+  },
+  oregon: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1040 }],
+    deductions: [
+      { name: "Fed Tax", amount: 130 },
+      { name: "OR State Tax", amount: 80 },
+      { name: "Transit Tax", amount: 1 },
+    ],
+  },
+  oklahoma: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 800 }],
+    deductions: [
+      { name: "Fed Tax", amount: 95 },
+      { name: "OK State Tax", amount: 38 },
+    ],
+  },
+  connecticut: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1120 }],
+    deductions: [
+      { name: "Fed Tax", amount: 140 },
+      { name: "CT State Tax", amount: 60 },
+      { name: "CT PFML", amount: 5 },
+    ],
+  },
+  nevada: {
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 880 }],
+    deductions: [{ name: "Fed Tax", amount: 105 }],
+  },
+
+  // --- 10. INTERNATIONAL (Currency Defaults) ---
+  usa: {
+    currencyCode: "USD",
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Hours (40h)", amount: 1000 }],
+    deductions: [{ name: "Federal Tax", amount: 120 }],
+  },
+  uk: {
+    currencyCode: "GBP",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Pay", amount: 2500 }],
+    deductions: [
+      { name: "PAYE Tax", amount: 320 },
+      { name: "National Insurance", amount: 180 },
+    ],
+  },
+  canada: {
+    currencyCode: "CAD",
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Pay (80h)", amount: 2000 }],
+    deductions: [
+      { name: "Fed Tax", amount: 250 },
+      { name: "CPP", amount: 110 },
+      { name: "EI", amount: 32 },
+    ],
+  },
+  australia: {
+    currencyCode: "AUD",
+    employeePosition: "Employee",
+    earnings: [{ name: "Base Salary", amount: 5000 }],
+    deductions: [
+      { name: "PAYG Tax", amount: 1100 },
+      { name: "Superannuation", amount: 500 },
+    ],
+  },
+  india: {
+    currencyCode: "INR",
+    employeePosition: "Employee",
+    earnings: [
+      { name: "Basic Salary", amount: 25000 },
+      { name: "HRA", amount: 10000 },
+      { name: "Special Allowance", amount: 5000 },
+    ],
+    deductions: [
+      { name: "Provident Fund", amount: 3000 },
+      { name: "Professional Tax", amount: 200 },
+    ],
+  },
+  uae: {
+    currencyCode: "AED",
+    employeePosition: "Employee",
+    earnings: [
+      { name: "Basic Salary", amount: 8000 },
+      { name: "Housing Allowance", amount: 3000 },
+    ],
+    deductions: [{ name: "Leaves/Absence", amount: 0 }],
+  },
+  pakistan: {
+    currencyCode: "PKR",
+    employeePosition: "Employee",
+    earnings: [
+      { name: "Basic Pay", amount: 75000 },
+      { name: "Medical Allowance", amount: 7500 },
+    ],
+    deductions: [{ name: "Income Tax", amount: 2000 }],
+  },
+  philippines: {
+    currencyCode: "PHP",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Pay", amount: 20000 }],
+    deductions: [
+      { name: "SSS", amount: 900 },
+      { name: "PhilHealth", amount: 400 },
+      { name: "Pag-IBIG", amount: 100 },
+    ],
+  },
+  "south-africa": {
+    currencyCode: "ZAR",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Salary", amount: 25000 }],
+    deductions: [
+      { name: "PAYE", amount: 4500 },
+      { name: "UIF", amount: 148 },
+    ],
+  },
+  nigeria: {
+    currencyCode: "NGN",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Salary", amount: 150000 }],
+    deductions: [
+      { name: "PAYE Tax", amount: 18000 },
+      { name: "Pension", amount: 12000 },
+    ],
+  },
+  germany: {
+    currencyCode: "EUR",
+    employeePosition: "Angestellter",
+    earnings: [{ name: "Bruttogehalt", amount: 3500 }],
+    deductions: [
+      { name: "Lohnsteuer", amount: 580 },
+      { name: "Rentenversicherung", amount: 330 },
+      { name: "Krankenversicherung", amount: 280 },
+    ],
+  },
+  ireland: {
+    currencyCode: "EUR",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Pay", amount: 3000 }],
+    deductions: [
+      { name: "PAYE", amount: 400 },
+      { name: "USC", amount: 80 },
+      { name: "PRSI", amount: 120 },
+    ],
+  },
+  "new-zealand": {
+    currencyCode: "NZD",
+    employeePosition: "Employee",
+    earnings: [{ name: "Regular Pay", amount: 2240 }],
+    deductions: [
+      { name: "PAYE", amount: 380 },
+      { name: "KiwiSaver", amount: 67 },
+    ],
+  },
+  singapore: {
+    currencyCode: "SGD",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Salary", amount: 4500 }],
+    deductions: [{ name: "CPF Contribution", amount: 900 }],
+  },
+  malaysia: {
+    currencyCode: "MYR",
+    employeePosition: "Employee",
+    earnings: [{ name: "Basic Salary", amount: 3500 }],
+    deductions: [
+      { name: "EPF", amount: 385 },
+      { name: "SOCSO", amount: 17 },
+      { name: "EIS", amount: 7 },
+    ],
+  },
+};
 
 // --- Helper: Editable Field Component ---
 function EditableField({
@@ -188,7 +1405,44 @@ export default function PayslipGeneratorClient() {
   const payslipPrintRef = useRef(null);
   const logoUploadRef = useRef(null);
   const bgWatermarkUploadRef = useRef(null);
+  const searchParams = useSearchParams();
+  const templateParam = searchParams.get("template");
 
+ useEffect(() => {
+    if (templateParam && TEMPLATE_DEFAULTS[templateParam]) {
+      const defaults = TEMPLATE_DEFAULTS[templateParam];
+
+      // 1. Update Earnings
+      if (defaults.earnings) {
+        const newEarnings = defaults.earnings.map((item) => ({
+          id: Date.now() + Math.random(),
+          name: item.name,
+          amount: item.amount,
+        }));
+        setEarnings(newEarnings);
+      }
+
+      // 2. Update Deductions
+      if (defaults.deductions) {
+        const newDeductions = defaults.deductions.map((item) => ({
+          id: Date.now() + Math.random(),
+          name: item.name,
+          amount: item.amount,
+        }));
+        setDeductions(newDeductions);
+      }
+
+      // 3. Update Employee Position (Job Title)
+      if (defaults.employeePosition) {
+        setEmployeePosition(defaults.employeePosition);
+      }
+
+      // 4. Update Currency
+      if (defaults.currencyCode) {
+        setCurrencyCode(defaults.currencyCode);
+      }
+    }
+  }, [templateParam]);
   // Load data from Local Storage on mount
   useEffect(() => {
     setIsTemplateModalOpen(true);
@@ -850,7 +2104,8 @@ export default function PayslipGeneratorClient() {
                     htmlFor="watermarkOpacity"
                     className="text-sm font-medium text-slate-700 dark:text-slate-300"
                   >
-                    Watermark Text Opacity: {Math.round(watermarkOpacity * 100)}%
+                    Watermark Text Opacity: {Math.round(watermarkOpacity * 100)}
+                    %
                   </label>
                   <input
                     type="range"
@@ -952,7 +2207,8 @@ export default function PayslipGeneratorClient() {
                         htmlFor="bgOpacity"
                         className="text-sm font-medium text-slate-700 dark:text-slate-300"
                       >
-                        Watermark Image Opacity: {Math.round(bgWatermarkOpacity * 100)}%
+                        Watermark Image Opacity:{" "}
+                        {Math.round(bgWatermarkOpacity * 100)}%
                       </label>
                       <input
                         type="range"
