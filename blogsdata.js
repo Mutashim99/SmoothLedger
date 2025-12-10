@@ -13,11 +13,18 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          An invoice is more than just a request for payment; it's a reflection
-          of your brand's professionalism. A clear, accurate, and professional
-          invoice builds trust with your clients and is a critical part of a
-          smooth cash flow. This guide will walk you through every component of
-          a perfect invoice.
+          An{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          is more than just a request for payment; it's a reflection of your
+          brand's professionalism. A clear, accurate, and professional invoice
+          builds trust with your clients and is a critical part of a smooth cash
+          flow. This guide will walk you through every component of a perfect
+          invoice.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -75,8 +82,15 @@ export const allBlogs = [
         </blockquote>
         <p>
           Use a tool that offers clean, modern templates (like the ones here at
-          SmoothLedger). Add your company logo—it's the simplest way to add a
-          layer of brand identity and trust. Use a clean, legible font.
+          SmoothLedger). Add your{" "}
+          <Link
+            href="/invoice-generator/graphic-designers"
+            className="text-blue-600 hover:underline"
+          >
+            company logo
+          </Link>
+          —it's the simplest way to add a layer of brand identity and trust. Use
+          a clean, legible font.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -102,8 +116,15 @@ export const allBlogs = [
           </li>
         </ul>
         <p className="mt-4">
-          Using a tool like SmoothLedger's free invoice generator ensures you
-          hit all these points every time, without having to think about it.
+          Using a tool like SmoothLedger's{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            free invoice generator
+          </Link>{" "}
+          ensures you hit all these points every time, without having to think
+          about it.
         </p>
       </>
     ),
@@ -128,8 +149,15 @@ export const allBlogs = [
           1. The Quotation (or Estimate): The "Before" Document
         </h2>
         <p>
-          A quotation is a document you send *before* any work begins. Its
-          purpose is to propose a price and get the client's approval.
+          A{" "}
+          <Link
+            href="/quotation-generator"
+            className="text-blue-600 hover:underline"
+          >
+            quotation
+          </Link>{" "}
+          is a document you send *before* any work begins. Its purpose is to
+          propose a price and get the client's approval.
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -164,8 +192,15 @@ export const allBlogs = [
           2. The Invoice: The "During" or "End" Document
         </h2>
         <p>
-          An invoice is a formal request for payment *after* you have delivered
-          a product or service.
+          An{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          is a formal request for payment *after* you have delivered a product
+          or service.
         </p>
         <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-slate-600 dark:text-slate-300 italic">
           A quotation is a question ("Will you pay this?"). An invoice is a
@@ -193,8 +228,15 @@ export const allBlogs = [
           3. The Receipt: The "After" Document
         </h2>
         <p>
-          A receipt is a proof of payment. It's the document you send *after*
-          the client has paid your invoice.
+          A{" "}
+          <Link
+            href="/invoice-generator/receipt-maker"
+            className="text-blue-600 hover:underline"
+          >
+            receipt
+          </Link>{" "}
+          is a proof of payment. It's the document you send *after* the client
+          has paid your invoice.
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -339,10 +381,16 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          Your payslip (or pay stub) is a critical document that details your
-          pay for a given period. It can be full of confusing codes and
-          acronyms. Let's demystify it by breaking it down into three simple
-          parts.
+          Your{" "}
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 hover:underline"
+          >
+            payslip
+          </Link>{" "}
+          (or pay stub) is a critical document that details your pay for a given
+          period. It can be full of confusing codes and acronyms. Let's
+          demystify it by breaking it down into three simple parts.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -430,7 +478,14 @@ export const allBlogs = [
           Always check this number against what you were expecting. Mistakes can
           happen! Understanding these three parts makes your payslip much less
           intimidating and empowers you to know exactly where your money is
-          going.
+          going. You can create your own for verification using our{" "}
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 hover:underline"
+          >
+            Free Payslip Generator
+          </Link>
+          .
         </p>
       </>
     ),
@@ -445,20 +500,33 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          A quotation is not just a price list; it's a sales document. It's
-          often the final piece of communication a client reviews before
-          deciding whether to hire you or your competitor. A professional,
-          clear, and persuasive quote can be the difference-maker.
+          A{" "}
+          <Link
+            href="/quotation-generator"
+            className="text-blue-600 hover:underline"
+          >
+            quotation
+          </Link>{" "}
+          is not just a price list; it's a sales document. It's often the final
+          piece of communication a client reviews before deciding whether to
+          hire you or your competitor. A professional, clear, and persuasive
+          quote can be the difference-maker.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           1. It's a "Quotation," Not an "Invoice"
         </h2>
         <p>
-          This is the most basic, yet most common, mistake. An invoice is a
-          bill. A quotation is an offer. Sending a document titled "Invoice"
-          before work has started is jarring and looks amateur. Clearly label
-          your document "Quotation" or "Estimate."
+          This is the most basic, yet most common, mistake. An{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          is a bill. A quotation is an offer. Sending a document titled
+          "Invoice" before work has started is jarring and looks amateur.
+          Clearly label your document "Quotation" or "Estimate."
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -748,8 +816,14 @@ export const allBlogs = [
           the tool.
         </blockquote>
         <p className="mt-4">
-          When you just need to send one invoice, speed is the only feature that
-          matters.
+          When you just need to send one{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>
+          , speed is the only feature that matters.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -945,7 +1019,7 @@ export const allBlogs = [
           will be a huge factor in your application. Pay down personal debts and
           fix any errors on your credit report *before* you apply.
         </p>
-        {/* ... (Add 5 more simple tips) ... */}
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           6. Prepare Your Financial Statements
         </h2>
@@ -988,7 +1062,6 @@ export const allBlogs = [
       </>
     ),
   },
-  // Add 3 more blogs
   {
     slug: "how-to-use-a-payslip-generator-for-your-small-business",
     title: "How to Use a Payslip Generator for Your Small Business",
@@ -1010,7 +1083,14 @@ export const allBlogs = [
         </h2>
         <p>
           You might be tempted to just e-transfer your employee their pay. **Do
-          not do this.** A payslip is a legal document. It serves as:
+          not do this.** A{" "}
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 hover:underline"
+          >
+            payslip
+          </Link>{" "}
+          is a legal document. It serves as:
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>A record for your own business accounting.</li>
@@ -1412,8 +1492,15 @@ export const allBlogs = [
           Proforma Invoice Definition
         </h2>
         <p>
-          A Proforma Invoice is a <strong>preliminary bill of sale</strong>. It
-          is sent to a buyer <em>before</em> the goods are shipped or delivered.
+          A{" "}
+          <Link
+            href="/invoice-generator/proforma-invoice"
+            className="text-blue-600 hover:underline"
+          >
+            Proforma Invoice
+          </Link>{" "}
+          is a <strong>preliminary bill of sale</strong>. It is sent to a buyer{" "}
+          <em>before</em> the goods are shipped or delivered.
         </p>
 
         <p className="mt-4">
@@ -1456,7 +1543,14 @@ export const allBlogs = [
         <p className="text-lg text-slate-600 dark:text-slate-300">
           The biggest downside to being your own boss? The paperwork. When you
           apply for a loan, a mortgage, or an apartment rental, the first thing
-          they ask for is "Proof of Income" or "Pay Stubs."
+          they ask for is "Proof of Income" or "
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 hover:underline"
+          >
+            Pay Stubs
+          </Link>
+          ."
         </p>
         <p className="mt-4">
           If you don't have an HR department, you might panic. Handing over
@@ -1514,9 +1608,16 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          The invoice is attached, but the email body is blank. You stare at the
-          cursor. How friendly should you be? How direct? Here are 5 templates
-          you can steal right now.
+          The{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          is attached, but the email body is blank. You stare at the cursor. How
+          friendly should you be? How direct? Here are 5 templates you can steal
+          right now.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -1589,9 +1690,17 @@ export const allBlogs = [
           The Quote: Fixed & Binding
         </h2>
         <p>
-          A <strong>Quote</strong> is a fixed price offer. Once the client
-          accepts it, you cannot change the price, even if the work takes twice
-          as long as you thought.
+          A{" "}
+          <strong>
+            <Link
+              href="/quotation-generator"
+              className="text-blue-600 hover:underline"
+            >
+              Quote
+            </Link>
+          </strong>{" "}
+          is a fixed price offer. Once the client accepts it, you cannot change
+          the price, even if the work takes twice as long as you thought.
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -1607,10 +1716,18 @@ export const allBlogs = [
           The Estimate: An Educated Guess
         </h2>
         <p>
-          An <strong>Estimate</strong> is a rough idea of the price based on
-          current information. It is generally <em>not</em> legally binding to
-          the exact cent, though it should be reasonably accurate (usually
-          within 10-15%).
+          An{" "}
+          <strong>
+            <Link
+              href="/quotation-generator/estimate-maker"
+              className="text-blue-600 hover:underline"
+            >
+              Estimate
+            </Link>
+          </strong>{" "}
+          is a rough idea of the price based on current information. It is
+          generally <em>not</em> legally binding to the exact cent, though it
+          should be reasonably accurate (usually within 10-15%).
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -1672,7 +1789,14 @@ export const allBlogs = [
             <strong>Post-Tax Deductions:</strong> Garnishments, Union Dues.
           </li>
           <li>
-            <strong>Net Pay:</strong> What actually hits your bank.
+            <strong>Net Pay:</strong> What actually hits your bank. Check with a{" "}
+            <Link
+              href="/payslip-generator"
+              className="text-blue-600 hover:underline"
+            >
+              payslip
+            </Link>
+            .
           </li>
         </ol>
       </>
@@ -1736,6 +1860,16 @@ export const allBlogs = [
             to you by law above this limit.
           </li>
         </ul>
+        <p className="mt-4">
+          Need help calculating payments? Use our{" "}
+          <Link
+            href="/loan-calculator"
+            className="text-blue-600 hover:underline"
+          >
+            loan calculator
+          </Link>
+          .
+        </p>
       </>
     ),
   },
@@ -1758,7 +1892,14 @@ export const allBlogs = [
           When to Invoice Hourly
         </h2>
         <p>
-          Use hourly invoicing when the scope is undefined or likely to change.
+          Use hourly{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoicing
+          </Link>{" "}
+          when the scope is undefined or likely to change.
         </p>
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -1809,17 +1950,32 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          On almost every professional payslip, next to the "Current Amount,"
-          there is a column labeled <strong>YTD</strong>.
+          On almost every professional{" "}
+          <Link
+            href="/payslip-generator"
+            className="text-blue-600 hover:underline"
+          >
+            payslip
+          </Link>
+          , next to the "Current Amount," there is a column labeled{" "}
+          <strong>YTD</strong>.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           The Cumulative Tracker
         </h2>
         <p>
-          YTD stands for <strong>Year-To-Date</strong>. It represents the total
-          amount for that category from January 1st of the current year up to
-          the current day.
+          YTD stands for{" "}
+          <strong>
+            <Link
+              href="/payslip-generator/year-to-date"
+              className="text-blue-600 hover:underline"
+            >
+              Year-To-Date
+            </Link>
+          </strong>
+          . It represents the total amount for that category from January 1st of
+          the current year up to the current day.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -1889,7 +2045,14 @@ export const allBlogs = [
           </li>
         </ul>
         <p className="mt-4">
-          If you are a 1099 worker, you are a business owner. You need to use an{" "}
+          If you are a{" "}
+          <Link
+            href="/payslip-generator/1099-form-equivalent"
+            className="text-blue-600 hover:underline"
+          >
+            1099
+          </Link>{" "}
+          worker, you are a business owner. You need to use an{" "}
           <Link
             href="/invoice-generator"
             className="text-blue-600 dark:text-blue-400"
@@ -1920,8 +2083,14 @@ export const allBlogs = [
           The "Digital Shoebox" Method
         </h2>
         <p>
-          Paper fades. Thermal receipts turn white in hot cars. You must
-          digitize.
+          Paper fades. Thermal{" "}
+          <Link
+            href="/invoice-generator/receipt-maker"
+            className="text-blue-600 hover:underline"
+          >
+            receipts
+          </Link>{" "}
+          turn white in hot cars. You must digitize.
         </p>
         <ol className="list-decimal list-inside space-y-2 mt-4 pl-4">
           <li>
@@ -1980,8 +2149,15 @@ export const allBlogs = [
           </li>
         </ul>
         <p className="mt-4">
-          Our Invoice Generator includes a specific "Tax/VAT" column toggle to
-          handle these calculations automatically.
+          Our{" "}
+          <Link
+            href="/invoice-generator/vat-invoice"
+            className="text-blue-600 hover:underline"
+          >
+            Invoice Generator
+          </Link>{" "}
+          includes a specific "Tax/VAT" column toggle to handle these
+          calculations automatically.
         </p>
       </>
     ),
@@ -1999,7 +2175,7 @@ export const allBlogs = [
           ROI is the universal metric for "Is this worth it?" It measures the
           efficiency of an investment.
         </p>
-        [Image of ROI formula diagram]
+
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           The Simple Formula
         </h2>
@@ -2017,7 +2193,14 @@ export const allBlogs = [
         </p>
         <p className="mt-4">
           If your ROI is negative, you are losing money. If it's positive, you
-          are growing.
+          are growing. Use our{" "}
+          <Link
+            href="/profit-margin-calculator"
+            className="text-blue-600 hover:underline"
+          >
+            ROI tools
+          </Link>{" "}
+          to check your numbers.
         </p>
       </>
     ),
@@ -2040,9 +2223,16 @@ export const allBlogs = [
           Currency Confusion
         </h2>
         <p>
-          Always invoice in the currency of your <strong>Client</strong> or a
-          standard reserve currency (USD/EUR). If you invoice in Thai Baht to a
-          US client, they likely cannot process it.
+          Always{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          in the currency of your <strong>Client</strong> or a standard reserve
+          currency (USD/EUR). If you invoice in Thai Baht to a US client, they
+          likely cannot process it.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -2094,8 +2284,14 @@ export const allBlogs = [
           </li>
         </ul>
         <p className="mt-4">
-          Detailed estimates build trust with homeowners and protect you from
-          "scope creep."
+          Detailed{" "}
+          <Link
+            href="/quotation-generator/general-contractors"
+            className="text-blue-600 hover:underline"
+          >
+            estimates
+          </Link>{" "}
+          build trust with homeowners and protect you from "scope creep."
         </p>
       </>
     ),
@@ -2121,8 +2317,16 @@ export const allBlogs = [
         <p>
           Paying yourself a small salary is usually smart to ensure you
           contribute to Social Security/National Insurance (for state pension
-          entitlement). You need to generate a <strong>Payslip</strong> for this
-          every month.
+          entitlement). You need to generate a{" "}
+          <strong>
+            <Link
+              href="/payslip-generator"
+              className="text-blue-600 hover:underline"
+            >
+              Payslip
+            </Link>
+          </strong>{" "}
+          for this every month.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -2146,8 +2350,15 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          You send a perfect quote. The client replies: "This is way over our
-          budget." Do you panic and drop the price? No.
+          You send a perfect{" "}
+          <Link
+            href="/quotation-generator"
+            className="text-blue-600 hover:underline"
+          >
+            quote
+          </Link>
+          . The client replies: "This is way over our budget." Do you panic and
+          drop the price? No.
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -2184,11 +2395,18 @@ export const allBlogs = [
           Profit is "Sales minus Expenses." Cash Flow is "Money In minus Money
           Out." They are not the same timing.
         </p>
-        [Image of cash flow diagram]
+
         <p className="mt-4">
           If you spend $50,000 on materials in January, but your client doesn't
-          pay the $80,000 invoice until April, you have a $30,000 profit, but
-          you might go bankrupt in February because you have $0 cash.
+          pay the $80,000{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          until April, you have a $30,000 profit, but you might go bankrupt in
+          February because you have $0 cash.
         </p>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           The Fix: Invoice Terms
@@ -2222,8 +2440,14 @@ export const allBlogs = [
           Step 2: The "Work Paused" (Day 7 Overdue)
         </h2>
         <p>
-          "To avoid further delays, please settle this invoice so we can
-          continue to Phase 2."
+          "To avoid further delays, please settle this{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          so we can continue to Phase 2."
         </p>
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -2254,9 +2478,22 @@ export const allBlogs = [
     content: (
       <>
         <p className="text-lg text-slate-600 dark:text-slate-300">
-          Your invoice is the last brand impression you leave. If you are a
-          graphic designer sending a Times New Roman invoice made in Word, you
-          are hurting your brand.
+          Your{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice
+          </Link>{" "}
+          is the last brand impression you leave. If you are a
+          <Link
+            href="/invoice-generator/graphic-designers"
+            className="text-blue-600 hover:underline"
+          >
+            graphic designer
+          </Link>{" "}
+          sending a Times New Roman invoice made in Word, you are hurting your
+          brand.
         </p>
 
         <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
