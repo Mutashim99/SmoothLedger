@@ -6,7 +6,7 @@ export async function GET() {
   // --- CONFIGURATION ---
   const HOST = 'smoothledger.com';
   // 👇 REPLACE THIS with the long code from your downloaded file name
-  const API_KEY = '94eadf8476144fbbb7ecb6989e339656'; 
+  const API_KEY = '59e3ef93c9164ceb9434c27b7483c119'; 
   const KEY_LOCATION = `https://${HOST}/${API_KEY}.txt`;
   const SITEMAP_URL = `https://${HOST}/sitemap.xml`;
 
