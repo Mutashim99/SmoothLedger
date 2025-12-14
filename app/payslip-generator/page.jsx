@@ -22,20 +22,39 @@ import { MockPayslipHero } from "@/app/components/MockPayslipHero"; // <-- MODIF
 
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Payslip Generator | Create Pay Stubs Online (No Signup)",
+  title: "Free Pay Stub Generator & Salary Slip Maker | SmoothLedger",
   description:
-    "Easily create accurate, professional PDF payslips for your employees or contractors. 100% free, no sign-up required. Calculates earnings, deductions, and net pay instantly.",
+    "Create free pay stubs and salary slips instantly. No signup required. Download professional PDF payroll documents with automatic calculations.",
   keywords: [
     "free payslip generator",
     "pay stub generator",
     "create payslip online",
-    "free pay stub generator",
+    "salary slip maker",
     "employee payslip template",
     "payslip maker",
-    "salary slip generator",
     "no signup payslip",
     "payroll calculator",
+    "create salary slip",
+    "pay stub creator no signup",
+    "pdf salary slip",
+    "online pay stub maker"
   ],
+  openGraph: {
+    title: 'Free Pay Stub Generator & Salary Slip Maker | SmoothLedger',
+    description: 'Create free pay stubs and salary slips instantly. No signup required. Download professional PDF payroll documents with automatic calculations.',
+    url: 'https://smoothledger.com/payslip-generator',
+    siteName: 'SmoothLedger',
+    images: [
+      {
+        url: 'https://smoothledger.com/SLlogo1.png',
+        width: 1200,
+        height: 630,
+        alt: 'Free Salary Slip and Pay Stub Generator',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 // --- FAQ Content (Already Excellent) ---
@@ -71,6 +90,25 @@ const faqs = [
 export default function PayslipGeneratorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "SmoothLedger Payslip Generator",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web Browser",
+            offers: {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+            },
+            description:
+              "A free online tool to create professional pay stubs and salary slips instantly.",
+          }),
+        }}
+      />
       {/* --- Hero Section --- */}
       {/* --- MODIFIED: Padding adjusted --- */}
       <section className="relative overflow-hidden py-20 min-h-[calc(100vh-4rem)] sm:py-24">

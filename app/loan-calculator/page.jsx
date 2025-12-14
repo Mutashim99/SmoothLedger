@@ -19,20 +19,41 @@ import { MockLoanCalcHero } from "@/app/components/MockLoanCalcHero"; // <-- MOD
 
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Loan Calculator | Calculate Monthly Payments & Amortization",
+  // Title targets the tool name AND the specific feature users hunt for
+  title: "Free Loan Calculator & Amortization Schedule | SmoothLedger",
   description:
-    "Our free loan calculator helps you instantly find your monthly payment, total interest, and see a full amortization schedule. Perfect for mortgages, car loans, or personal loans.",
+    "Calculate monthly payments, total interest, and view full amortization schedules instantly. Free tool for mortgages, car loans, and personal loans.",
   keywords: [
     "free loan calculator",
     "amortization schedule calculator",
     "mortgage payment calculator",
     "car loan calculator",
     "personal loan calculator",
-    "how much is my loan payment",
+    "loan amortization table",
+    "EMI calculator",
+    "calculate monthly interest",
+    "simple loan calculator",
   ],
+  openGraph: {
+    title: "Free Loan Calculator & Amortization Schedule | SmoothLedger",
+    description:
+      "Calculate monthly payments, total interest, and view full amortization schedules instantly. Free tool for mortgages, car loans, and personal loans.",
+    url: "https://smoothledger.com/loan-calculator",
+    siteName: "SmoothLedger",
+    images: [
+      {
+        url: "https://smoothledger.com/SLlogo1.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Loan and Amortization Calculator",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
-// --- FAQ Content (Already Excellent) ---
+// --- FAQ Content ---
 const faqs = [
   {
     question: "Is this loan calculator completely free?",
@@ -60,6 +81,32 @@ const faqs = [
 export default function LoanCalculatorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950 ">
+      {/* --- ADDED: JSON-LD Schema for FinanceApplication --- */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "SmoothLedger Loan Calculator",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web Browser",
+            offers: {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+            },
+            description:
+              "A free online tool to calculate loan payments, interest, and amortization schedules instantly.",
+            featureList: [
+              "Monthly Payment Calculation",
+              "Total Interest Calculation",
+              "Amortization Schedule",
+              "Pie Chart Visualization",
+            ],
+          }),
+        }}
+      />
       {/* --- Hero Section --- */}
       {/* --- MODIFIED: Padding adjusted --- */}
       <section className="relative overflow-hidden min-h-[calc(100vh-4rem)] py-20 sm:py-24">

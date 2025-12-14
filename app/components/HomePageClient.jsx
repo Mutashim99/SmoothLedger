@@ -927,6 +927,38 @@ function FinalCtaSection() {
 export default function HomePageClient() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "SmoothLedger",
+            url: "https://smoothledger.com",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://smoothledger.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "SmoothLedger",
+            url: "https://smoothledger.com",
+            logo: "https://smoothledger.com/SLlogo1.png",
+            sameAs: [
+              "https://twitter.com/smoothledger", // Replace with actual social links if you have them
+              "https://facebook.com/smoothledger",
+            ],
+          }),
+        }}
+      />
       <HeroSection />
       <WhySmoothLedgerSection />
       <ToolsTabsSection />

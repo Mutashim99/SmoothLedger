@@ -19,7 +19,8 @@ import { MockQuotationHero } from "@/app/components/MockQuotationHero"; // <-- M
 
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Quotation Generator | Make PDF Quotes (No Signup)",
+  // Title targets both main keywords: "Quotation Generator" and "Estimate Maker"
+  title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
   description:
     "Create professional PDF price quotes or estimates in seconds. Our free quote maker is 100% free, no signup, no watermarks. Choose a template, add your logo, and win more jobs.",
   keywords: [
@@ -32,8 +33,26 @@ export const metadata = {
     "business quote generator",
     "no signup quote tool",
     "freelance quotation",
-    "how to make a price quote",
+    "construction estimate maker",
+    "proforma invoice generator",
   ],
+  openGraph: {
+    title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
+    description:
+      "Create professional PDF price quotes or estimates in seconds. Our free quote maker is 100% free, no signup, no watermarks.",
+    url: "https://smoothledger.com/quotation-generator",
+    siteName: "SmoothLedger",
+    images: [
+      {
+        url: "https://smoothledger.com/SLlogo1.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Online Quotation and Estimate Maker",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 // --- MODIFIED FAQ Content ---
@@ -65,6 +84,25 @@ const faqs = [
 export default function QuotationGeneratorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "SmoothLedger Quotation Generator",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web Browser",
+            offers: {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+            },
+            description:
+              "A free online tool to create professional price quotes and estimates instantly.",
+          }),
+        }}
+      />
       {/* --- Hero Section --- */}
       {/* --- MODIFIED: Padding adjusted --- */}
       <section className="relative overflow-hidden py-20 min-h-[calc(100vh-4rem)] sm:py-24">

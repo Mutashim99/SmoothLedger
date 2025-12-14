@@ -17,9 +17,10 @@ import { MockProfitMarginHero } from "@/app/components/MockProfitMarginHero"; //
 
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Profit Margin Calculator | Calculate Margin & Markup",
+  // Title targets "Profit Margin" and "Markup" (59 Characters)
+  title: "Free Profit Margin Calculator & Markup Tool | SmoothLedger",
   description:
-    "Instantly calculate your profit margin, gross profit, and markup with our free online calculator. Simple, fast, and no signup required. Perfect for pricing products.",
+    "Instantly calculate gross profit margin, markup percentage, and net profit. 100% free online calculator with reverse margin mode. No signup required.",
   keywords: [
     "profit margin calculator",
     "free profit margin calculator",
@@ -27,14 +28,30 @@ export const metadata = {
     "profit margin formula",
     "markup calculator",
     "gross profit margin calculator",
-    "net profit margin",
+    "reverse margin calculator",
     "margin vs markup",
-    "business profit calculator",
+    "sales price calculator",
   ],
+  openGraph: {
+    title: "Free Profit Margin Calculator & Markup Tool | SmoothLedger",
+    description:
+      "Instantly calculate gross profit margin, markup percentage, and net profit. 100% free online calculator with reverse margin mode.",
+    url: "https://smoothledger.com/profit-margin-calculator",
+    siteName: "SmoothLedger",
+    images: [
+      {
+        url: "https://smoothledger.com/SLlogo1.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Profit Margin and Markup Calculator",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
-// --- MODIFIED FAQ Content ---
-// Re-written to remove redundancy and target new long-tail keywords.
+// --- FAQ Content ---
 const faqs = [
   {
     question: "What is the difference between Gross Profit and Net Profit?",
@@ -62,6 +79,26 @@ const faqs = [
 export default function ProfitMarginLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
+      {/* --- ADDED: JSON-LD Schema for SoftwareApplication --- */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "SmoothLedger Profit Margin Calculator",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web Browser",
+            offers: {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+            },
+            description:
+              "A free online tool to calculate profit margin, markup, and gross profit instantly.",
+          }),
+        }}
+      />
       {/* --- Hero Section --- */}
       {/* --- MODIFIED: Padding adjusted --- */}
       <section className="relative overflow-hidden min-h-[calc(100vh-4rem)] py-20 sm:py-24">

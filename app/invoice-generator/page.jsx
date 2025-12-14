@@ -21,9 +21,9 @@ import { MockInvoiceHero } from "../components/MockInvoiceHero";
 import { CiCreditCard1 } from "react-icons/ci";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Invoice Generator | No Signup, No Credit Card | SmoothLedger",
+  title: "Free Invoice Generator & Online Invoice Maker | SmoothLedger",
   description:
-    "The 100% free invoice generator. Create professional PDF invoices in seconds. No login, no signup, and no credit card required. Get started instantly.",
+    "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
   keywords: [
     "free invoice generator",
     "invoice maker",
@@ -37,7 +37,29 @@ export const metadata = {
     "no signup invoice generator",
     "no credit card required invoice",
     "instant invoice maker",
+    "create invoice pdf",
+    "invoice template free",
+    "no signup invoice creator",
+    "freelance invoice tool",
+    "bill generator",
   ],
+  openGraph: {
+    title: "Free Invoice Generator & Online Invoice Maker | SmoothLedger",
+    description:
+      "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
+    url: "https://smoothledger.com/invoice-generator",
+    siteName: "SmoothLedger",
+    images: [
+      {
+        url: "https://smoothledger.com/SLlogo1.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Online Invoice Maker",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 // --- FAQ Content (Unchanged) ---
@@ -73,6 +95,25 @@ const faqs = [
 export default function InvoiceGeneratorLandingPage() {
   return (
     <div className="bg-white dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "SmoothLedger Invoice Generator",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web Browser",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+            },
+            description:
+              "A free online tool to generate professional PDF invoices instantly without signup.",
+          }),
+        }}
+      />
       {/* --- Hero Section --- */}
       <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden py-20 sm:py-24">
         <div
@@ -145,7 +186,8 @@ export default function InvoiceGeneratorLandingPage() {
               Powerful Features in Our Free Invoice Maker
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Our free invoice maker is packed with features designed to save you time and impress your clients.
+              Our free invoice maker is packed with features designed to save
+              you time and impress your clients.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
