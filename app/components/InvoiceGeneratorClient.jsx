@@ -874,6 +874,91 @@ const TEMPLATE_DEFAULTS = {
     currency: "SAR",
     note: "VAT Registration: 300012345600003",
   },
+  // --- 13. ECOMMERCE & RETAIL PRODUCTS ---
+  "perfume-sellers": {
+    items: [
+      { name: "Eau de Parfum (50ml) - Midnight Rose", qty: 10, price: 45 },
+      { name: "Sample Vial Set", qty: 5, price: 12 },
+    ],
+    note: "Fragile: Handle with care.",
+  },
+  "jewelry-sellers": {
+    items: [
+      { name: "14k Gold Necklace", qty: 1, price: 350 },
+      { name: "Custom Engraving", qty: 1, price: 25 },
+    ],
+    note: "Authenticity certificate included.",
+  },
+  "electronics-sellers": {
+    items: [
+      { name: "Smartphone Model X (128GB)", qty: 1, price: 899 },
+      { name: "Screen Protector Installation", qty: 1, price: 15 },
+    ],
+    note: "1-Year Warranty applied.",
+  },
+  "clothing-boutiques": {
+    items: [
+      { name: "Summer Dress (Size M)", qty: 2, price: 65 },
+      { name: "Silk Scarf", qty: 1, price: 30 },
+    ],
+    note: "No returns on sale items.",
+  },
+  "furniture-stores": {
+    items: [
+      { name: "Modern Sofa (Grey)", qty: 1, price: 1200 },
+      { name: "White Glove Delivery", qty: 1, price: 150 },
+    ],
+    note: "Delivery scheduled for [Date].",
+  },
+  "skincare-brands": {
+    items: [
+      { name: "Hydrating Serum (30ml)", qty: 1, price: 45 },
+      { name: "Daily Moisturizer", qty: 1, price: 32 },
+    ],
+    note: "Cruelty-free products.",
+  },
+  "sneaker-resellers": {
+    items: [
+      { name: "Retro High OG (Size 10)", qty: 1, price: 450 },
+      { name: "Sourcing Fee", qty: 1, price: 50 },
+    ],
+    note: "verified authentic.",
+  },
+  "auto-parts-sellers": {
+    items: [
+      { name: "Brake Caliper Kit (Front)", qty: 1, price: 120 },
+      { name: "Synthetic Oil (5Q Jug)", qty: 2, price: 35 },
+    ],
+    note: "Part number: #99887766.",
+  },
+  "toy-stores": {
+    items: [
+      { name: "Building Block Set (500pc)", qty: 1, price: 60 },
+      { name: "Action Figure Series 1", qty: 3, price: 15 },
+    ],
+    note: "Ages 3+ only.",
+  },
+  "handmade-sellers": {
+    items: [
+      { name: "Hand-knit Wool Blanket", qty: 1, price: 180 },
+      { name: "Gift Wrapping", qty: 1, price: 10 },
+    ],
+    note: "Made with love.",
+  },
+  dropshippers: {
+    items: [
+      { name: "Product SKU #DS-101", qty: 1, price: 29.99 },
+      { name: "International Shipping", qty: 1, price: 12.0 },
+    ],
+    note: "Order processing time: 2-3 days.",
+  },
+  wholesalers: {
+    items: [
+      { name: "Bulk Order: Unit A (Case of 24)", qty: 50, price: 120 },
+      { name: "Pallet Shipping Fee", qty: 1, price: 350 },
+    ],
+    note: "Net 30 terms apply.",
+  },
 };
 // --- Helper: Editable Field Component ---
 function EditableField({

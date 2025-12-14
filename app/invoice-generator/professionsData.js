@@ -912,4 +912,79 @@ export const professions = [
     keyword: "Saudi Invoice",
     desc: "ZATCA compliant invoice generator for Saudi businesses (SAR).",
   },
+  // ===========================================================================
+  // 13. ECOMMERCE & RETAIL PRODUCTS
+  // ===========================================================================
+  {
+    slug: "perfume-sellers",
+    title: "Perfume Sellers",
+    keyword: "Perfume Invoice",
+    desc: "Create elegant invoices for fragrances, essential oils, and wholesale perfume orders.",
+  },
+  {
+    slug: "jewelry-sellers",
+    title: "Jewelry Stores",
+    keyword: "Jewelry Invoice",
+    desc: "Bill for custom jewelry, gemstones, watch repairs, and luxury accessories.",
+  },
+  {
+    slug: "electronics-sellers",
+    title: "Electronics Retailers",
+    keyword: "Gadget Invoice",
+    desc: "Generate invoices for phones, computers, and electronics with warranty details.",
+  },
+  {
+    slug: "clothing-boutiques",
+    title: "Clothing Boutiques",
+    keyword: "Apparel Invoice",
+    desc: "Invoice for fashion retail, wholesale clothing orders, and accessories.",
+  },
+  {
+    slug: "furniture-stores",
+    title: "Furniture Sellers",
+    keyword: "Furniture Invoice",
+    desc: "Bill for custom furniture, home decor items, and delivery fees.",
+  },
+  {
+    slug: "skincare-brands",
+    title: "Skincare Brands",
+    keyword: "Cosmetics Invoice",
+    desc: "Create invoices for beauty products, makeup kits, and skincare bundles.",
+  },
+  {
+    slug: "sneaker-resellers",
+    title: "Sneaker Resellers",
+    keyword: "Sneaker Invoice",
+    desc: "Professional invoices for rare sneakers, streetwear, and vintage resale.",
+  },
+  {
+    slug: "auto-parts-sellers",
+    title: "Auto Parts Sellers",
+    keyword: "Car Parts Invoice",
+    desc: "Invoice for vehicle components, aftermarket parts, and accessories.",
+  },
+  {
+    slug: "toy-stores",
+    title: "Toy & Hobby Sellers",
+    keyword: "Toy Invoice",
+    desc: "Bill for children's toys, collectibles, board games, and hobby kits.",
+  },
+  {
+    slug: "handmade-sellers",
+    title: "Etsy & Handmade Sellers",
+    keyword: "Craft Invoice",
+    desc: "Bill for handmade crafts, personalized gifts, and DIY supplies.",
+  },
+  {
+    slug: "dropshippers",
+    title: "Dropshippers",
+    keyword: "Dropshipping Invoice",
+    desc: "Generate invoices for dropshipped goods and international orders.",
+  },
+  {
+    slug: "wholesalers",
+    title: "Wholesalers",
+    keyword: "Wholesale Invoice",
+    desc: "Bulk billing for large quantity orders, pallets, and B2B supply chains.",
+  },
 ];
