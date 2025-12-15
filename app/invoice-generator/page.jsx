@@ -43,6 +43,9 @@ export const metadata = {
     "freelance invoice tool",
     "bill generator",
   ],
+  alternates: {
+    canonical: "https://smoothledger.com/invoice-generator",
+  },
   openGraph: {
     title: "Free Invoice Generator & Online Invoice Maker | SmoothLedger",
     description:

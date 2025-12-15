@@ -36,6 +36,9 @@ export const metadata = {
     "construction estimate maker",
     "proforma invoice generator",
   ],
+  alternates: {
+    canonical: 'https://smoothledger.com/quotation-generator', 
+  },
   openGraph: {
     title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
     description:

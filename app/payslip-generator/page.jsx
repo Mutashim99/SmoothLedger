@@ -39,6 +39,9 @@ export const metadata = {
     "pdf salary slip",
     "online pay stub maker",
   ],
+  alternates: {
+    canonical: 'https://smoothledger.com/payslip-generator', 
+  },
   openGraph: {
     title: "Free Pay Stub Generator & Salary Slip Maker | SmoothLedger",
     description:

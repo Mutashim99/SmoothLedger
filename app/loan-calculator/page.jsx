@@ -34,6 +34,9 @@ export const metadata = {
     "calculate monthly interest",
     "simple loan calculator",
   ],
+  alternates: {
+    canonical: 'https://smoothledger.com/loan-calculator', 
+  },
   openGraph: {
     title: "Free Loan Calculator & Amortization Schedule | SmoothLedger",
     description:

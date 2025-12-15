@@ -32,6 +32,9 @@ export const metadata = {
     "margin vs markup",
     "sales price calculator",
   ],
+  alternates: {
+    canonical: 'https://smoothledger.com/profit-margin-calculator', 
+  },
   openGraph: {
     title: "Free Profit Margin Calculator & Markup Tool | SmoothLedger",
     description:
