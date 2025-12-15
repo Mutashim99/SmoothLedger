@@ -21,7 +21,7 @@ import { MockInvoiceHero } from "../components/MockInvoiceHero";
 import { CiCreditCard1 } from "react-icons/ci";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Invoice Generator & Online Invoice Maker | SmoothLedger",
+  title: "Free Invoice Generator & Online Invoice Maker - Download PDF",
   description:
     "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
   keywords: [
