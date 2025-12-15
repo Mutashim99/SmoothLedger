@@ -33,7 +33,7 @@ export default function WeeklyUpdate({
                 e.g., https://www.smoothledger.com/logo.png
               */}
               <Img
-                src="./SLlogo1.png" // <-- REPLACE THIS
+                src="https://www.smoothledger.com/SLlogo1.png" // <-- REPLACE THIS
                 width="180"
                 alt="SmoothLedger Logo"
                 style={logo}
