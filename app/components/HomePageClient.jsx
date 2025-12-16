@@ -959,6 +959,26 @@ export default function HomePageClient() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "SmoothLedger",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Free online invoice and payslip generator suite. No login required.",
+            "featureList": "Invoice Generator, Payslip Creator, Quotation Generator, Loan Calculator, Profit Margin Calculator",
+            "softwareRequirements": "Modern Web Browser"
+          }),
+        }}
+      />
       <HeroSection />
       <WhySmoothLedgerSection />
       <ToolsTabsSection />
