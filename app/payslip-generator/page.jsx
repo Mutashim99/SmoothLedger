@@ -128,10 +128,10 @@ export default function PayslipGeneratorLandingPage() {
                 Free Payslip Generator
               </span>
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
-                Free Pay Stub Generator
+                Free Pay Stub & Salary Slip Maker
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
-                  & PDF Maker.
+                  Generate PDF.
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
