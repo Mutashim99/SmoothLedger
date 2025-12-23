@@ -124,7 +124,7 @@ export default function QuotationGeneratorLandingPage() {
                 Create Professional Price Quotes
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
-                  and Win More Jobs.
+                  and Price Estimates.
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">

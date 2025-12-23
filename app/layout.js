@@ -24,7 +24,7 @@ export const metadata = {
 
   // --- 1. SEO Core (from your example) ---
   title: {
-    template: "%s | SmoothLedger",
+    template: "%s",
     default: siteConfig.title,
   },
   description: siteConfig.description,

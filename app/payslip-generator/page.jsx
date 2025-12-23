@@ -8,23 +8,18 @@ import {
   RiDownload2Line,
   RiCheckboxCircleFill,
   RiLayoutLine,
-  RiPaintBrushLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
-  RiSaveLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
-  RiShipLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
-  RiDoorLockBoxLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
-  RiSpeedLine, // <-- This was in your imports, but not used. I've left it, but you could remove it.
+  RiPaintBrushLine,
   RiCalculatorLine,
   RiFileList3Line,
-  RiUserSearchLine,
 } from "react-icons/ri";
 import { FaqAccordion } from "@/app/components/FaqAccordion";
-import { MockPayslipHero } from "@/app/components/MockPayslipHero"; // <-- MODIFIED: Consistent path
+import { MockPayslipHero } from "@/app/components/MockPayslipHero";
 
 // --- Metadata (Already Excellent) ---
 export const metadata = {
   title: "Free Pay Stub & Salary Slip Maker - Download PDF Instantly",
   description:
-    "Instant PDF Download: Create free pay stubs and salary slips. No signup required. Automatic calculations for taxes and deductions. 100% Free.",
+    "Create professional pay stubs and salary slips instantly. Free PDF download, no signup required, and automatic tax calculations.",
   keywords: [
     "free payslip generator",
     "pay stub generator",
@@ -40,12 +35,12 @@ export const metadata = {
     "online pay stub maker",
   ],
   alternates: {
-    canonical: 'https://smoothledger.com/payslip-generator', 
+    canonical: "https://smoothledger.com/payslip-generator",
   },
   openGraph: {
     title: "Free Pay Stub Generator & Salary Slip Maker | SmoothLedger",
     description:
-      "Create free pay stubs and salary slips instantly. No signup required. Download professional PDF payroll documents with automatic calculations.",
+      "Generate professional PDF pay stubs instantly. 100% free, no signup required, and secure browser-based calculations.",
     url: "https://smoothledger.com/payslip-generator",
     siteName: "SmoothLedger",
     images: [
@@ -58,6 +53,13 @@ export const metadata = {
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Pay Stub & Salary Slip Maker | SmoothLedger",
+    description:
+      "Create and download professional pay stubs for free. No signup needed.",
+    images: ["https://smoothledger.com/SLlogo1.png"],
   },
 };
 
@@ -97,20 +99,68 @@ export default function PayslipGeneratorLandingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "SmoothLedger Payslip Generator",
-            applicationCategory: "FinanceApplication",
-            operatingSystem: "Web Browser",
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "USD",
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "SmoothLedger Payslip Generator",
+              applicationCategory: "FinanceApplication",
+              operatingSystem: "Web Browser",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              description:
+                "A free online tool to create professional pay stubs and salary slips instantly.",
             },
-            description:
-              "A free online tool to create professional pay stubs and salary slips instantly.",
-          }),
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "Is this payslip generator completely free to use?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. Our payslip generator is 100% free, with no watermarks, no user limits, and no hidden fees. All features, including calculations and PDF downloads, are available for free.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Do I need to sign up or create an account?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "No. We believe in fast and simple tools. You can create, customize, and download your payslip instantly without ever providing an email or password.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Is my employee's salary and tax information safe?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. All data entered is processed and stored 100% in your own web browser. We never see, save, or have access to any of your sensitive financial data.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "What's the difference between a 'payslip' and a 'pay stub'?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "They are the same thing! 'Payslip' is common in the UK and Commonwealth countries, while 'pay stub' is more common in the US and Canada.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I use this for contractors as well as employees?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Absolutely. You can customize earnings and deductions to suit any arrangement, whether it is for a full-time employee or a simple contractor payment.",
+                  },
+                },
+              ],
+            },
+          ]),
         }}
       />
       {/* --- Hero Section --- */}
