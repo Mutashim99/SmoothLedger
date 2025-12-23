@@ -7,14 +7,17 @@ import { motion } from "framer-motion";
 export function MockLoanCalcHero() {
   return (
     <motion.div
-      initial={{ opacity: 0.5 ,scale: 0.98, y: 20 }}
+      initial={{ opacity: 0.5, scale: 0.98, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className="relative w-full max-w-md mx-auto"
+      className="relative w-full max-w-md mx-auto select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
     >
       {/* Main card */}
       <div className="w-full h-auto p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800">
-        
         <h3 className="text-xl font-semibold text-slate-800 dark:text-white text-center">
           Sample Loan Calculation
         </h3>
@@ -32,7 +35,7 @@ export function MockLoanCalcHero() {
               </span>
             </div>
           </div>
-          
+
           {/* Two-column for Rate and Term */}
           <div className="grid grid-cols-2 gap-4">
             {/* Interest Rate */}
@@ -91,7 +94,7 @@ export function MockLoanCalcHero() {
               {/* Inner hole */}
               <div className="absolute top-1/2 left-1/2 w-14 h-14 bg-white dark:bg-slate-900 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
             </div>
-            
+
             {/* Legend */}
             <div className="space-y-2">
               <div className="flex items-center">

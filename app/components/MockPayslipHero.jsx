@@ -7,17 +7,19 @@ import { motion } from "framer-motion";
 export function MockPayslipHero() {
   return (
     <motion.div
-      initial={{ opacity: 0.5 ,scale: 0.98, y: 20 }}
+      initial={{ opacity: 0.5, scale: 0.98, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className="relative w-full max-w-lg mx-auto"
+      className="relative w-full max-w-lg mx-auto select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
     >
       <div className="w-full h-auto p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800">
-        
         {/* Header: Company Info and Payslip Title */}
         <div className="flex justify-between items-start pb-4 border-b dark:border-slate-700">
           <div className="flex items-center gap-3">
-            
             <div>
               <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                 SmoothLedger Corp
@@ -131,8 +133,6 @@ export function MockPayslipHero() {
             $2,980.00
           </p>
         </div>
-        
-        
       </div>
 
       {/* A subtle decorative element */}

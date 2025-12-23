@@ -8,32 +8,33 @@ import { motion } from "framer-motion";
 export function MockInvoiceHero() {
   return (
     <motion.div
-      initial={{ opacity: 0.5 ,scale: 0.98, y: 20 }}
+      initial={{ opacity: 0.5, scale: 0.98, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className="relative w-full max-w-lg mx-auto"
+      className="relative w-full max-w-lg mx-auto select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
     >
       {/* This is the main invoice card */}
       <div className="w-full h-auto p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800">
-        
         {/* Header: Logo and "INVOICE" */}
         <div className="flex justify-between items-start pb-4 border-b dark:border-slate-700">
           {/* Mock Logo */}
           <div>
-              <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                SmoothLedger Solutions
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                456 Tech Lane, Innovation City, 78901
-              </p>
-            </div>
+            <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              SmoothLedger Solutions
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              456 Tech Lane, Innovation City, 78901
+            </p>
+          </div>
           <div className="text-right">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
               INVOICE
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              #001
-            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">#001</p>
           </div>
         </div>
 
@@ -54,7 +55,7 @@ export function MockInvoiceHero() {
               Web City, 90210
             </p>
           </div>
-          
+
           {/* Bill To */}
           <div className="sm:col-span-1">
             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
@@ -73,13 +74,13 @@ export function MockInvoiceHero() {
 
           {/* Details */}
           <div className="sm:col-span-1 sm:text-right">
-             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               Issued
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
               Nov 15, 2025
             </p>
-             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-2">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-2">
               Due
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
@@ -106,16 +107,24 @@ export function MockInvoiceHero() {
                   <div className="w-1/2 text-sm font-medium text-slate-800 dark:text-slate-100">
                     SaaS Website Design
                   </div>
-                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">1</div>
-                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">$2,500.00</div>
+                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">
+                    1
+                  </div>
+                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">
+                    $2,500.00
+                  </div>
                 </div>
                 {/* Item 2 */}
                 <div className="flex px-6 py-4">
                   <div className="w-1/2 text-sm font-medium text-slate-800 dark:text-slate-100">
                     Logo & Brand Kit
                   </div>
-                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">1</div>
-                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">$1,200.00</div>
+                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">
+                    1
+                  </div>
+                  <div className="w-1/4 text-right text-sm text-slate-600 dark:text-slate-300">
+                    $1,200.00
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,13 +150,12 @@ export function MockInvoiceHero() {
             </div>
           </div>
         </div>
-        
+
         {/* Footer */}
         <div className="mt-8 pt-4 border-t dark:border-slate-700 text-center text-xs text-slate-500 dark:text-slate-400">
           Thank you for your business.
         </div>
       </div>
-
     </motion.div>
   );
 }
