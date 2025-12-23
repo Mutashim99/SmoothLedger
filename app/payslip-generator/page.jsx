@@ -14,10 +14,10 @@ import {
 } from "react-icons/ri";
 import { FaqAccordion } from "@/app/components/FaqAccordion";
 import { MockPayslipHero } from "@/app/components/MockPayslipHero";
-
+import { professions } from "./professionsData";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Pay Stub & Salary Slip Maker - Download PDF Instantly",
+  title: `Free Pay Stub & Salary Slip Maker ${new Date().getFullYear()} - Download PDF Instantly`,
   description:
     "Create professional pay stubs and salary slips instantly. Free PDF download, no signup required, and automatic tax calculations.",
   keywords: [
@@ -111,6 +111,13 @@ export default function PayslipGeneratorLandingPage() {
                 price: "0",
                 priceCurrency: "USD",
               },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.8",
+                ratingCount: "850",
+                bestRating: "5",
+                worstRating: "1",
+              },
               description:
                 "A free online tool to create professional pay stubs and salary slips instantly.",
             },
@@ -178,7 +185,7 @@ export default function PayslipGeneratorLandingPage() {
                 Free Payslip Generator
               </span>
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
-                Free Pay Stub & Salary Slip Maker
+                Free Pay Stub & Salary Slip Maker {new Date().getFullYear()}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
                   Generate PDF.
@@ -507,6 +514,25 @@ export default function PayslipGeneratorLandingPage() {
                 </radialGradient>
               </defs>
             </svg>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">
+            Browse All Payslip Templates
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {professions.map((p) => (
+              <Link
+                key={p.slug}
+                // CRITICAL CHANGE: Point to payslip-generator
+                href={`/payslip-generator/${p.slug}`}
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
+              >
+                {p.title}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

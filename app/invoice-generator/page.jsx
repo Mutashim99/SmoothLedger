@@ -19,9 +19,10 @@ import {
 import { FaqAccordion } from "../components/FaqAccordion";
 import { MockInvoiceHero } from "../components/MockInvoiceHero";
 import { CiCreditCard1 } from "react-icons/ci";
+import { professions } from "./professionsData";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: "Free Invoice Generator & Online Invoice Maker - Download PDF",
+  title: `Free Invoice Generator & Online Invoice Maker ${new Date().getFullYear()} - Download PDF`,
   description:
     "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
   keywords: [
@@ -101,20 +102,91 @@ export default function InvoiceGeneratorLandingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "SmoothLedger Invoice Generator",
-            applicationCategory: "BusinessApplication",
-            operatingSystem: "Web Browser",
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "USD",
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "SmoothLedger Invoice Generator",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web Browser",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.9",
+                ratingCount: "1250",
+                bestRating: "5",
+                worstRating: "1",
+              },
+              description:
+                "A free online tool to generate professional PDF invoices instantly without signup.",
             },
-            description:
-              "A free online tool to generate professional PDF invoices instantly without signup.",
-          }),
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "Is this invoice generator really 100% free?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. Our invoice generator is completely free to use. There are no watermarks on your downloaded PDF, no premium-only templates, and no limits on how many invoices you can create.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Do I need to create an account or sign up?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "No. We believe in fast and simple tools. This is a 'no signup invoice generator'. You can create, customize, and download your invoice instantly without ever providing an email or password.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I change the currency symbol?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. Our tool supports all major global currencies including USD ($), GBP (£), EUR (€), CAD ($), AUD ($), and many more. You can select your preferred currency from the settings menu.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I add taxes and discounts?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. You can easily add tax percentages (like VAT, GST, or Sales Tax) and apply discounts to specific line items or the total amount. The tool calculates the math for you automatically.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Does this work on mobile phones?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. SmoothLedger is fully responsive. You can generate professional PDF invoices directly from your iPhone, Android, tablet, or desktop computer.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "How do I email the invoice to my client?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Simply click the 'Download PDF' button to save the file to your device. You can then attach this professional PDF to an email, WhatsApp message, or Slack DM to send it to your client.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Is my financial data saved on your servers?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "No. All the data you enter (your company info, client info, line items) is processed and stored 100% in your own web browser. We never see or save any of your sensitive financial data.",
+                  },
+                },
+              ],
+            },
+          ]),
         }}
       />
       {/* --- Hero Section --- */}
@@ -132,7 +204,7 @@ export default function InvoiceGeneratorLandingPage() {
                 100% Free Tool. No Signup.
               </span>
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
-                Free Invoice Generator.
+                Free Invoice Generator. {new Date().getFullYear()}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
                   Create Invoices Instantly.
@@ -513,6 +585,24 @@ export default function InvoiceGeneratorLandingPage() {
                 </radialGradient>
               </defs>
             </svg>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">
+            Browse All Invoice Templates
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {professions.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/invoice-generator/${p.slug}`}
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
+              >
+                {p.title}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

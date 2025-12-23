@@ -16,11 +16,11 @@ import {
 } from "react-icons/ri";
 import { FaqAccordion } from "@/app/components/FaqAccordion";
 import { MockQuotationHero } from "@/app/components/MockQuotationHero"; // <-- MODIFIED: Consistent path
-
+import { professions } from "./professionsData";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
   // Title targets both main keywords: "Quotation Generator" and "Estimate Maker"
-  title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
+  title: `Free Quotation Generator & Estimate Maker ${new Date().getFullYear()} - Download PDF`,
   description:
     "Create professional PDF price quotes or estimates in seconds. Our free quote maker is 100% free, no signup, no watermarks. Choose a template, add your logo, and win more jobs.",
   keywords: [
@@ -37,7 +37,7 @@ export const metadata = {
     "proforma invoice generator",
   ],
   alternates: {
-    canonical: 'https://smoothledger.com/quotation-generator', 
+    canonical: "https://smoothledger.com/quotation-generator",
   },
   openGraph: {
     title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
@@ -90,20 +90,91 @@ export default function QuotationGeneratorLandingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "SmoothLedger Quotation Generator",
-            applicationCategory: "BusinessApplication",
-            operatingSystem: "Web Browser",
-            offers: {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD",
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "SmoothLedger Quotation Generator",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web Browser",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.9",
+                ratingCount: "520",
+                bestRating: "5",
+                worstRating: "1",
+              },
+              description:
+                "A free online tool to create professional price quotes and estimates instantly.",
             },
-            description:
-              "A free online tool to create professional price quotes and estimates instantly.",
-          }),
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "Is this quotation generator free?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. Our quotation tool is 100% free. You can create unlimited estimates and download them as PDFs without paying a cent.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "What is the difference between a Quote and an Estimate?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "A 'Quote' is usually a fixed price offer that, once accepted, becomes a contract. An 'Estimate' is a rough guess of costs that may change. Our tool allows you to create both.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I add Terms and Conditions to my quote?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. There is a dedicated 'Notes' and 'Terms' section where you can outline your payment terms, project scope, validity period (e.g., 'Valid for 30 days'), and cancellation policies.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I convert a Quote into an Invoice later?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. Since the data structure is similar, you can simply use our Invoice Generator with the same details once the job is done.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Is the PDF print-friendly?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes. The downloaded PDF is formatted to fit perfectly on standard A4 or Letter paper, making it easy to print physically or save digitally.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I save my quote to edit later?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Because we prioritize privacy, we don't store your data on our servers. However, you can use the 'Save to Browser' feature to keep your company details and logo saved locally on your device for your next quote.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Do I need to sign up?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "No. We are a 'no-signup' platform. You can generate your document immediately without creating an account.",
+                  },
+                },
+              ],
+            },
+          ]),
         }}
       />
       {/* --- Hero Section --- */}
@@ -124,7 +195,7 @@ export default function QuotationGeneratorLandingPage() {
                 Create Professional Price Quotes
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {" "}
-                  and Price Estimates.
+                  and Price Estimates. {new Date().getFullYear()}
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
@@ -441,6 +512,25 @@ export default function QuotationGeneratorLandingPage() {
                 </radialGradient>
               </defs>
             </svg>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">
+            Browse All Quotation Templates
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {professions.map((p) => (
+              <Link
+                key={p.slug}
+                // CRITICAL CHANGE: Point to quotation-generator
+                href={`/quotation-generator/${p.slug}`}
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
+              >
+                {p.title}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

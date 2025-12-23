@@ -301,6 +301,24 @@ export default function ProfessionLandingPage({ params }) {
           </div>
         </div>
       </section>
+      <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">
+            Browse All Invoice Templates
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {professions.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/invoice-generator/${p.slug}`}
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
+              >
+                {p.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

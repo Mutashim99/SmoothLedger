@@ -74,7 +74,7 @@ export default function ProfessionQuotationPage({ params }) {
         "Yes, 100% free. You can create and download unlimited PDFs without any watermarks or hidden fees.",
     },
   ];
-   const jsonLd = {
+  const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: `Free ${data.title} Quotation Generator`,
@@ -295,6 +295,25 @@ export default function ProfessionQuotationPage({ params }) {
               Generate Free Quote
               <RiArrowRightSLine className="ml-2 h-5 w-5" />
             </Link>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">
+            Browse All Quotation Templates
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {professions.map((p) => (
+              <Link
+                key={p.slug}
+                // CRITICAL CHANGE: Point to quotation-generator
+                href={`/quotation-generator/${p.slug}`}
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
+              >
+                {p.title}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
