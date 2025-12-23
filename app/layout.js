@@ -117,13 +117,22 @@ export default function RootLayout({ children }) {
     ]
   };
 
-  const webSiteSchema = {
+const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "SmoothLedger",
     "url": siteConfig.url,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        // This tells Google how to search your site. 
+        // Even if you don't have a search bar yet, this is safe to add.
+        "urlTemplate": `${siteConfig.url}/search?q={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
   };
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}>
