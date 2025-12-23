@@ -10,7 +10,7 @@ export function MockQuotationHero() {
       initial={{ opacity: 0.5, scale: 0.98, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className="relative w-full max-w-lg mx-autoselect-none" // Added select-none so users don't accidentally highlight it
+      className="relative w-full max-w-lg mx-auto select-none" // Added select-none so users don't accidentally highlight it
       /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
       data-nosnippet=""
       /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
