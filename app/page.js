@@ -1,5 +1,5 @@
 import HomePageClient from "./components/HomePageClient";
-
+import FooterSEO from "./components/FooterSEO"; // Ensure path is correct
 // Optimized Metadata for Home Page
 export const metadata = {
   title: "Free Financial Tools for Freelancers & Small Business | SmoothLedger",
@@ -37,5 +37,12 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <HomePageClient />;
+  return (
+    <>
+      <HomePageClient />
+      {/* This creates a powerful SEO "Hub" on your homepage 
+          that links directly to every deep page on your site. */}
+      <FooterSEO />
+    </>
+  );
 }

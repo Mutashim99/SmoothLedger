@@ -38,7 +38,13 @@ function classNames(...classes) {
 // --- Mockup Components for Hero & Tabs ---
 function MockupInvoice() {
   return (
-    <div className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800">
+    <div
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
+    >
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-bold text-blue-600">Your Company</h3>
@@ -106,7 +112,13 @@ function MockupInvoice() {
 
 function MockupPayslip() {
   return (
-    <div className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800">
+    <div
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
+    >
       <div className="text-center">
         <h2 className="text-2xl font-bold uppercase text-blue-600">PAYSLIP</h2>
         <p className="text-sm font-medium">Employee Name</p>
@@ -150,7 +162,13 @@ function MockupPayslip() {
 
 function MockupQuotation() {
   return (
-    <div className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800">
+    <div
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
+    >
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-bold text-blue-600">Your Company</h3>
@@ -200,7 +218,13 @@ function MockupQuotation() {
 
 function MockupLoan() {
   return (
-    <div className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800">
+    <div
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
+    >
       <div className="text-center mb-4">
         <div className="text-sm text-slate-500">Monthly Payment</div>
         <div className="text-4xl font-bold text-blue-600">$920.80</div>
@@ -231,7 +255,13 @@ function MockupLoan() {
 
 function MockupMargin() {
   return (
-    <div className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800">
+    <div
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
+      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      data-nosnippet=""
+      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
+      aria-hidden="true"
+    >
       <div className="text-center mb-4">
         <div className="text-sm text-slate-500">Profit Margin</div>
         <div className="text-4xl font-bold text-blue-600">50.00%</div>
@@ -927,55 +957,26 @@ function FinalCtaSection() {
 export default function HomePageClient() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "SmoothLedger",
-            url: "https://smoothledger.com",
-            potentialAction: {
-              "@type": "SearchAction",
-              target: "https://smoothledger.com/search?q={search_term_string}",
-              "query-input": "required name=search_term_string",
-            },
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "SmoothLedger",
-            url: "https://smoothledger.com",
-            logo: "https://smoothledger.com/SLlogo1.png",
-            sameAs: [
-              "https://twitter.com/smoothledger", // Replace with actual social links if you have them
-              "https://facebook.com/smoothledger",
-            ],
-          }),
-        }}
-      />
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "SmoothLedger",
-            "applicationCategory": "BusinessApplication",
-            "operatingSystem": "Web",
-            "offers": {
+            name: "SmoothLedger",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            offers: {
               "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
+              price: "0",
+              priceCurrency: "USD",
             },
-            "description": "Free online invoice and payslip generator suite. No login required.",
-            "featureList": "Invoice Generator, Payslip Creator, Quotation Generator, Loan Calculator, Profit Margin Calculator",
-            "softwareRequirements": "Modern Web Browser"
+            description:
+              "Free online invoice and payslip generator suite. No login required.",
+            featureList:
+              "Invoice Generator, Payslip Creator, Quotation Generator, Loan Calculator, Profit Margin Calculator",
+            softwareRequirements: "Modern Web Browser",
           }),
         }}
       />

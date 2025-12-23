@@ -6,7 +6,7 @@ import { ModernNavbar } from "@/app/components/ModernNavbar";
 import { ModernFooter } from "@/app/components/ModernFooter"; // <-- NEW IMPORT
 import { Analytics } from '@vercel/analytics/next';
 // DELETED: Removed Ri... icons, they are now in ModernFooter.jsx
-import FooterSEO from "./components/FooterSEO"; // Ensure path is correct
+
 const inter = Inter({ subsets: ["latin"] });
 
 // --- NEW: ADVANCED METADATA ---
@@ -155,7 +155,7 @@ const webSiteSchema = {
           <ModernNavbar /> 
           <main className="flex-grow">{children}</main>
           <Analytics />
-          <FooterSEO />
+          
           <ModernFooter /> {/* <-- UPDATED: Now using the imported Client Component */}
         </ThemeProvider>
       </body>
