@@ -1,7 +1,6 @@
 /* File: app/invoice-generator/page.jsx */
 
 import Link from "next/link";
-// import Image from "next/image"; // Removed - Not used in this file
 import {
   RiArrowRightSLine,
   RiShieldCheckLine,
@@ -12,45 +11,42 @@ import {
   RiShipLine,
   RiDoorLockBoxLine,
   RiSpeedLine,
-  RiCreditCardLine, // <-- Swapped for consistency
-  RiLayoutLine, // <-- Added for "Templates" feature
+  RiCreditCardLine,
+  RiLayoutLine,
 } from "react-icons/ri";
-// import { CiCreditCard1 } from "react-icons/ci"; // Removed for consistency
 import { FaqAccordion } from "../components/FaqAccordion";
 import { MockInvoiceHero } from "../components/MockInvoiceHero";
 import { CiCreditCard1 } from "react-icons/ci";
 import { professions } from "./professionsData";
-// --- Metadata (Already Excellent) ---
+
+// --- Metadata (OPTIMIZED FOR HIGH CTR) ---
 export const metadata = {
-  title: `Free Invoice Generator & Online Invoice Maker ${new Date().getFullYear()} - Download PDF`,
+  // Title Strategy: [Main Keyword] + [No Signup Hook] + [PDF Action]
+  // Length: ~59 Characters (Perfect for Google & Bing)
+  title: "Free Invoice Generator (No Signup) - Download PDF Instantly",
+
   description:
-    "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
+    "Create professional PDF invoices instantly. 100% free, no login required, and no watermarks. Choose from 5+ templates and download printable PDFs.",
+
   keywords: [
     "free invoice generator",
-    "invoice maker",
-    "create invoice online",
-    "pdf invoice generator",
-    "invoice template",
+    "invoice maker pdf", // <--- High intent keyword
+    "simple invoice template", // <--- Bing users love "Simple"
+    "blank invoice maker", // <--- Specific search term
+    "printable invoice generator",
     "no signup invoice",
-    "freelance invoice",
-    "small business invoicing",
-    "free invoice generator no login",
-    "no signup invoice generator",
-    "no credit card required invoice",
-    "instant invoice maker",
-    "create invoice pdf",
-    "invoice template free",
-    "no signup invoice creator",
-    "freelance invoice tool",
-    "bill generator",
+    "freelance invoice maker",
+    "bill generator free",
+    "invoice creator no watermark",
+    "instant invoice pdf",
   ],
   alternates: {
     canonical: "https://smoothledger.com/invoice-generator",
   },
   openGraph: {
-    title: "Free Invoice Generator & Online Invoice Maker | SmoothLedger",
+    title: "Free Invoice Generator (No Signup) - Download PDF",
     description:
-      "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Choose from 5+ templates and download now.",
+      "Create professional PDF invoices instantly with our free invoice maker. No login or credit card required. Download now.",
     url: "https://smoothledger.com/invoice-generator",
     siteName: "SmoothLedger",
     images: [
@@ -198,11 +194,12 @@ export default function InvoiceGeneratorLandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* --- MODIFIED: Fixed large gap --- */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-16 lg:gap-24 items-center">
-            {/* Text Content (Unchanged) */}
+            {/* Text Content */}
             <div className="text-center lg:text-left">
               <span className="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-4 py-1 rounded-full text-sm font-medium">
                 100% Free Tool. No Signup.
               </span>
+              {/* Note: Keeping Year Here for User Trust, but NOT in Title Tag */}
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
                 Free Invoice Generator. {new Date().getFullYear()}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -256,7 +253,6 @@ export default function InvoiceGeneratorLandingPage() {
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               Powerful Features in Our Free Invoice Maker
             </h2>
@@ -266,7 +262,6 @@ export default function InvoiceGeneratorLandingPage() {
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* --- MODIFIED: Fixed duplicate icon --- */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiLayoutLine className="h-6 w-6" />
@@ -279,7 +274,6 @@ export default function InvoiceGeneratorLandingPage() {
                 modern and creative to classic and minimal.
               </p>
             </div>
-            {/* Feature 2 */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiPaintBrushLine className="h-6 w-6" />
@@ -292,7 +286,6 @@ export default function InvoiceGeneratorLandingPage() {
                 perfectly match your company's branding.
               </p>
             </div>
-            {/* Feature 3 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiDownload2Line className="h-6 w-6" />
@@ -305,7 +298,6 @@ export default function InvoiceGeneratorLandingPage() {
                 immediately. No waiting, no emails, just your file.
               </p>
             </div>
-            {/* Feature 4 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiShieldCheckLine className="h-6 w-6" />
@@ -318,7 +310,6 @@ export default function InvoiceGeneratorLandingPage() {
                 your sensitive client or financial information.
               </p>
             </div>
-            {/* Feature 5 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiSaveLine className="h-6 w-6" />
@@ -331,7 +322,6 @@ export default function InvoiceGeneratorLandingPage() {
                 your company info for faster invoicing next time.
               </p>
             </div>
-            {/* Feature 6 (Unchanged) */}
             <div className="p-8 bg-white dark:bg-slate-950 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiShipLine className="h-6 w-6" />
@@ -352,7 +342,6 @@ export default function InvoiceGeneratorLandingPage() {
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               A Free Invoice Maker Built for Speed & Privacy
             </h2>
@@ -362,7 +351,6 @@ export default function InvoiceGeneratorLandingPage() {
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Item 1 (Unchanged) */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiDoorLockBoxLine className="h-6 w-6" />
@@ -376,7 +364,6 @@ export default function InvoiceGeneratorLandingPage() {
                 start making your invoice.
               </p>
             </div>
-            {/* --- MODIFIED: Swapped icon for consistency --- */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <CiCreditCard1 className="h-6 w-6" />
@@ -392,7 +379,6 @@ export default function InvoiceGeneratorLandingPage() {
                 . We will never ask for payment or put watermarks on your PDF.
               </p>
             </div>
-            {/* Item 3 (Unchanged) */}
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
                 <RiSpeedLine className="h-6 w-6" />
@@ -420,9 +406,7 @@ export default function InvoiceGeneratorLandingPage() {
               Go from zero to a professional, downloaded PDF in under a minute.
             </p>
           </div>
-          {/* --- MODIFIED: Cleaned up layout code --- */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {/* Step 1 */}
             <div className="p-6">
               <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 1
@@ -435,7 +419,6 @@ export default function InvoiceGeneratorLandingPage() {
                 totals, taxes, and discounts are calculated automatically.
               </p>
             </div>
-            {/* Step 2 */}
             <div className="p-6">
               <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 2
@@ -448,7 +431,6 @@ export default function InvoiceGeneratorLandingPage() {
                 and fonts to match your brand's unique style.
               </p>
             </div>
-            {/* Step 3 */}
             <div className="p-6">
               <div className="flex justify-center items-center h-16 w-16 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-2xl font-bold mx-auto">
                 3
@@ -472,7 +454,6 @@ export default function InvoiceGeneratorLandingPage() {
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               What Makes a Perfect Invoice?
             </h2>
-            {/* --- MODIFIED: Added keyword --- */}
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
               Our <strong>free invoice maker</strong> helps you create a
               perfect, professional document. Here’s what every good{" "}
@@ -551,7 +532,6 @@ export default function InvoiceGeneratorLandingPage() {
       <section className="bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
           <div className="relative isolate overflow-hidden bg-blue-600 dark:bg-blue-800 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
-            {/* --- MODIFIED: Added keyword --- */}
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Ready to Get Paid? (100% Free)
             </h2>
@@ -588,6 +568,7 @@ export default function InvoiceGeneratorLandingPage() {
           </div>
         </div>
       </section>
+
       <section className="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { professions } from "../professionsData"; // Importing Quote Data
+import { professions } from "../professionsData";
 import {
   RiArrowRightSLine,
   RiFileList3Line,
@@ -14,8 +14,8 @@ import {
   RiFileTextLine,
   RiSaveLine,
 } from "react-icons/ri";
-import { FaqAccordion } from "@/app/components/FaqAccordion";
-import { MockQuotationHero } from "@/app/components/MockQuotationHero";
+import { FaqAccordion } from "../../components/FaqAccordion";
+import { MockQuotationHero } from "../../components/MockQuotationHero";
 
 // 1. Generate Static Params
 export async function generateStaticParams() {
@@ -24,21 +24,65 @@ export async function generateStaticParams() {
   }));
 }
 
-// 2. Dynamic Metadata
+// 2. Dynamic Metadata (SMART LOGIC FOR QUOTE/ESTIMATE/BID/PROPOSAL)
 export async function generateMetadata({ params }) {
   const professionData = professions.find((p) => p.slug === params.profession);
 
   if (!professionData) return {};
 
+  const k = professionData.keyword;
+  const lowerK = k.toLowerCase();
+
+  // Detect which term is used in the keyword
+  const hasQuote = lowerK.includes("quote") || lowerK.includes("quotation");
+  const hasEstimate = lowerK.includes("estimate");
+  const hasBid = lowerK.includes("bid");
+  const hasProposal = lowerK.includes("proposal");
+  
+  // Determine the correct suffix to avoid "Quote Quote" duplication
+  // If the keyword is "Roofing Quote", suffix is "Template"
+  // If the keyword is "Proforma", suffix is "Quote Template"
+  let suffix = "Quote Template";
+  if (hasQuote || hasEstimate || hasBid || hasProposal) {
+    suffix = "Template";
+  }
+
+  // Dynamic Keyword Generation
+  const dynamicKeywords = [
+    `free ${k} template`,
+    `${k} maker pdf`,
+    `printable ${k} form`,
+    `blank ${k}`,
+    `simple ${k} format`,
+    `online ${professionData.title} quote generator`,
+    "no signup quotation maker",
+  ];
+
   return {
-    title: `Free ${professionData.keyword} Generator | SmoothLedger`,
-    description: `Create professional ${professionData.keyword.toLowerCase()}s in seconds. ${professionData.desc} No signup required.`,
+    // Title Strategy: "Free Roofing Quote Template (No Signup) - Download PDF"
+    title: `Free ${k} ${suffix} (No Signup) - Download PDF`,
+    
+    description: `Create professional ${k}s in seconds. 100% free, no login required. Download printable PDF templates for ${professionData.title}.`,
+    
+    keywords: dynamicKeywords,
+    
     alternates: {
       canonical: `https://smoothledger.com/quotation-generator/${params.profession}`,
     },
     openGraph: {
-      title: `Free Quote Maker for ${professionData.title}`,
+      title: `Free ${k} Template (PDF)`,
       description: professionData.desc,
+      url: `https://smoothledger.com/quotation-generator/${params.profession}`,
+      siteName: "SmoothLedger",
+      images: [
+        {
+          url: "https://smoothledger.com/SLlogo1.png",
+          width: 1200,
+          height: 630,
+          alt: `Free Quote Generator for ${professionData.title}`,
+        },
+      ],
+      type: "website",
     },
   };
 }
@@ -51,36 +95,44 @@ export default function ProfessionQuotationPage({ params }) {
     return notFound();
   }
 
+  // Determine the document type string for UI text (e.g. "Estimate" or "Quote")
+  const kLower = data.keyword.toLowerCase();
+  let docType = "Quote";
+  if (kLower.includes("estimate")) docType = "Estimate";
+  if (kLower.includes("bid")) docType = "Bid";
+  if (kLower.includes("proposal")) docType = "Proposal";
+
   // FAQs customized for the profession context
   const faqs = [
     {
-      question: `Is this quote template suitable for ${data.title}?`,
+      question: `Is this ${docType.toLowerCase()} template free for ${data.title}?`,
       answer:
-        "Yes. Our templates are fully customizable. You can edit the line items, terms, and notes to perfectly fit the specific needs of your industry.",
+        "Yes. Our generator is completely free. You can create unlimited documents and download them as PDFs without any watermarks.",
     },
     {
-      question: "Is this quote legally binding?",
+      question: "Is this legally binding?",
       answer:
-        "Generally, once a client accepts and signs a formal quotation, it becomes a binding contract. Always ensure your 'Terms & Conditions' section is clear.",
+        "Generally, once a client accepts and signs a formal quotation or proposal, it becomes a binding contract. Always ensure your 'Terms & Conditions' section is clear.",
     },
     {
-      question: "Can I convert this quote to an invoice later?",
+      question: "Can I convert this to an invoice later?",
       answer:
-        "Currently, you can save your client details in the browser. When the job is done, you can easily switch to our Invoice Generator and auto-fill the details.",
+        "Yes. You can save your client details in the browser. When the job is done, simply switch to our Invoice Generator to bill them.",
     },
     {
-      question: "Is it free to download the PDF?",
+      question: "Do I need an account?",
       answer:
-        "Yes, 100% free. You can create and download unlimited PDFs without any watermarks or hidden fees.",
+        "No. We are a no-signup tool. You can create your document immediately without logging in.",
     },
   ];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: `Free ${data.title} Quotation Generator`,
-    headline: `Create professional ${data.keyword} Quotations in seconds`,
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Any",
+    name: `Free ${data.title} ${docType} Generator`,
+    headline: `Create professional ${data.keyword}s instantly`,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web Browser",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -93,6 +145,7 @@ export default function ProfessionQuotationPage({ params }) {
     },
     featureList: "PDF Export, No Signup, Customizable Branding",
   };
+
   return (
     <div className="bg-white dark:bg-slate-950">
       <script
@@ -120,8 +173,8 @@ export default function ProfessionQuotationPage({ params }) {
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
-                {data.desc} Create professional, winning price quotes in under
-                60 seconds. No signup required.
+                {data.desc} Create professional, winning price {docType.toLowerCase()}s in under
+                60 seconds. <strong>No signup required.</strong>
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -222,7 +275,7 @@ export default function ProfessionQuotationPage({ params }) {
               How to Create a {data.keyword}
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Build a winning estimate in 3 simple steps.
+              Build a winning {docType.toLowerCase()} in 3 simple steps.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -307,7 +360,6 @@ export default function ProfessionQuotationPage({ params }) {
             {professions.map((p) => (
               <Link
                 key={p.slug}
-                // CRITICAL CHANGE: Point to quotation-generator
                 href={`/quotation-generator/${p.slug}`}
                 className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
               >

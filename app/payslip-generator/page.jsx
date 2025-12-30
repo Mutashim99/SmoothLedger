@@ -17,14 +17,18 @@ import { MockPayslipHero } from "@/app/components/MockPayslipHero";
 import { professions } from "./professionsData";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
-  title: `Free Pay Stub & Salary Slip Maker ${new Date().getFullYear()} - Download PDF Instantly`,
+  title: "Free Payslip Generator (No Signup) - Download PDF Instantly",
+  
   description:
-    "Create professional pay stubs and salary slips instantly. Free PDF download, no signup required, and automatic tax calculations.",
+    "Create professional payslips and pay stubs instantly. 100% free, no signup required, and no watermarks. Automatic tax calculations and printable PDF download.",
   keywords: [
     "free payslip generator",
+    "pay stub generator free pdf", // <--- Added based on your 11.76% CTR data
+    "salary slip maker", // <--- Added (16 impressions on Bing)
+    "no watermark pay stub", // <--- Added (Users searched for this)
+    "free printable pay stubs",
     "pay stub generator",
     "create payslip online",
-    "salary slip maker",
     "employee payslip template",
     "payslip maker",
     "no signup payslip",

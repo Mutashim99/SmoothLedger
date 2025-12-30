@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { professions } from "../professionsData"; // Importing the payslip specific data
+import { professions } from "../professionsData";
 import {
   RiArrowRightSLine,
   RiCheckboxCircleFill,
@@ -16,28 +16,57 @@ import {
 import { FaqAccordion } from "@/app/components/FaqAccordion";
 import { MockPayslipHero } from "@/app/components/MockPayslipHero";
 
-// 1. Generate Static Params (Builds HTML for all 50+ professions at build time)
+// 1. Generate Static Params (Builds HTML for all professions at build time)
 export async function generateStaticParams() {
   return professions.map((p) => ({
     profession: p.slug,
   }));
 }
 
-// 2. Dynamic Metadata
+// 2. Dynamic Metadata (OPTIMIZED)
 export async function generateMetadata({ params }) {
   const professionData = professions.find((p) => p.slug === params.profession);
 
   if (!professionData) return {};
 
+  // Dynamic Keyword Generation
+  const dynamicKeywords = [
+    `free ${professionData.keyword} payslip generator`,
+    `${professionData.keyword} pay stub maker pdf`,
+    `printable ${professionData.keyword} salary slip`,
+    `free pay stub generator for ${professionData.title}`,
+    `${professionData.keyword} payslip template free`,
+    "no signup payslip generator",
+    "instant pdf pay stub",
+    "no watermark salary slip",
+  ];
+
   return {
-    title: `Free Payslip Generator for ${professionData.title} | SmoothLedger`,
-    description: `Create accurate ${professionData.keyword} pay stubs in seconds. ${professionData.desc} No signup required.`,
+    // Title Strategy: [Job] + [No Signup] + [PDF Hook]
+    // Example: "Free Teacher Payslip Generator (No Signup) - Download PDF"
+    title: `Free ${professionData.title} Payslip Generator (No Signup) - Download PDF`,
+    
+    description: `Create professional ${professionData.keyword} payslips and pay stubs instantly. 100% free, no signup required. Automatic tax calculations and printable PDF download.`,
+    
+    keywords: dynamicKeywords, // <--- Now injecting specific keywords
+    
     alternates: {
       canonical: `https://smoothledger.com/payslip-generator/${params.profession}`,
     },
     openGraph: {
-      title: `Free Pay Stub Maker for ${professionData.title}`,
+      title: `Free Pay Stub Maker for ${professionData.title} (PDF)`,
       description: professionData.desc,
+      url: `https://smoothledger.com/payslip-generator/${params.profession}`,
+      siteName: "SmoothLedger",
+      images: [
+        {
+          url: "https://smoothledger.com/SLlogo1.png",
+          width: 1200,
+          height: 630,
+          alt: `Free Payslip Generator for ${professionData.title}`,
+        },
+      ],
+      type: "website",
     },
   };
 }
@@ -78,9 +107,9 @@ export default function ProfessionPayslipPage({ params }) {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: `Free ${data.title} Payslip Generator`,
-    headline: `Create professional ${data.keyword} Payslips in seconds`,
+    headline: `Create professional ${data.keyword} Payslips instantly with PDF download`,
     applicationCategory: "FinanceApplication",
-    operatingSystem: "Any",
+    operatingSystem: "Web Browser",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -91,8 +120,9 @@ export default function ProfessionPayslipPage({ params }) {
       ratingValue: "4.8",
       ratingCount: "1024",
     },
-    featureList: "PDF Export, No Signup, Customizable Branding",
+    featureList: "PDF Export, No Signup, Customizable Branding, No Watermarks",
   };
+
   return (
     <div className="bg-white dark:bg-slate-950">
       <script
@@ -120,8 +150,8 @@ export default function ProfessionPayslipPage({ params }) {
                 </span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
-                {data.desc} Generate professional PDF pay stubs instantly. No
-                signup required.
+                {data.desc} Generate professional PDF pay stubs instantly.{" "}
+                <strong>No signup required.</strong>
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -129,7 +159,7 @@ export default function ProfessionPayslipPage({ params }) {
                   href={`/payslip-generator/create?template=${data.slug}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                 >
-                  Create {data.keyword} Slip
+                  Create {data.keyword} Slip (PDF)
                   <RiArrowRightSLine className="ml-2 h-5 w-5" />
                 </Link>
               </div>
@@ -145,7 +175,7 @@ export default function ProfessionPayslipPage({ params }) {
                 </span>
                 <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <RiCheckboxCircleFill className="h-5 w-5 text-green-500" />
-                  Accurate Math
+                  Instant PDF
                 </span>
               </div>
             </div>
@@ -307,7 +337,6 @@ export default function ProfessionPayslipPage({ params }) {
             {professions.map((p) => (
               <Link
                 key={p.slug}
-                // CRITICAL CHANGE: Point to payslip-generator
                 href={`/payslip-generator/${p.slug}`}
                 className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
               >

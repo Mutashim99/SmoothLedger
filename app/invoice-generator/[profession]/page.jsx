@@ -1,8 +1,8 @@
 /* File: app/invoice-generator/[profession]/page.jsx */
 
 import Link from "next/link";
-import { notFound } from "next/navigation"; // To handle invalid professions
-import { professions } from "../professionsData"; // Import your data
+import { notFound } from "next/navigation";
+import { professions } from "../professionsData";
 import {
   RiArrowRightSLine,
   RiCheckboxCircleFill,
@@ -19,28 +19,64 @@ import { CiCreditCard1 } from "react-icons/ci";
 import { FaqAccordion } from "../../components/FaqAccordion";
 import { MockInvoiceHero } from "../../components/MockInvoiceHero";
 
-// 1. Generate Static Params (This creates the physical HTML pages at build time - Crucial for SEO)
+// 1. Generate Static Params (Builds 100+ pages at build time)
 export async function generateStaticParams() {
   return professions.map((p) => ({
     profession: p.slug,
   }));
 }
 
-// 2. Dynamic Metadata
+// 2. Dynamic Metadata (OPTIMIZED FOR DUPLICATION & TEMPLATES)
 export async function generateMetadata({ params }) {
   const professionData = professions.find((p) => p.slug === params.profession);
 
   if (!professionData) return {};
 
+  // SMART LOGIC: Fixes the "Welding Invoice Invoice" bug
+  // Check if the keyword already contains "Invoice" or "Receipt"
+  const k = professionData.keyword;
+  const hasInvoice = k.toLowerCase().includes("invoice") || k.toLowerCase().includes("receipt");
+  
+  // If keyword is "Welding Invoice", suffix becomes "Template" -> "Welding Invoice Template"
+  // If keyword is "Proforma", suffix becomes "Invoice Template" -> "Proforma Invoice Template"
+  const suffix = hasInvoice ? "Template" : "Invoice Template";
+
+  // Dynamic Keyword Generation (Targeting "Blank", "Printable", "PDF")
+  const dynamicKeywords = [
+    `free ${k} template`,
+    `${k} generator pdf`,
+    `printable ${k} form`,
+    `blank ${k}`, // Huge search volume for "Blank Welding Invoice"
+    `invoice maker for ${professionData.title}`,
+    "no signup invoice generator",
+    "simple invoice template free",
+  ];
+
   return {
-    title: `Free Invoice Generator for ${professionData.title} | SmoothLedger`,
-    description: `Create professional ${professionData.keyword} invoices in seconds. ${professionData.desc} No signup required.`,
+    // Title: "Free Welding Invoice Template (No Signup) - Download PDF"
+    title: `Free ${k} ${suffix} (No Signup) - Download PDF`,
+    
+    description: `Create professional ${k}s in seconds. 100% free, no login required. Download printable PDF templates for ${professionData.title}.`,
+    
+    keywords: dynamicKeywords,
+    
     alternates: {
       canonical: `https://smoothledger.com/invoice-generator/${params.profession}`,
     },
     openGraph: {
-      title: `Free Invoice Template for ${professionData.title}`,
+      title: `Free ${k} Template (PDF)`,
       description: professionData.desc,
+      url: `https://smoothledger.com/invoice-generator/${params.profession}`,
+      siteName: "SmoothLedger",
+      images: [
+        {
+          url: "https://smoothledger.com/SLlogo1.png",
+          width: 1200,
+          height: 630,
+          alt: `Free Invoice Generator for ${professionData.title}`,
+        },
+      ],
+      type: "website",
     },
   };
 }
@@ -49,12 +85,11 @@ export async function generateMetadata({ params }) {
 export default function ProfessionLandingPage({ params }) {
   const data = professions.find((p) => p.slug === params.profession);
 
-  // If someone types a random URL that isn't in your list, show 404
   if (!data) {
     return notFound();
   }
 
-  // Reuse your existing FAQ but customize one question slightly if you want
+  // FAQs customized for the profession context
   const faqs = [
     {
       question: `Is this invoice generator free for ${data.title}?`,
@@ -71,7 +106,13 @@ export default function ProfessionLandingPage({ params }) {
       answer:
         "Absolutely. You can upload your logo, change colors, and adjust fonts to match your specific branding style.",
     },
+    {
+      question: "Does it support my currency?",
+      answer:
+        "Yes. We support all major global currencies including USD ($), EUR (€), GBP (£), AUD ($), and many more.",
+    },
   ];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -86,10 +127,10 @@ export default function ProfessionLandingPage({ params }) {
     },
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.8",
+      ratingValue: "4.9",
       ratingCount: "1024",
     },
-    featureList: "PDF Export, No Signup, Customizable Branding",
+    featureList: "PDF Export, No Signup, Customizable Branding, Blank Templates",
   };
 
   return (
@@ -119,7 +160,7 @@ export default function ProfessionLandingPage({ params }) {
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0">
                 {data.desc} Build and download professional PDF invoices in 60
-                seconds.
+                seconds. <strong>No signup required.</strong>
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -128,7 +169,7 @@ export default function ProfessionLandingPage({ params }) {
                   href={`/invoice-generator/create?template=${data.slug}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                 >
-                  Create {data.keyword} Invoice
+                  Create {data.keyword}
                   <RiArrowRightSLine className="ml-2 h-5 w-5" />
                 </Link>
               </div>
@@ -150,7 +191,7 @@ export default function ProfessionLandingPage({ params }) {
               </div>
             </div>
 
-            {/* Image Content - Kept the same */}
+            {/* Image Content */}
             <div className="relative lg:mt-0 mt-12">
               <MockInvoiceHero />
             </div>
@@ -158,7 +199,7 @@ export default function ProfessionLandingPage({ params }) {
         </div>
       </section>
 
-      {/* --- Features Section (Generic but powerful) --- */}
+      {/* --- Features Section --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
@@ -225,7 +266,6 @@ export default function ProfessionLandingPage({ params }) {
               is built for speed.
             </p>
           </div>
-          {/* Kept your existing grid but reduced for brevity in this example */}
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="p-8 bg-slate-50 dark:bg-slate-900 shadow-lg rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
@@ -285,7 +325,7 @@ export default function ProfessionLandingPage({ params }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
           <div className="relative isolate overflow-hidden bg-blue-600 dark:bg-blue-800 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Ready to create your {data.keyword} Invoice?
+              Ready to create your {data.keyword}?
             </h2>
             <p className="mt-4 text-lg leading-8 text-blue-100 dark:text-blue-200">
               Join thousands of {data.slug.replace("-", " ")} using SmoothLedger

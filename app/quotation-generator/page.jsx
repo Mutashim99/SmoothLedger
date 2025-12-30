@@ -1,10 +1,8 @@
 /* File: app/quotation-generator/page.jsx */
 
 import Link from "next/link";
-// import Image from "next/image"; // Removed - Not used
 import {
   RiArrowRightSLine,
-  RiFileList3Line, // <-- This was in your imports, but not used. I've removed it.
   RiCalculatorLine,
   RiCheckboxCircleFill,
   RiPaintBrushLine,
@@ -12,35 +10,37 @@ import {
   RiLayoutLine,
   RiFileTextLine,
   RiSaveLine,
-  // Unused icons removed: RiShieldCheckLine, RiHandCoinLine, RiTeamLine
 } from "react-icons/ri";
 import { FaqAccordion } from "@/app/components/FaqAccordion";
-import { MockQuotationHero } from "@/app/components/MockQuotationHero"; // <-- MODIFIED: Consistent path
+import { MockQuotationHero } from "@/app/components/MockQuotationHero";
 import { professions } from "./professionsData";
-// --- Metadata (Already Excellent) ---
+
+// --- Metadata (OPTIMIZED FOR "QUOTE" AND "ESTIMATE") ---
 export const metadata = {
-  // Title targets both main keywords: "Quotation Generator" and "Estimate Maker"
-  title: `Free Quotation Generator & Estimate Maker ${new Date().getFullYear()} - Download PDF`,
+  // Title Strategy: [Main Keyword] + [No Signup Hook] + [PDF Action]
+  // We use "Estimate" in the description to catch that keyword variation.
+  title: "Free Quotation Generator (No Signup) - Download PDF Instantly",
+
   description:
-    "Create professional PDF price quotes or estimates in seconds. Our free quote maker is 100% free, no signup, no watermarks. Choose a template, add your logo, and win more jobs.",
+    "Create professional price quotes and estimates in seconds. 100% free, no login required. Automatic calculations and printable PDF templates for any business.",
+
   keywords: [
     "free quotation generator",
-    "quote maker",
-    "estimate maker",
-    "create quotation online",
-    "free price quote template",
-    "pdf quote generator",
-    "business quote generator",
+    "estimate maker pdf", // <--- High intent keyword
+    "price quote generator",
+    "simple quotation format", // <--- Bing users love "Simple"
+    "blank quote template", // <--- Bing users love "Blank"
+    "printable estimate form", // <--- Trade/Construction keyword
     "no signup quote tool",
-    "freelance quotation",
     "construction estimate maker",
+    "freelance quotation",
     "proforma invoice generator",
   ],
   alternates: {
     canonical: "https://smoothledger.com/quotation-generator",
   },
   openGraph: {
-    title: "Free Quotation Generator & Estimate Maker | SmoothLedger",
+    title: "Free Quotation Generator & Estimate Maker (No Signup)",
     description:
       "Create professional PDF price quotes or estimates in seconds. Our free quote maker is 100% free, no signup, no watermarks.",
     url: "https://smoothledger.com/quotation-generator",
@@ -58,28 +58,43 @@ export const metadata = {
   },
 };
 
-// --- MODIFIED FAQ Content ---
-// Re-written first FAQ to remove redundancy and add new value.
+// --- FAQ Content ---
+// --- MODIFIED FAQ Content (Matches Schema perfectly now) ---
 const faqs = [
   {
-    question: "Is a price quote legally binding?",
+    question: "Is this quotation generator free?",
     answer:
-      "A quotation is a fixed-price offer. If the client accepts it within the 'valid until' date, it generally becomes a legally binding agreement for that specific scope of work. This is why it's important to be detailed! An 'estimate,' on the other hand, is just a rough guess and is usually not binding.",
+      "Yes. Our quotation tool is 100% free. You can create unlimited estimates and download them as PDFs without paying a cent.",
   },
   {
-    question: "Is this quote generator completely free?",
+    question: "What is the difference between a Quote and an Estimate?",
     answer:
-      "Yes, 100%. Our free quotation generator allows you to create, customize, and download unlimited PDF quotes with no watermarks and no hidden fees. All templates and features are free.",
+      "A 'Quote' is usually a fixed price offer that, once accepted, becomes a contract. An 'Estimate' is a rough guess of costs that may change. Our tool allows you to create both.",
   },
   {
-    question: "Do I need to sign up to make a quote?",
+    question: "Can I add Terms and Conditions to my quote?",
     answer:
-      "No account is needed. You can use our quote maker instantly without providing an email or password. We also offer a free 'Save in Browser' feature for your convenience, which does not send any data to our servers.",
+      "Yes. There is a dedicated 'Notes' and 'Terms' section where you can outline your payment terms, project scope, validity period (e.g., 'Valid for 30 days'), and cancellation policies.",
   },
   {
-    question: "Can I add my business logo and terms & conditions?",
+    question: "Can I convert a Quote into an Invoice later?",
     answer:
-      "Absolutely. You can upload your own logo, choose custom colors, and edit the 'Terms & Conditions' section on every quote to include your own payment terms or project details.",
+      "Yes. Since the data structure is similar, you can simply use our Invoice Generator with the same details once the job is done.",
+  },
+  {
+    question: "Is the PDF print-friendly?",
+    answer:
+      "Yes. The downloaded PDF is formatted to fit perfectly on standard A4 or Letter paper, making it easy to print physically or save digitally.",
+  },
+  {
+    question: "Can I save my quote to edit later?",
+    answer:
+      "Because we prioritize privacy, we don't store your data on our servers. However, you can use the 'Save to Browser' feature to keep your company details and logo saved locally on your device.",
+  },
+  {
+    question: "Do I need to sign up?",
+    answer:
+      "No. We are a 'no-signup' platform. You can generate your document immediately without creating an account.",
   },
 ];
 
@@ -158,18 +173,18 @@ export default function QuotationGeneratorLandingPage() {
                 },
                 {
                   "@type": "Question",
-                  name: "Can I save my quote to edit later?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Because we prioritize privacy, we don't store your data on our servers. However, you can use the 'Save to Browser' feature to keep your company details and logo saved locally on your device for your next quote.",
-                  },
-                },
-                {
-                  "@type": "Question",
                   name: "Do I need to sign up?",
                   acceptedAnswer: {
                     "@type": "Answer",
                     text: "No. We are a 'no-signup' platform. You can generate your document immediately without creating an account.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I save my quote to edit later?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Because we prioritize privacy, we don't store your data on our servers. However, you can use the 'Save to Browser' feature to keep your company details and logo saved locally on your device for your next quote.",
                   },
                 },
               ],
@@ -178,7 +193,6 @@ export default function QuotationGeneratorLandingPage() {
         }}
       />
       {/* --- Hero Section --- */}
-      {/* --- MODIFIED: Padding adjusted --- */}
       <section className="relative overflow-hidden py-20 min-h-[calc(100vh-4rem)] sm:py-24">
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]"
@@ -348,7 +362,6 @@ export default function QuotationGeneratorLandingPage() {
               Create a professional business quote in three simple steps.
             </p>
           </div>
-          {/* --- MODIFIED: Added mx-auto --- */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Step 1 */}
             <div className="p-6">
@@ -393,7 +406,7 @@ export default function QuotationGeneratorLandingPage() {
         </div>
       </section>
 
-      {/* --- SEO Content Block (Already Excellent) --- */}
+      {/* --- SEO Content Block --- */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
@@ -464,19 +477,17 @@ export default function QuotationGeneratorLandingPage() {
       <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            {/* --- MODIFIED: SEO H2 --- */}
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               Quotation & Estimate Maker FAQs
             </h2>
           </div>
           <div className="mt-12">
-            {/* --- MODIFIED: Passing new FAQs --- */}
             <FaqAccordion faqs={faqs} />
           </div>
         </div>
       </section>
 
-      {/* --- Final CTA Section (Already Good) --- */}
+      {/* --- Final CTA Section --- */}
       <section className="bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
           <div className="relative isolate overflow-hidden bg-blue-600 dark:bg-blue-800 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
@@ -524,7 +535,6 @@ export default function QuotationGeneratorLandingPage() {
             {professions.map((p) => (
               <Link
                 key={p.slug}
-                // CRITICAL CHANGE: Point to quotation-generator
                 href={`/quotation-generator/${p.slug}`}
                 className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:underline"
               >
