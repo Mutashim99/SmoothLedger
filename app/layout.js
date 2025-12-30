@@ -4,7 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { ModernNavbar } from "@/app/components/ModernNavbar";
 import { ModernFooter } from "@/app/components/ModernFooter"; // <-- NEW IMPORT
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 // DELETED: Removed Ri... icons, they are now in ModernFooter.jsx
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,7 +28,11 @@ export const metadata = {
     default: siteConfig.title,
   },
   description: siteConfig.description,
-  keywords: [ 
+  icons: {
+    icon: "/favicon.ico", // Points to public/favicon.ico
+    shortcut: "/favicon.ico", // Explicitly for legacy browsers/Bing
+  },
+  keywords: [
     "free invoice generator",
     "free payslip generator",
     "free quotation generator",
@@ -39,9 +43,9 @@ export const metadata = {
     "small business",
     "no signup",
   ],
-  
+
   // --- 2. Robots & Canonical (from your example) ---
-  robots: { 
+  robots: {
     index: true,
     follow: true,
     googleBot: {
@@ -52,7 +56,7 @@ export const metadata = {
       "max-video-preview": -1,
     },
   },
-  alternates: { 
+  alternates: {
     canonical: siteConfig.url,
     languages: {
       "en-US": siteConfig.url,
@@ -61,10 +65,10 @@ export const metadata = {
 
   // --- 3. Brand / Icons (from your example) ---
   themeColor: "#ffffff",
-  manifest: "/site.webmanifest", 
+  manifest: "/site.webmanifest",
 
   // --- 4. Open Graph (for Facebook, LinkedIn, etc.) ---
-  openGraph: { 
+  openGraph: {
     type: "website",
     url: siteConfig.url,
     title: siteConfig.title,
@@ -82,17 +86,17 @@ export const metadata = {
   },
 
   // --- 5. Twitter Cards (for Twitter) ---
-  twitter: { 
+  twitter: {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/SLlogo1.png`], 
+    images: [`${siteConfig.url}/SLlogo1.png`],
     // site: siteConfig.twitterHandle,
     // creator: siteConfig.twitterHandle,
   },
-  
+
   // // --- 6. Ownership Verification (from your example) ---
-  // verification: { 
+  // verification: {
   //   // google: "YOUR_GOOGLE_TOKEN",
   // },
 };
@@ -108,55 +112,59 @@ export default function RootLayout({ children }) {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "SmoothLedger",
-    "url": siteConfig.url,
-    "logo": `${siteConfig.url}/SLlogo1.png`, // Assumes you have an app/icon.png
-    "sameAs": [
+    name: "SmoothLedger",
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/SLlogo1.png`, // Assumes you have an app/icon.png
+    sameAs: [
       // "https://twitter.com/YOUR_TWITTER",
-       "https://github.com/Mutashim99"
-    ]
+      "https://github.com/Mutashim99",
+    ],
   };
 
-const webSiteSchema = {
+  const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "SmoothLedger",
-    "url": siteConfig.url,
-    "potentialAction": {
+    name: "SmoothLedger",
+    url: siteConfig.url,
+    potentialAction: {
       "@type": "SearchAction",
-      "target": {
+      target: {
         "@type": "EntryPoint",
-        // This tells Google how to search your site. 
+        // This tells Google how to search your site.
         // Even if you don't have a search bar yet, this is safe to add.
-        "urlTemplate": `${siteConfig.url}/search?q={search_term_string}`
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
       },
-      "query-input": "required name=search_term_string"
-    }
+      "query-input": "required name=search_term_string",
+    },
   };
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}>
+      <body
+        className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}
+      >
         {/* NEW: Add Structured Data scripts here */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
-        
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ModernNavbar /> 
+          <ModernNavbar />
           <main className="flex-grow">{children}</main>
           <Analytics />
-          
-          <ModernFooter /> {/* <-- UPDATED: Now using the imported Client Component */}
+          <ModernFooter />{" "}
+          {/* <-- UPDATED: Now using the imported Client Component */}
         </ThemeProvider>
       </body>
     </html>
