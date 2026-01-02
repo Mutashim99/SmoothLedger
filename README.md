@@ -2,8 +2,7 @@
 
 <div align="center">
 
-
-  **The "No-Signup" Financial Suite for Freelancers & Small Businesses.**
+  <img src="./public/assets/promobanner.jpg" alt="SmoothLedger Banner" width="100%">
 
   <h3>
     <a href="https://smoothledger.com">Visit Live Site ↗</a>
@@ -41,6 +40,31 @@ SmoothLedger currently includes five distinct financial tools:
 3.  **Quotation Generator** - Create estimates, bids, and proposals to win jobs.
 4.  **Loan Calculator** - Calculate amortization schedules, principal/interest splits, and monthly payments.
 5.  **Profit Margin Calculator** - Determine gross/net margins and markup percentages to ensure profitability.
+
+---
+
+## Interface Previews
+
+<div align="center">
+  <p><strong>Professional Dashboard</strong></p>
+  <img src="./public/assets/professionaldashboard.png" alt="SmoothLedger Dashboard" width="100%">
+  
+  <br />
+  <br />
+
+  <table align="center">
+    <tr>
+      <td align="center">
+        <strong>Invoice Generator</strong><br />
+        <img src="./public/assets/invoicelanding.png" alt="Invoice Generator" width="400">
+      </td>
+      <td align="center">
+        <strong>Payslip Generator</strong><br />
+        <img src="./public/assets/paysliplanding.png" alt="Payslip Generator" width="400">
+      </td>
+    </tr>
+  </table>
+</div>
 
 ---
 
@@ -113,6 +137,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-**Mutashim Mohsin** - Full Stack Developer
+**Mutashim Mohsin** - mutashimmohsin@gmail.com
 
 Project Link: [https://github.com/Mutashim99/SmoothLedger](https://github.com/Mutashim99/SmoothLedger)
