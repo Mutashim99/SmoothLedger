@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <img src="./public/assets/promobanner.jpg" alt="SmoothLedger Banner" width="100%">
+  <img src="./public/assets/promobanner.png" alt="SmoothLedger Banner" width="100%">
 
   <h3>
     <a href="https://smoothledger.com">Visit Live Site ↗</a>
