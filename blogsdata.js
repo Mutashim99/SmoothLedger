@@ -4,6 +4,145 @@ import React from "react";
 
 export const allBlogs = [
   {
+    slug: "smoothledger-2026-roadmap-new-features",
+    title:
+      "SmoothLedger 2026 Roadmap: Bulk Generation, Cloud Accounts, and a New Look",
+    date: "2026-01-02",
+    tags: ["News", "Product Update", "2026", "Features"],
+    description:
+      "We're kicking off 2026 with our biggest update ever. From generating 100 invoices at once via Excel to a secure cloud dashboard for your data, here is what is coming to SmoothLedger.",
+    content: (
+      <>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          Happy New Year! 2025 was a year of growth, but for 2026, we have a
+          different goal: <strong>Scale.</strong>
+        </p>
+        <p className="mt-4">
+          We started SmoothLedger as a collection of simple, no-signup tools.
+          While we will <em>always</em> keep our core generators free and open,
+          this year we are rolling out a suite of "Power User" features designed
+          to rival enterprise software like QuickBooks and Xero—but without the
+          enterprise price tag.
+        </p>
+        <p className="mt-4">
+          Here is a sneak peek at the major features rolling out this month.
+        </p>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1. Bulk Generation via Excel (The Time Saver)
+        </h2>
+        <p>
+          For freelancers with one or two clients, our manual{" "}
+          <Link
+            href="/invoice-generator"
+            className="text-blue-600 hover:underline"
+          >
+            invoice generator
+          </Link>{" "}
+          is perfect. But for agencies, property managers, or HR departments
+          processing payroll for 50 people, typing data manually is a pain.
+        </p>
+        <p className="mt-4">
+          <strong>Coming this month:</strong> The Bulk Upload Engine.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>How it works:</strong> Download our simple Excel/CSV
+            template. Fill in your rows (Client Name, Amount, Due Date, etc.).
+            Upload the file.
+          </li>
+          <li>
+            <strong> The Result:</strong> SmoothLedger will instantly generate,
+            name, and zip 50+ PDF invoices or{" "}
+            <Link
+              href="/payslip-generator"
+              className="text-blue-600 hover:underline"
+            >
+              payslips
+            </Link>{" "}
+            in seconds.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          2. SmoothLedger Cloud (Secure Authentication)
+        </h2>
+        <p>
+          You asked, we listened. While our "Local Storage" method is great for
+          privacy, it meant you couldn't switch from your laptop to your phone
+          without losing data.
+        </p>
+        <p className="mt-4">
+          <strong>Introducing SmoothLedger Accounts.</strong>
+        </p>
+        <p className="mt-2">
+          You will soon be able to create a secure, encrypted account. This
+          allows you to:
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>Save unlimited documents to the cloud.</li>
+          <li>Access your client list from any device, anywhere.</li>
+          <li>Sync your settings and preferences across your team.</li>
+        </ul>
+        <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-slate-600 dark:text-slate-300 italic">
+          <strong>Note:</strong> Guest Mode isn't going anywhere. You can still
+          use all tools without an account if you prefer.
+        </blockquote>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          3. A Completely Redesigned UI
+        </h2>
+        <p>
+          We have rebuilt our interface from the ground up. It’s not just
+          prettier; it’s faster and more intuitive.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Dark Mode 2.0:</strong> A deeper, contrast-rich dark theme
+            that is easier on the eyes during those late-night accounting
+            sessions.
+          </li>
+          <li>
+            <strong>Live Preview:</strong> See changes on your document in
+            real-time as you type, with zero lag.
+          </li>
+          <li>
+            <strong>Mobile Optimization:</strong> Creating an invoice on your
+            phone will now feel as smooth as a native app.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          4. Financial Reporting & Analytics
+        </h2>
+        <p>
+          Later this year, we will be introducing the <strong>Dashboard</strong>
+          . Instead of just creating documents, you will be able to track them.
+        </p>
+        <ul className="list-disc list-inside space-y-2 mt-4 pl-4">
+          <li>
+            <strong>Income vs. Expense Graphs:</strong> Visualise your cash flow
+            instantly.
+          </li>
+          <li>
+            <strong>Tax Estimator:</strong> Automatically calculate how much you
+            should set aside based on your generated invoices.
+          </li>
+          <li>
+            <strong>Client Insights:</strong> See who your best clients are and
+            who pays the fastest.
+          </li>
+        </ul>
+
+        <p className="mt-8">
+          We are building the ultimate financial operating system for the modern
+          business, and we are thrilled to have you with us for the ride. Stay
+          tuned for the first feature drop next week!
+        </p>
+      </>
+    ),
+  },
+  {
     slug: "ultimate-guide-to-professional-invoices",
     title: "The Ultimate Guide to Creating a Professional Invoice",
     date: "2025-11-10",
