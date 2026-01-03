@@ -5,6 +5,7 @@ import { ThemeProvider } from "./theme-provider";
 import { ModernNavbar } from "@/app/components/ModernNavbar";
 import { ModernFooter } from "@/app/components/ModernFooter"; // <-- NEW IMPORT
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 // DELETED: Removed Ri... icons, they are now in ModernFooter.jsx
 
 const inter = Inter({ subsets: ["latin"] });
@@ -153,7 +154,11 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
-
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="ea88ae59-b8b2-4f9d-a2c3-182a5650fde6"
+          strategy="afterInteractive"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
