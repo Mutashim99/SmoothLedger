@@ -1,6 +1,6 @@
 /* File: app/contact/page.jsx */
 
-import ContactPageClient from "../components/ContactPageClient";
+import ContactPageClient from "@/app/components/ContactPageClient";
 
 
 

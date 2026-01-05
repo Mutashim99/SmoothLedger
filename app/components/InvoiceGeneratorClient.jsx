@@ -3827,13 +3827,13 @@ function EmailCaptureModal({
                         "Subscribe & Download"
                       )}
                     </button>
-                    {/* <button
+                    <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={onSkip}
                     >
                       No thanks, just download
-                    </button> */}
+                    </button>
                   </div>
                 </form>
               </Dialog.Panel>

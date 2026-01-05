@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { 
-  RiFileList3Line, 
-  RiPriceTag3Line, 
-  RiMoneyDollarCircleLine 
+import {
+  RiFileList3Line,
+  RiPriceTag3Line,
+  RiMoneyDollarCircleLine,
 } from "react-icons/ri";
 
 // Import all three data sets
-import { professions as invoiceData } from "../invoice-generator/professionsData";
-import { professions as payslipData } from "../payslip-generator/professionsData";
-import { professions as quoteData } from "../quotation-generator/professionsData";
+import { professions as invoiceData } from "../(tools)/invoice-generator/professionsData";
+import { professions as payslipData } from "../(tools)/payslip-generator/professionsData";
+import { professions as quoteData } from "../(tools)/quotation-generator/professionsData";
 
 export default function FooterSEO() {
   // Define the sections structure
@@ -19,7 +19,8 @@ export default function FooterSEO() {
       icon: RiMoneyDollarCircleLine,
       data: invoiceData, // Renders ALL items
       basePath: "/invoice-generator",
-      description: "SmoothLedger provides free invoicing tools for professionals worldwide. Whether you are a freelancer in the UK, a contractor in the US, or a designer in Canada, our Invoice Generator templates are fully customizable."
+      description:
+        "SmoothLedger provides free invoicing tools for professionals worldwide. Whether you are a freelancer in the UK, a contractor in the US, or a designer in Canada, our Invoice Generator templates are fully customizable.",
     },
     {
       id: "payslip",
@@ -27,7 +28,8 @@ export default function FooterSEO() {
       icon: RiFileList3Line,
       data: payslipData, // Renders ALL items
       basePath: "/payslip-generator",
-      description: "Generate accurate proof of income with our Payslip Generator. Ideal for employees, self-employed individuals, and HR managers looking to create salary certificates, pay stubs, and wage slips instantly."
+      description:
+        "Generate accurate proof of income with our Payslip Generator. Ideal for employees, self-employed individuals, and HR managers looking to create salary certificates, pay stubs, and wage slips instantly.",
     },
     {
       id: "quotation",
@@ -35,14 +37,14 @@ export default function FooterSEO() {
       icon: RiPriceTag3Line,
       data: quoteData, // Renders ALL items
       basePath: "/quotation-generator",
-      description: "Win more jobs with professional estimates. Our Quotation Generator helps contractors, freelancers, and agencies create detailed price quotes, bids, and proposals that look great on any device."
-    }
+      description:
+        "Win more jobs with professional estimates. Our Quotation Generator helps contractors, freelancers, and agencies create detailed price quotes, bids, and proposals that look great on any device.",
+    },
   ];
 
   return (
     <div className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8">
           Browse Templates by Profession
         </h2>
@@ -52,8 +54,10 @@ export default function FooterSEO() {
           {sections.map((section) => {
             const Icon = section.icon;
             return (
-              <div key={section.id} className="border-b border-slate-200 dark:border-slate-800 pb-12 last:border-0 last:pb-0">
-                
+              <div
+                key={section.id}
+                className="border-b border-slate-200 dark:border-slate-800 pb-12 last:border-0 last:pb-0"
+              >
                 {/* Section Header */}
                 <div className="flex items-center gap-2 mb-6">
                   <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
@@ -86,7 +90,6 @@ export default function FooterSEO() {
             );
           })}
         </div>
-
       </div>
     </div>
   );

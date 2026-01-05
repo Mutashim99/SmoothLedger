@@ -1,4 +1,4 @@
-import PrivacyPolicyClient from "../components/PrivacyPolicyClient";
+import PrivacyPolicyClient from "@/app/components/PrivacyPolicyClient";
 
 export const metadata = {
   title: "Privacy Policy | SmoothLedger",

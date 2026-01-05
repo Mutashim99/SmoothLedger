@@ -1,4 +1,4 @@
-import TermsOfServiceClient from "../components/TermsOfServiceClient";
+import TermsOfServiceClient from "@/app/components/TermsOfServiceClient";
 
 export const metadata = {
   title: "Terms of Service | SmoothLedger",

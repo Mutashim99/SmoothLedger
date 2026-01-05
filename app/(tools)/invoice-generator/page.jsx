@@ -14,8 +14,8 @@ import {
   RiCreditCardLine,
   RiLayoutLine,
 } from "react-icons/ri";
-import { FaqAccordion } from "../components/FaqAccordion";
-import { MockInvoiceHero } from "../components/MockInvoiceHero";
+import { FaqAccordion } from "@/app/components/FaqAccordion";
+import { MockInvoiceHero } from "@/app/components/MockInvoiceHero";
 import { CiCreditCard1 } from "react-icons/ci";
 import { professions } from "./professionsData";
 

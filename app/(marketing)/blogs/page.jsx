@@ -1,5 +1,5 @@
 import BlogListingClient from "@/app/components/BlogListingClient"; // We will create this
-import { allBlogs } from "../../blogsdata"; // We need this here for the sitemap/metadata logic
+import { allBlogs } from "@/blogsdata"; // We need this here for the sitemap/metadata logic
 
 // 1. Your SEO Metadata lives here, on the server.
 export const metadata = {

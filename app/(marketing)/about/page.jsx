@@ -1,6 +1,6 @@
 /* File: app/about/page.jsx */
 
-import AboutPageClient from "../components/AboutPageClient";
+import AboutPageClient from "@/app/components/AboutPageClient";
 
 
 

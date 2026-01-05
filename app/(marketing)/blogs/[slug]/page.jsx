@@ -1,6 +1,6 @@
 /* File: app/blogs/[slug]/page.jsx */
 
-import { allBlogs } from "../../../blogsdata"; // Adjust path as needed
+import { allBlogs } from "@/blogsdata"; // Adjust path as needed
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { RiArrowLeftLine, RiPriceTag3Line } from "react-icons/ri";

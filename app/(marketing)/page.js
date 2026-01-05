@@ -1,5 +1,5 @@
-import HomePageClient from "./components/HomePageClient";
-import FooterSEO from "./components/FooterSEO"; // Ensure path is correct
+import HomePageClient from "@/app/components/HomePageClient";
+import FooterSEO from "@/app/components/FooterSEO"; // Ensure path is correct
 // Optimized Metadata for Home Page
 export const metadata = {
   title: "Free Financial Tools for Freelancers & Small Business | SmoothLedger",

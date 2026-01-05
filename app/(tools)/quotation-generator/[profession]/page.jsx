@@ -14,8 +14,8 @@ import {
   RiFileTextLine,
   RiSaveLine,
 } from "react-icons/ri";
-import { FaqAccordion } from "../../components/FaqAccordion";
-import { MockQuotationHero } from "../../components/MockQuotationHero";
+import { FaqAccordion } from "@/app/components/FaqAccordion";
+import { MockQuotationHero } from "@/app/components/MockQuotationHero";
 
 // 1. Generate Static Params
 export async function generateStaticParams() {

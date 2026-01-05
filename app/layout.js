@@ -165,10 +165,10 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <ModernNavbar />
+          {/* <ModernNavbar /> */}
           <main className="flex-grow">{children}</main>
           <Analytics />
-          <ModernFooter />{" "}
+          {/* <ModernFooter />{" "} */}
           {/* <-- UPDATED: Now using the imported Client Component */}
         </ThemeProvider>
       </body>
