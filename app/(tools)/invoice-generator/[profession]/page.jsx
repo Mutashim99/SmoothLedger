@@ -16,8 +16,8 @@ import {
   RiSpeedLine,
 } from "react-icons/ri";
 import { CiCreditCard1 } from "react-icons/ci";
-import { FaqAccordion } from "../../components/FaqAccordion";
-import { MockInvoiceHero } from "../../components/MockInvoiceHero";
+import { FaqAccordion } from "@/app/components/FaqAccordion";
+import { MockInvoiceHero } from "@/app/components/MockInvoiceHero";
 
 // 1. Generate Static Params (Builds 100+ pages at build time)
 export async function generateStaticParams() {
