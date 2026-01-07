@@ -182,6 +182,24 @@ export default function InvoiceGeneratorLandingPage() {
                 },
               ],
             },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://smoothledger.com",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Invoice Generator",
+                  item: "https://smoothledger.com/invoice-generator",
+                },
+              ],
+            },
           ]),
         }}
       />

@@ -18,7 +18,7 @@ import { professions } from "./professionsData";
 // --- Metadata (Already Excellent) ---
 export const metadata = {
   title: "Free Payslip Generator (No Signup) - Download PDF Instantly",
-  
+
   description:
     "Create professional payslips and pay stubs instantly. 100% free, no signup required, and no watermarks. Automatic tax calculations and printable PDF download.",
   keywords: [
@@ -168,6 +168,24 @@ export default function PayslipGeneratorLandingPage() {
                     "@type": "Answer",
                     text: "Absolutely. You can customize earnings and deductions to suit any arrangement, whether it is for a full-time employee or a simple contractor payment.",
                   },
+                },
+              ],
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://smoothledger.com",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Payslip Generator",
+                  item: "https://smoothledger.com/payslip-generator",
                 },
               ],
             },
