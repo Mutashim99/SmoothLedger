@@ -1,8 +1,8 @@
-/* File: app/page.jsx */
+/* File: app/components/HomePageClient.jsx */
 
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Tab, Disclosure } from "@headlessui/react";
@@ -14,7 +14,6 @@ import {
   RiPercentLine,
   RiArrowRightSLine,
   RiPencilLine,
-  RiEyeLine,
   RiSubtractLine,
   RiAddLine,
   RiStarFill,
@@ -24,25 +23,17 @@ import {
   RiUserSearchLine,
 } from "react-icons/ri";
 
-// export const metadata = {
-//   title: "Free Financial Tools for Freelancers | SmoothLedger",
-//   description:
-//     "Create free invoices, payslips, quotes, and calculate loans or profit margins. 100% free, no signups. The ultimate toolbox for small businesses.",
-// };
-
 // --- Helper: ClassName Util ---
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-// --- Mockup Components for Hero & Tabs ---
+// --- Mockup Components ---
 function MockupInvoice() {
   return (
     <div
-      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
-      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none"
       data-nosnippet=""
-      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
       aria-hidden="true"
     >
       <div className="flex justify-between items-start">
@@ -113,10 +104,8 @@ function MockupInvoice() {
 function MockupPayslip() {
   return (
     <div
-      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
-      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none"
       data-nosnippet=""
-      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
       aria-hidden="true"
     >
       <div className="text-center">
@@ -163,10 +152,8 @@ function MockupPayslip() {
 function MockupQuotation() {
   return (
     <div
-      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
-      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none"
       data-nosnippet=""
-      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
       aria-hidden="true"
     >
       <div className="flex justify-between items-start">
@@ -219,10 +206,8 @@ function MockupQuotation() {
 function MockupLoan() {
   return (
     <div
-      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
-      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none"
       data-nosnippet=""
-      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
       aria-hidden="true"
     >
       <div className="text-center mb-4">
@@ -256,10 +241,8 @@ function MockupLoan() {
 function MockupMargin() {
   return (
     <div
-      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none" // Added select-none so users don't accidentally highlight it
-      /* --- 1. SEO FIX: Tell Google to ignore this text for snippets --- */
+      className="w-full rounded-lg bg-white shadow-xl border border-slate-200 p-4 sm:p-6 text-slate-800 select-none"
       data-nosnippet=""
-      /* --- 2. ACCESSIBILITY FIX: Tell Screen Readers this is just a picture --- */
       aria-hidden="true"
     >
       <div className="text-center mb-4">
@@ -283,25 +266,10 @@ function MockupMargin() {
     </div>
   );
 }
-// --- End Mockup Components ---
 
-// --- 1. Hero Section ---
-// --- 1. Hero Section ---
+// --- 1. Hero Section (OPTIMIZED FOR LCP) ---
 function HeroSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  };
-
+  // Animation removed for text elements to fix 4.7s Mobile LCP delay
   const cardVariants = {
     hidden: { opacity: 0, y: 50, rotateX: -30 },
     visible: (i) => ({
@@ -323,37 +291,22 @@ function HeroSection() {
         aria-hidden="true"
       />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* --- FIX #1: Added items-center back to vertically align columns --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* --- Left Column (Text Content) --- */}
-          <motion.div
-            className="text-center lg:text-left"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white"
-              variants={itemVariants}
-            >
+          {/* --- Left Column (Text Content) - STATIC HTML FOR SPEED --- */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-slate-900 dark:text-white">
               Financial Tools,
               <br />
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 bg-clip-text text-transparent">
                 Beautifully Simple.
               </span>
-            </motion.h1>
-            <motion.p
-              className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0"
-              variants={itemVariants}
-            >
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-200 max-w-xl mx-auto lg:mx-0">
               Create professional invoices, payslips, and quotes in seconds.
               Calculate loans and margins instantly. All 100% free.
-            </motion.p>
+            </p>
 
-            <motion.div
-              className="mt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
-              variants={itemVariants}
-            >
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <div className="flex items-center gap-1">
                 <RiStarFill className="h-5 w-5 text-yellow-400" />
                 <RiStarFill className="h-5 w-5 text-yellow-400" />
@@ -368,12 +321,9 @@ function HeroSection() {
                 </span>{" "}
                 freelancers and small businesses.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.ul
-              className="mt-8 space-y-2 text-left max-w-md mx-auto lg:mx-0" // <-- Re-centered text-left
-              variants={itemVariants}
-            >
+            <ul className="mt-8 space-y-2 text-left max-w-md mx-auto lg:mx-0">
               <li className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                 <RiCheckboxCircleFill className="h-5 w-5 text-green-500" />
                 100% Free, No Watermarks
@@ -386,12 +336,9 @@ function HeroSection() {
                 <RiCheckboxCircleFill className="h-5 w-5 text-green-500" />
                 Beautiful, Professional Templates
               </li>
-            </motion.ul>
+            </ul>
 
-            <motion.div
-              className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
-              variants={itemVariants}
-            >
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <Link
                 href="/invoice-generator/create"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
@@ -405,21 +352,19 @@ function HeroSection() {
               >
                 Explore All Tools
               </Link>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* --- Right Column (Visual Mockups) --- */}
-          {/* --- FIX #2: Changed to hidden md:block, adjusted heights --- */}
+          {/* --- Right Column (Visual Mockups) - Animation Kept (Non-Critical) --- */}
           <motion.div
-            className="relative w-full h-[450px] md:h-[500px] lg:h-[600px] hidden md:block" // <-- Shows on tablet up, with responsive heights
+            className="relative w-full h-[450px] md:h-[500px] lg:h-[600px] hidden md:block"
             style={{ perspective: "1000px" }}
             initial="hidden"
             animate="visible"
           >
-            {/* --- FIX #3: Changed max-w-lg to max-w-md to fit smaller screens --- */}
             <motion.div
-              className="absolute w-full max-w-sm sm:max-w-md" // <-- Removed lg:max-w-lg
-              style={{ top: "0%", left: "15%", rotate: "4deg", zIndex: 30 }} // <-- Adjusted top/left
+              className="absolute w-full max-w-sm sm:max-w-md"
+              style={{ top: "0%", left: "15%", rotate: "4deg", zIndex: 30 }}
               variants={cardVariants}
               custom={1}
             >
@@ -428,7 +373,7 @@ function HeroSection() {
 
             <motion.div
               className="absolute w-full max-w-sm sm:max-w-md"
-              style={{ top: "25%", left: "0%", rotate: "-3deg", zIndex: 20 }} // <-- Adjusted top
+              style={{ top: "25%", left: "0%", rotate: "-3deg", zIndex: 20 }}
               variants={cardVariants}
               custom={2}
             >
@@ -437,7 +382,7 @@ function HeroSection() {
 
             <motion.div
               className="absolute w-full max-w-sm sm:max-w-md"
-              style={{ top: "50%", left: "20%", rotate: "2deg", zIndex: 10 }} // <-- Adjusted top
+              style={{ top: "50%", left: "20%", rotate: "2deg", zIndex: 10 }}
               variants={cardVariants}
               custom={3}
             >
@@ -476,27 +421,18 @@ function WhySmoothLedgerSection() {
   return (
     <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto text-center"
-        >
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             A Better Toolbox for Freelancers
           </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-200">
             We built SmoothLedger to be the simple, fast, and professional tool
             we always wanted.
           </p>
-        </motion.div>
+        </div>
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
           {features.map((feature, i) => {
-            // --- FIX #1 ---
-            // Alias feature.icon to a PascalCase variable
             const IconComponent = feature.icon;
-            // --- END FIX ---
             return (
               <motion.div
                 key={feature.name}
@@ -507,7 +443,6 @@ function WhySmoothLedgerSection() {
                 className="p-8 bg-white dark:bg-slate-950 shadow-xl rounded-xl border border-slate-200 dark:border-slate-800"
               >
                 <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                  {/* Render the aliased component */}
                   <IconComponent className="h-6 w-6" />
                 </div>
                 <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
@@ -539,28 +474,19 @@ function ToolsTabsSection() {
   return (
     <section className="py-24 sm:py-32 bg-white dark:bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto text-center mb-12"
-        >
+        <div className="max-w-3xl mx-auto text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Try a Tool Right Now
           </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-200">
             Get a feel for our tools without leaving the page.
           </p>
-        </motion.div>
+        </div>
 
         <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
           <Tab.List className="flex flex-wrap sm:flex-nowrap justify-center gap-4">
             {tabs.map((tab) => {
-              // --- FIX #2 ---
-              // Alias tab.icon to a PascalCase variable
               const IconComponent = tab.icon;
-              // --- END FIX ---
               return (
                 <Tab
                   key={tab.name}
@@ -574,7 +500,6 @@ function ToolsTabsSection() {
                     )
                   }
                 >
-                  {/* Render the aliased component */}
                   <IconComponent className="h-5 w-5 mr-2 inline-block" />
                   {tab.name}
                 </Tab>
@@ -658,26 +583,17 @@ function AllToolsSection() {
       className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto text-center"
-        >
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Your Financial Utility Toolbox
           </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-200">
             One-click solutions for your most common financial tasks.
           </p>
-        </motion.div>
+        </div>
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool, i) => {
-            // --- FIX #3 ---
-            // Alias tool.icon to a PascalCase variable
             const IconComponent = tool.icon;
-            // --- END FIX ---
             return (
               <motion.div
                 key={tool.name}
@@ -692,7 +608,6 @@ function AllToolsSection() {
                   className="group block p-8 h-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl hover:shadow-2xl hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300"
                 >
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
-                    {/* Render the aliased component */}
                     <IconComponent className="h-6 w-6" />
                   </div>
                   <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">
@@ -750,7 +665,7 @@ function TestimonialsSection() {
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Loved by Freelancers & Founders
           </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-200">
             Dont just take our word for it. See what real users are saying.
           </p>
         </motion.div>
@@ -764,9 +679,8 @@ function TestimonialsSection() {
               viewport={{ once: true, amount: 0.5 }}
               className="flex flex-col justify-between p-6 bg-slate-50 dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800"
             >
-              {/* --- FIX #2: Removed the quotes "" around the variable --- */}
               <blockquote className="text-lg text-slate-800 dark:text-slate-200">
-                {testimonial.quote}
+                "{testimonial.quote}"
               </blockquote>
               <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <div className="font-semibold text-slate-900 dark:text-white">
@@ -828,37 +742,15 @@ function FaqSection() {
         "Our Profit Margin Calculator has two modes. In 'Standard Mode,' you enter your Cost and Sale Price to find your profit margin. In 'Reverse Mode,' you enter your Cost and your *desired* margin (e.g., 40%), and it will instantly calculate the exact Sale Price you need to charge to hit that target. It's perfect for pricing new products.",
     },
   ];
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
 
   return (
     <section className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto text-center"
-        >
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Frequently Asked Questions
           </h2>
-        </motion.div>
+        </div>
         <div className="mt-12 space-y-4">
           {faqs.map((faq, i) => (
             <motion.div
@@ -957,29 +849,6 @@ function FinalCtaSection() {
 export default function HomePageClient() {
   return (
     <>
-      
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "SmoothLedger",
-            applicationCategory: "BusinessApplication",
-            operatingSystem: "Web",
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "USD",
-            },
-            description:
-              "Free online invoice and payslip generator suite. No login required.",
-            featureList:
-              "Invoice Generator, Payslip Creator, Quotation Generator, Loan Calculator, Profit Margin Calculator",
-            softwareRequirements: "Modern Web Browser",
-          }),
-        }}
-      />
       <HeroSection />
       <WhySmoothLedgerSection />
       <ToolsTabsSection />

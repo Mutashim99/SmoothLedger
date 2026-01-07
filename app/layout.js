@@ -1,14 +1,15 @@
 import { Inter } from "next/font/google";
-// import Link from "next/link"; // No longer needed here
 import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
-import { ModernNavbar } from "@/app/components/ModernNavbar";
-import { ModernFooter } from "@/app/components/ModernFooter"; // <-- NEW IMPORT
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
-// DELETED: Removed Ri... icons, they are now in ModernFooter.jsx
 
-const inter = Inter({ subsets: ["latin"] });
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap", // <--- CRITICAL: Tells browser to show text immediately, don't wait for font file
+  adjustFontFallback: false, // Prevents layout shift
+});
 
 // --- NEW: ADVANCED METADATA ---
 const siteConfig = {
@@ -103,23 +104,25 @@ export const metadata = {
 };
 // --- END OF METADATA ---
 
-// --- DELETED ---
-// The entire 'function Footer() { ... }' block has been removed from this file
-// and moved to app/components/ModernFooter.jsx
-
-// --- Root Layout (Imports the new components) ---
 export default function RootLayout({ children }) {
-  // NEW: Define the Structured Data for your Organization and Website
+
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "SmoothLedger",
     url: siteConfig.url,
-    logo: `${siteConfig.url}/SLlogo1.png`, // Assumes you have an app/icon.png
+    logo: `${siteConfig.url}/SLlogo1.png`,
     sameAs: [
-      // "https://twitter.com/YOUR_TWITTER",
-      "https://github.com/Mutashim99",
+      "https://github.com/Mutashim99", // Keep your Github
+      "https://www.crunchbase.com/organization/smoothledger", // <--- NEW!
+      "https://www.linkedin.com/company/smoothledger", // <--- Replace with your actual LinkedIn URL
+      // "https://twitter.com/smoothledger", // Add this later if you make one
     ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "support@smoothledger.com", // Add this if you have it, helps trust
+      contactType: "customer support",
+    },
   };
 
   const webSiteSchema = {
@@ -141,7 +144,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950`}
+        className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-slate-950 antialiased text-slate-900 dark:text-slate-100`}
       >
         {/* NEW: Add Structured Data scripts here */}
         <script
@@ -157,7 +160,7 @@ export default function RootLayout({ children }) {
         <Script
           src="https://cloud.umami.is/script.js"
           data-website-id="ea88ae59-b8b2-4f9d-a2c3-182a5650fde6"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <ThemeProvider
           attribute="class"

@@ -506,7 +506,7 @@ export default function PayslipGeneratorLandingPage() {
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Create Your First Payslip Now
             </h2>
-            <p className="mt-4 text-lg leading-8 text-blue-100 dark:text-blue-200">
+            <p className="mt-4 text-lg leading-8 text-white dark:text-white">
               Generate a professional pay stub in seconds. It's free, fast, and
               secure.
             </p>
