@@ -5,13 +5,18 @@ import { allBlogs } from "../blogsdata";
 import { professions as invoiceProfessions } from "./(tools)/invoice-generator/professionsData";
 // 2. Import Payslip Data
 import { professions as payslipProfessions } from "./(tools)/payslip-generator/professionsData";
-// 3. Import Quotation Data (NEW)
+// 3. Import Quotation Data
 import { professions as quoteProfessions } from "./(tools)/quotation-generator/professionsData";
 
 export default function sitemap() {
   const baseUrl = "https://smoothledger.com";
 
-  // --- Blog Posts ---
+  // --- MANUAL UPDATE REQUIRED ---
+  // Change this date ONLY when you add new features or update the text on your tool pages.
+  // This prevents Google from re-crawling 400+ pages unnecessarily every time you deploy.
+  const SITE_UPDATED = new Date("2026-01-07").toISOString();
+
+  // --- Blog Posts (Keep logic: Uses actual post date) ---
   const blogPosts = allBlogs.map((post) => ({
     url: `${baseUrl}/blogs/${post.slug}`,
     lastModified: new Date(post.date).toISOString(),
@@ -22,7 +27,7 @@ export default function sitemap() {
   // --- Dynamic Invoice Pages ---
   const invoicePages = invoiceProfessions.map((p) => ({
     url: `${baseUrl}/invoice-generator/${p.slug}`,
-    lastModified: new Date().toISOString(),
+    lastModified: SITE_UPDATED, // Uses fixed date
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -30,15 +35,15 @@ export default function sitemap() {
   // --- Dynamic Payslip Pages ---
   const payslipPages = payslipProfessions.map((p) => ({
     url: `${baseUrl}/payslip-generator/${p.slug}`,
-    lastModified: new Date().toISOString(),
+    lastModified: SITE_UPDATED, // Uses fixed date
     changeFrequency: "weekly",
     priority: 0.8,
   }));
 
-  // --- Dynamic Quotation Pages (NEW) ---
+  // --- Dynamic Quotation Pages ---
   const quotePages = quoteProfessions.map((p) => ({
     url: `${baseUrl}/quotation-generator/${p.slug}`,
-    lastModified: new Date().toISOString(),
+    lastModified: SITE_UPDATED, // Uses fixed date
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -47,7 +52,7 @@ export default function sitemap() {
   const staticPages = [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "weekly",
       priority: 1.0,
     },
@@ -55,13 +60,13 @@ export default function sitemap() {
     // Invoice Tools
     {
       url: `${baseUrl}/invoice-generator`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/invoice-generator/create`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
     },
@@ -69,13 +74,13 @@ export default function sitemap() {
     // Payslip Tools
     {
       url: `${baseUrl}/payslip-generator`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/payslip-generator/create`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
     },
@@ -83,27 +88,27 @@ export default function sitemap() {
     // Quotation Tools
     {
       url: `${baseUrl}/quotation-generator`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/quotation-generator/create`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "daily",
       priority: 0.9,
-    }, // Added this
+    },
 
     // Calculators
     {
       url: `${baseUrl}/loan-calculator`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/profit-margin-calculator`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
     },
@@ -111,31 +116,31 @@ export default function sitemap() {
     // Company / Info
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "yearly",
       priority: 0.5,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "yearly",
       priority: 0.5,
     },
     {
       url: `${baseUrl}/blogs`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/privacy-policy`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms-of-service`,
-      lastModified: new Date().toISOString(),
+      lastModified: SITE_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
@@ -146,7 +151,7 @@ export default function sitemap() {
     ...staticPages,
     ...invoicePages,
     ...payslipPages,
-    ...quotePages, // Added here
+    ...quotePages,
     ...blogPosts,
   ];
 }

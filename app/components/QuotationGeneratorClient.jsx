@@ -24,13 +24,17 @@ import {
   RiInformationLine,
   RiMailSendLine, // NEW: For email modal
   RiLoader4Line, // NEW: For loading spinner
+  RiCupLine,
+  RiDownloadLine,
+  RiFileLockFill,
+  RiCheckDoubleFill,
+  RiUserSmileFill,
 } from "react-icons/ri";
 import { Dialog, Transition, RadioGroup, Switch } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useSearchParams } from "next/navigation";
-
 
 const TEMPLATE_DEFAULTS = {
   // --- 1. CONSTRUCTION & TRADES ---
@@ -39,7 +43,8 @@ const TEMPLATE_DEFAULTS = {
       { name: "Project Labor (Hours)", qty: 40, price: 65 },
       { name: "Construction Materials", qty: 1, price: 2500 },
     ],
-    terms: "50% deposit required to commence work. Balance due upon completion.",
+    terms:
+      "50% deposit required to commence work. Balance due upon completion.",
     tax: 0,
   },
   roofers: {
@@ -1142,7 +1147,6 @@ export default function QuotationGeneratorClient() {
   const searchParams = useSearchParams();
   const templateParam = searchParams.get("template");
 
-
   useEffect(() => {
     if (templateParam && TEMPLATE_DEFAULTS[templateParam]) {
       const defaults = TEMPLATE_DEFAULTS[templateParam];
@@ -2173,12 +2177,17 @@ export default function QuotationGeneratorClient() {
       />
 
       {/* --- 6. NEW: Email Capture Modal --- */}
-      <EmailCaptureModal
+      {/* <EmailCaptureModal
         isOpen={isEmailModalOpen}
         isSubscribing={isSubscribing}
         onClose={() => setIsEmailModalOpen(false)}
         onSubmit={handleEmailSubmit}
         onSkip={startDownload} // Allow user to skip and just download
+      /> */}
+      <SupportModal
+        isOpen={isEmailModalOpen} // We reuse the existing state variable for simplicity
+        onClose={() => setIsEmailModalOpen(false)}
+        onSkip={startDownload} // This runs when they click "No Thanks"
       />
     </>
   );
@@ -3596,18 +3605,143 @@ function NotificationModal({ isOpen, message, onClose }) {
 }
 
 // --- NEW: Email Capture Modal Component ---
-function EmailCaptureModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  onSkip,
-  isSubscribing,
-}) {
-  const [email, setEmail] = useState("");
+// function EmailCaptureModal({
+//   isOpen,
+//   onClose,
+//   onSubmit,
+//   onSkip,
+//   isSubscribing,
+// }) {
+//   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(email);
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     onSubmit(email);
+//   };
+
+//   return (
+//     <Transition appear show={isOpen} as={Fragment}>
+//       <Dialog as="div" className="relative z-50" onClose={onClose}>
+//         <Transition.Child
+//           as={Fragment}
+//           enter="ease-out duration-300"
+//           enterFrom="opacity-0"
+//           enterTo="opacity-100"
+//           leave="ease-in duration-200"
+//           leaveFrom="opacity-100"
+//           leaveTo="opacity-0"
+//         >
+//           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+//         </Transition.Child>
+
+//         <div className="fixed inset-0 overflow-y-auto">
+//           <div className="flex min-h-full items-center justify-center p-4 text-center">
+//             <Transition.Child
+//               as={Fragment}
+//               enter="ease-out duration-300"
+//               enterFrom="opacity-0 scale-95"
+//               enterTo="opacity-100 scale-100"
+//               leave="ease-in duration-200"
+//               leaveFrom="opacity-100 scale-100"
+//               leaveTo="opacity-0 scale-95"
+//             >
+//               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
+//                 <div className="flex items-center justify-center">
+//                   <div className=" flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+//                     <RiMailSendLine
+//                       className="h-6 w-6 text-blue-600 dark:text-blue-400"
+//                       aria-hidden="true"
+//                     />
+//                   </div>
+//                   <div className="ml-4 text-left">
+//                     <Dialog.Title
+//                       as="h3"
+//                       className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
+//                     >
+//                       One Last Step!
+//                     </Dialog.Title>
+//                   </div>
+//                 </div>
+
+//                 <form onSubmit={handleSubmit}>
+//                   <div className="mt-4">
+//                     <p className="text-sm text-slate-600 dark:text-slate-300">
+//                       To download your customized document, please enter your
+//                       email. We'll send you occasional product updates and
+//                       helpful tips.
+//                     </p>
+//                     <div className="mt-4">
+//                       <label htmlFor="modal-email" className="sr-only">
+//                         Email address
+//                       </label>
+//                       <input
+//                         type="email"
+//                         name="email"
+//                         id="modal-email"
+//                         required
+//                         value={email}
+//                         onChange={(e) => setEmail(e.target.value)}
+//                         className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="you@example.com"
+//                       />
+//                     </div>
+//                   </div>
+
+//                   <div className="mt-5 sm:mt-6 space-y-3">
+//                     <button
+//                       type="submit"
+//                       disabled={isSubscribing}
+//                       className="inline-flex w-full justify-center items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-slate-400"
+//                     >
+//                       {isSubscribing ? (
+//                         <RiLoader4Line className="h-5 w-5 animate-spin" />
+//                       ) : (
+//                         "Subscribe & Download"
+//                       )}
+//                     </button>
+//                     <button
+//                         type="button"
+//                         className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+//                         onClick={onSkip}
+//                       >
+//                         No thanks, just download
+//                       </button>
+//                   </div>
+//                 </form>
+//               </Dialog.Panel>
+//             </Transition.Child>
+//           </div>
+//         </div>
+//       </Dialog>
+//     </Transition>
+//   );
+// }
+const AVATAR_IMAGE_PATH = "/images/my-heart-avatar.png";
+
+// Fallback if you haven't uploaded your image yet
+const DEMO_AVATAR =
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&glassesProbability=100&skinColor=ecad80";
+
+function SupportModal({ isOpen, onClose, onSkip }) {
+  const [isWaitingForReturn, setIsWaitingForReturn] = useState(false);
+  const activeAvatar = AVATAR_IMAGE_PATH || DEMO_AVATAR;
+
+  useEffect(() => {
+    const checkTabFocus = () => {
+      if (document.visibilityState === "visible" && isWaitingForReturn) {
+        onSkip();
+        setIsWaitingForReturn(false);
+        onClose();
+      }
+    };
+    document.addEventListener("visibilitychange", checkTabFocus);
+    return () =>
+      document.removeEventListener("visibilitychange", checkTabFocus);
+  }, [isWaitingForReturn, onSkip, onClose]);
+
+  const handleSupport = () => {
+    window.open("https://mutashim8.gumroad.com/l/coffee", "_blank");
+    setIsWaitingForReturn(true);
   };
 
   return (
@@ -3622,83 +3756,166 @@ function EmailCaptureModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
+              enter="ease-out duration-500"
+              enterFrom="opacity-0 scale-75 translate-y-12"
+              enterTo="opacity-100 scale-100 translate-y-0"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+              leaveFrom="opacity-100 scale-100 translate-y-0"
+              leaveTo="opacity-0 scale-95 translate-y-4"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all">
-                <div className="flex items-center justify-center">
-                  <div className=" flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                    <RiMailSendLine
-                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
-                      aria-hidden="true"
-                    />
+              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-slate-900 p-0 text-left align-middle shadow-2xl transition-all border-4 border-slate-900 dark:border-slate-700">
+                {/* --- HERO SECTION --- */}
+                <div className="bg-slate-900 px-8 py-8 text-center relative overflow-hidden border-b-4 border-slate-900">
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-pink-500/20 via-slate-900 to-slate-900 animate-pulse"></div>
+
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300 mb-6 relative z-10 shadow-sm">
+                    <RiUserSmileFill className="text-yellow-400" />
+                    <span>Solo Student Developer</span>
                   </div>
-                  <div className="ml-4 text-left">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
-                    >
-                      One Last Step!
-                    </Dialog.Title>
-                  </div>
+
+                  <Dialog.Title
+                    as="h3"
+                    className="text-3xl font-black leading-tight text-white relative z-10 tracking-tight"
+                  >
+                    {isWaitingForReturn ? (
+                      <span className="text-[#ff90e8] animate-pulse">
+                        Wait for it... 🚀
+                      </span>
+                    ) : (
+                      <>
+                        One small tip,
+                        <br />
+                        <span className="text-[#ff90e8] drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+                          one giant leap
+                        </span>{" "}
+                        for me.
+                      </>
+                    )}
+                  </Dialog.Title>
+
+                  <p className="mt-4 text-slate-300 text-base max-w-sm mx-auto relative z-10 font-medium leading-relaxed">
+                    {isWaitingForReturn
+                      ? "Go complete the tip in the new tab! I'm waiting right here to auto-start your download."
+                      : "SmoothLedger is free, but servers cost money. Your support keeps the lights on!"}
+                  </p>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                  <div className="mt-4">
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      To download your customized document, please enter your
-                      email. We'll send you occasional product updates and
-                      helpful tips.
-                    </p>
-                    <div className="mt-4">
-                      <label htmlFor="modal-email" className="sr-only">
-                        Email address
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="modal-email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="you@example.com"
-                      />
+                {/* --- OFFER SECTION --- */}
+                <div className="px-8 py-8 bg-white dark:bg-slate-950 overflow-visible relative">
+                  {/* The Bonus Card */}
+                  {!isWaitingForReturn && (
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-yellow-50 border-2 border-yellow-400 dark:bg-yellow-900/10 dark:border-yellow-600 mb-10 shadow-[4px_4px_0px_0px_rgba(250,204,21,0.4)] transform -rotate-1 relative z-0">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-yellow-400 flex items-center justify-center text-slate-900 border-2 border-slate-900">
+                        <RiFileLockFill className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-black text-slate-900 dark:text-white text-lg uppercase italic">
+                          Bonus Unlocked:
+                        </h4>
+                        <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mt-1 leading-tight">
+                          Tip $5+ to instantly get my{" "}
+                          <span className="underline decoration-wavy decoration-yellow-500">
+                            Secret 2026 Feature Roadmap
+                          </span>{" "}
+                          PDF.
+                        </p>
+                      </div>
                     </div>
+                  )}
+
+                  <div className="space-y-4 relative z-10">
+                    {/* BUTTON CONTAINER FOR AVATAR POSITIONING */}
+                    <div className="relative">
+                      {/* --- THE FLOATING AVATAR (Visible BEFORE click) --- */}
+                      {!isWaitingForReturn && (
+                        <div className="absolute -top-16 -right-2 z-20 pointer-events-none animate-[bounce_3s_infinite]">
+                          {/* Thought Bubble */}
+                          <div className="absolute -top-10 -right-8 bg-white text-slate-900 text-xs font-bold py-1.5 px-3 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] whitespace-nowrap">
+                            It helps a ton! 💖
+                            {/* Triangle tail */}
+                            <div className="absolute -bottom-2 left-4 w-3 h-3 bg-white border-b-2 border-r-2 border-slate-900 transform rotate-45"></div>
+                          </div>
+
+                          {/* Avatar Image */}
+                          <img
+                            src={activeAvatar}
+                            alt="Me"
+                            className="w-16 h-16 rounded-full border-4 border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] bg-white object-cover"
+                          />
+                        </div>
+                      )}
+
+                      {/* --- THE 3D SUPER BUTTON --- */}
+                      <button
+                        onClick={handleSupport}
+                        disabled={isWaitingForReturn}
+                        className="group relative w-full flex items-center justify-center gap-3 bg-[#ff90e8] border-4 border-slate-900 text-slate-900 font-black text-xl py-4 rounded-2xl 
+                        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] 
+                        hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] 
+                        active:translate-y-[4px] active:translate-x-[4px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] 
+                        transition-all duration-150 ease-in-out overflow-hidden disabled:opacity-100 disabled:cursor-wait"
+                      >
+                        {/* Shine Effect */}
+                        <div className="absolute inset-0 w-full h-full pointer-events-none">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out skew-x-12"></div>
+                        </div>
+
+                        <div className="relative flex items-center gap-3">
+                          {isWaitingForReturn ? (
+                            <>
+                              <span>Waiting for ya!</span>
+                              {/* Avatar jumps INSIDE button on wait */}
+                              <img
+                                src={activeAvatar}
+                                alt="My Avatar"
+                                className="w-10 h-10 rounded-full border-2 border-slate-900 bg-white animate-[spin_3s_linear_infinite]"
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <RiCupLine className="w-7 h-7 -rotate-12 group-hover:rotate-0 transition-transform" />
+                              <span>Buy Me a Coffee ❤️</span>
+                            </>
+                          )}
+                        </div>
+                      </button>
+                    </div>
+
+                    {/* SECONDARY BUTTON */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSkip();
+                        onClose();
+                      }}
+                      className="w-full py-3 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <span>No thanks, just download</span>
+                      <RiDownloadLine />
+                    </button>
                   </div>
 
-                  <div className="mt-5 sm:mt-6 space-y-3">
-                    <button
-                      type="submit"
-                      disabled={isSubscribing}
-                      className="inline-flex w-full justify-center items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-slate-400"
-                    >
-                      {isSubscribing ? (
-                        <RiLoader4Line className="h-5 w-5 animate-spin" />
-                      ) : (
-                        "Subscribe & Download"
-                      )}
-                    </button>
-                    <button
-                        type="button"
-                        className="inline-flex w-full justify-center rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={onSkip}
-                      >
-                        No thanks, just download
-                      </button>
-                  </div>
-                </form>
+                  {!isWaitingForReturn && (
+                    <div className="mt-6 flex items-center justify-center gap-4 text-[11px] uppercase tracking-widest text-slate-400 font-black">
+                      <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
+                        <RiCheckDoubleFill className="text-green-500" /> Secure
+                        Payment
+                      </span>
+                      <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
+                        <RiCheckDoubleFill className="text-green-500" /> Instant
+                        Delivery
+                      </span>
+                    </div>
+                  )}
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
