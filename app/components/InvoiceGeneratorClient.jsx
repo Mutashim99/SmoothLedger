@@ -2275,7 +2275,11 @@ export default function InvoiceGeneratorClient() {
         onSubmit={handleEmailSubmit}
         onSkip={startDownload}
       /> */}
-      c
+      <SupportModal
+        isOpen={isEmailModalOpen} // We reuse the existing state variable for simplicity
+        onClose={() => setIsEmailModalOpen(false)}
+        onSkip={startDownload} // This runs when they click "No Thanks"
+      />
     </>
   );
 }
