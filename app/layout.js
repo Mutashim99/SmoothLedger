@@ -98,7 +98,7 @@ export const metadata = {
 
   // --- 6. Ownership Verification (from your example) ---
   verification: {
-    yandex: "574488cbaa89bbe1",
+    yandex: "92ea06eeceaf99b1",
   },
 };
 // --- END OF METADATA ---
