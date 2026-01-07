@@ -96,10 +96,10 @@ export const metadata = {
     // creator: siteConfig.twitterHandle,
   },
 
-  // // --- 6. Ownership Verification (from your example) ---
-  // verification: {
-  //   // google: "YOUR_GOOGLE_TOKEN",
-  // },
+  // --- 6. Ownership Verification (from your example) ---
+  verification: {
+    yandex: "574488cbaa89bbe1",
+  },
 };
 // --- END OF METADATA ---
 
